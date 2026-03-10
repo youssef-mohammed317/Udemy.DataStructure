@@ -21,7 +21,7 @@ public:
 	int Max(); // return value
 	int Min(); // return value
 	int Sum();
-	int Avg();
+	double Avg();
 	void Reverse();
 	void ShiftLeft();
 	void ShiftRight();

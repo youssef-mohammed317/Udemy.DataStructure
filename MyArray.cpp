@@ -4,6 +4,9 @@
 
 MyArray::MyArray(int size)
 {
+	if (size <= 0)
+		throw std::invalid_argument("Size must be greater than 0");
+
 	this->length = 0;
 	this->size = size;
 	this->arr = new int[size];
@@ -17,19 +20,18 @@ void MyArray::Display()
 		if (i < length - 1)
 			std::cout << ", ";
 	}
-	std::cout << "}";
+	std::cout << "}\n";
 }
 void MyArray::Append(int value)
 {
-	if (length < size)
-		arr[length++] = value;
-	else
-		throw std::out_of_range("The array is full");
+	ThrowIfFull();
+	arr[length++] = value;
 }
 void MyArray::Insert(int index, int value)
 {
-	ThrowIfOutOfRange(index);
 	ThrowIfFull();
+	if (index != length)
+		ThrowIfOutOfRange(index);
 
 	for (int j = length - 1; j >= index; j--)
 	{
@@ -97,9 +99,9 @@ int MyArray::Sum()
 	}
 	return sum;
 }
-int MyArray::Avg()
+double MyArray::Avg()
 {
-	return Sum() / length;
+	return  (double)Sum() / length;
 }
 void MyArray::Reverse()
 {
@@ -109,7 +111,7 @@ void MyArray::Reverse()
 void MyArray::ShiftLeft()
 {
 	ThrowIfEmpty();
-	for (int i = 0; i < length; i++)
+	for (int i = 0; i < length - 1; i++)
 	{
 		arr[i] = arr[i + 1];
 	}
@@ -155,7 +157,7 @@ void MyArray::Swap(int& x, int& y)
 void MyArray::ThrowIfOutOfRange(int index)
 {
 	if (index < 0 || index >= length)
-		throw std::out_of_range("The the index out of range");
+		throw std::out_of_range("The index is out of range");
 }
 void MyArray::ThrowIfFull()
 {
