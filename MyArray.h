@@ -28,6 +28,8 @@ public:
 	void RotateLeft();
 	void RotateRight();
 
+
+	void static TestBehavior();
 	~MyArray();
 
 };

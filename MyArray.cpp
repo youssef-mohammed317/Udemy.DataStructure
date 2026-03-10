@@ -44,9 +44,9 @@ int MyArray::Delete(int index) // return the value deleted
 	ThrowIfOutOfRange(index);
 
 	int value = arr[index];
-	for (int j = length - 1; j >= index; j--)
+	for (int j = index; j < length - 1; j++)
 	{
-		arr[j - 1] = arr[j];
+		arr[j] = arr[j + 1];
 	}
 	length--;
 	return value;
@@ -128,19 +128,19 @@ void MyArray::RotateLeft()
 void MyArray::ShiftRight()
 {
 	ThrowIfEmpty();
-	for (int i = 0; i < length - 1; i++)
+	for (int i = length - 1; i > 0; i--)
 	{
-		arr[i + 1] = arr[i];
+		arr[i] = arr[i - 1];
 	}
 	arr[0] = 0;
 }
-void MyArray::RotateLeft()
+void MyArray::RotateRight()
 {
 	ThrowIfEmpty();
 	int last = arr[length - 1];
-	for (int i = 0; i < length - 1; i++)
+	for (int i = length - 1; i > 0; i--)
 	{
-		arr[i + 1] = arr[i];
+		arr[i] = arr[i - 1];
 	}
 	arr[0] = last;
 }
@@ -154,7 +154,7 @@ void MyArray::Swap(int& x, int& y)
 }
 void MyArray::ThrowIfOutOfRange(int index)
 {
-	if (index >= 0 || index <= length)
+	if (index < 0 || index >= length)
 		throw std::out_of_range("The the index out of range");
 }
 void MyArray::ThrowIfFull()
@@ -166,6 +166,69 @@ void MyArray::ThrowIfEmpty()
 {
 	if (length == 0)
 		throw std::out_of_range("The array is empty");
+}
+
+
+void MyArray::TestBehavior()
+{
+	try
+	{
+		MyArray arr(10);
+
+		std::cout << "\nAppend values:\n";
+		arr.Append(10);
+		arr.Append(20);
+		arr.Append(30);
+		arr.Append(40);
+		arr.Append(50);
+		arr.Display();
+
+		std::cout << "\n\nInsert 25 at index 2:\n";
+		arr.Insert(2, 25);
+		arr.Display();
+
+		std::cout << "\n\nDelete element at index 3:\n";
+		int deleted = arr.Delete(3);
+		std::cout << "Deleted value: " << deleted << std::endl;
+		arr.Display();
+
+		std::cout << "\n\nGet element at index 2: ";
+		std::cout << arr.Get(2) << std::endl;
+
+		std::cout << "\nSet index 1 to 99\n";
+		arr.Set(1, 99);
+		arr.Display();
+
+		std::cout << "\n\nMax value: " << arr.Max() << std::endl;
+		std::cout << "Min value: " << arr.Min() << std::endl;
+		std::cout << "Sum: " << arr.Sum() << std::endl;
+		std::cout << "Average: " << arr.Avg() << std::endl;
+
+		std::cout << "\nReverse array:\n";
+		arr.Reverse();
+		arr.Display();
+
+		std::cout << "\n\nShift Left:\n";
+		arr.ShiftLeft();
+		arr.Display();
+
+		std::cout << "\n\nRotate Left:\n";
+		arr.RotateLeft();
+		arr.Display();
+
+		std::cout << "\n\nRotate Right:\n";
+		arr.RotateRight();
+		arr.Display();
+
+		std::cout << "\n\nShift Right:\n";
+		arr.ShiftRight();
+		arr.Display();
+
+	}
+	catch (const std::exception& e)
+	{
+		std::cout << "\nException: " << e.what() << std::endl;
+	}
 }
 
 MyArray::~MyArray()

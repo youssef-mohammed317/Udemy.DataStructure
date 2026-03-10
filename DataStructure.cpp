@@ -2,9 +2,10 @@
 //
 
 #include <iostream>
-
+#include "MyArray.h"
 int main()
 {
+	MyArray::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
