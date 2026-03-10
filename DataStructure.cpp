@@ -2,10 +2,11 @@
 //
 
 #include <iostream>
+#include "MyString.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    MyString::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
