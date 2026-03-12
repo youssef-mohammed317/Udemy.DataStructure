@@ -118,6 +118,89 @@ void MyString::Reverse(char* string)
 		string[j] = temp;
 	}
 }
+bool MyString::Compare(const char* string1, const char* string2, bool ignoreCase)
+{
+	int i = 0, j = 0;
+
+	while (string1[i] != '\0' && string2[j] != '\0')
+	{
+		if (!ignoreCase)
+		{
+			if (string1[i] != string2[j])
+				return false;
+		}
+		else
+		{
+			if (std::tolower(string1[i]) != std::tolower(string2[j]))
+				return false;
+		}
+		i++;
+		j++;
+	}
+	return (string1[i] == '\0' && string2[j] == '\0');
+}
+bool MyString::IsPalindrome(const char* string)
+{
+	for (int i = 0, j = GetLength(string) - 1; j > i; i++, j--)
+	{
+		if (string[i] != string[j])
+			return false;
+	}
+	return true;
+}
+
+std::string MyString::GetDuplicates(const char* string, bool ignoreCase)
+{
+	std::string result = "";
+	unsigned long long H = 0, x = 0; // int 4 bytes 32 bits (26 char)
+	for (int i = 0; string[i] != '\0'; i++)
+	{
+		if (!IsLetter(string[i]))
+			continue;
+		x = 1;
+		if (ignoreCase)
+		{
+			x <<= std::tolower(string[i]) - 'a';
+		}
+		else {
+			if (IsLower(string[i]))
+				x <<= string[i] - 'a';
+			else
+				x <<= (string[i] - 'A') + 26;
+		}
+		if ((x & H) > 0)
+		{
+			result += string[i];
+		}
+		H |= x;
+	}
+
+	return result;
+}
+bool MyString::IsAnagram(const char* string1, const char* string2)
+{
+	int HashTable[26] = { 0 };
+	int i = 0, j = 0;
+	while (string1[i] != '\0' && string2[j] != '\0')
+	{
+		HashTable[std::tolower(string1[i]) - 'a']++;
+		HashTable[std::tolower(string2[j]) - 'a']--;
+		j++;
+		i++;
+	}
+	if (string1[i] == '\0' && string2[j] == '\0')
+	{
+		for (int k = 0; k < 26; k++)
+		{
+			if (HashTable[k] != 0)
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+	return false;
+}
 void MyString::TestBehavior()
 {
 	std::cout << "=========== TEST START ===========\n\n";
@@ -128,13 +211,21 @@ void MyString::TestBehavior()
 	char str4[] = "bcdfg";
 	char str5[] = "Hello123";
 	char str6[] = "Hello@123";
-	char str7[] = "DataStructure";
+	char str7[] = "DATASrucDTure";
 	char str8[] = "aBcD";
+	char str9[] = "madam";
+	char str10[] = "hello";
+	char str11[] = "Silent";
+	char str12[] = "Listen";
+	char str13[] = "Triangle";
+	char str14[] = "Integral";
+	char str15[] = "DataStructure";
+	char str16[] = "Programming";
 
 	// GetLength
 	std::cout << "GetLength\n";
-	std::cout << "Hello World -> " << GetLength(str1) << "\n";
-	std::cout << "ah1M0eD -> " << GetLength(str2) << "\n\n";
+	std::cout << "\"" << str1 << "\" -> " << GetLength(str1) << "\n";
+	std::cout << "\"" << str2 << "\" -> " << GetLength(str2) << "\n\n";
 
 	// ChangeCase
 	std::cout << "ChangeCase\n";
@@ -144,17 +235,18 @@ void MyString::TestBehavior()
 
 	// CountWords
 	std::cout << "CountWords\n";
-	std::cout << "Hello World -> " << CountWords(str1) << "\n\n";
+	std::cout << "\"" << str1 << "\" -> " << CountWords(str1) << "\n";
+	std::cout << "\"One Two Three\" -> " << CountWords("One Two Three") << "\n\n";
 
 	// CountVowels
 	std::cout << "CountVowels\n";
-	std::cout << "Hello World -> " << CountVowels(str1) << "\n";
-	std::cout << "AEIOU -> " << CountVowels(str3) << "\n\n";
+	std::cout << "\"" << str1 << "\" -> " << CountVowels(str1) << "\n";
+	std::cout << "\"" << str3 << "\" -> " << CountVowels(str3) << "\n\n";
 
 	// CountConsonents
 	std::cout << "CountConsonents\n";
-	std::cout << "Hello World -> " << CountConsonents(str1) << "\n";
-	std::cout << "bcdfg -> " << CountConsonents(str4) << "\n\n";
+	std::cout << "\"" << str1 << "\" -> " << CountConsonents(str1) << "\n";
+	std::cout << "\"" << str4 << "\" -> " << CountConsonents(str4) << "\n\n";
 
 	// Reverse
 	std::cout << "Reverse\n";
@@ -162,14 +254,13 @@ void MyString::TestBehavior()
 	Reverse(str7);
 	std::cout << "After : " << str7 << "\n\n";
 
-	// Character checks
+	// Character Tests
 	std::cout << "Character Tests\n";
-	char testChars[] = { 'a','Z','5','@' };
+	char testChars[] = { 'a', 'Z', '5', '@' };
 
 	for (int i = 0; i < 4; i++)
 	{
 		char c = testChars[i];
-
 		std::cout << "\nTesting: " << c << "\n";
 		std::cout << "IsLetter: " << IsLetter(c) << "\n";
 		std::cout << "IsNumber: " << IsNumber(c) << "\n";
@@ -181,8 +272,42 @@ void MyString::TestBehavior()
 
 	// IsValidString
 	std::cout << "\nIsValidString\n";
-	std::cout << "Hello123 -> " << IsValidString(str5) << "\n";
-	std::cout << "Hello@123 -> " << IsValidString(str6) << "\n";
+	std::cout << "\"" << str5 << "\" -> " << IsValidString(str5) << "\n";
+	std::cout << "\"" << str6 << "\" -> " << IsValidString(str6) << "\n";
+	std::cout << "\"HelloWorld\" -> " << IsValidString("HelloWorld") << "\n\n";
 
-	std::cout << "\n=========== TEST END ===========\n";
+	// Compare
+	std::cout << "Compare\n";
+	std::cout << "\"Hello\" vs \"Hello\" (false) -> "
+		<< Compare("Hello", "Hello", false) << "\n";
+	std::cout << "\"Hello\" vs \"hello\" (false) -> "
+		<< Compare("Hello", "hello", false) << "\n";
+	std::cout << "\"Hello\" vs \"hello\" (true)  -> "
+		<< Compare("Hello", "hello", true) << "\n\n";
+
+	// IsPalindrome
+	std::cout << "IsPalindrome\n";
+	std::cout << "\"" << str9 << "\" -> " << IsPalindrome(str9) << "\n";
+	std::cout << "\"" << str10 << "\" -> " << IsPalindrome(str10) << "\n\n";
+
+	// GetDuplicates
+	std::cout << "GetDuplicates\n";
+	std::cout << "\"" << str5 << "\" -> " << GetDuplicates(str5) << "\n";
+	std::cout << "\"" << str15 << "\" ignoreCase=true  -> "
+		<< GetDuplicates(str15, true) << "\n";
+	std::cout << "\"" << str15 << "\" ignoreCase=false -> "
+		<< GetDuplicates(str15, false) << "\n";
+	std::cout << "\"" << str16 << "\" ignoreCase=true  -> "
+		<< GetDuplicates(str16, true) << "\n\n";
+
+	// IsAnagram
+	std::cout << "IsAnagram\n";
+	std::cout << "\"" << str11 << "\" and \"" << str12 << "\" -> "
+		<< IsAnagram(str11, str12) << "\n";
+	std::cout << "\"" << str13 << "\" and \"" << str14 << "\" -> "
+		<< IsAnagram(str13, str14) << "\n";
+	std::cout << "\"Hello\" and \"World\" -> "
+		<< IsAnagram("Hello", "World") << "\n\n";
+
+	std::cout << "=========== TEST END ===========\n";
 }
