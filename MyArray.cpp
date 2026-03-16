@@ -170,6 +170,58 @@ void MyArray::ThrowIfEmpty()
 		throw std::out_of_range("The array is empty");
 }
 
+int MyArray::LinearSearch(int key)
+{
+	for (int i = 0; i < length; i++)
+		if (arr[i] == key)
+			return i;
+	return -1;
+}
+int MyArray::ImprovedLinearSearch(int key)
+{
+	for (int i = 0; i < length; i++)
+		if (arr[i] == key)
+		{
+			if (i > 0)
+				Swap(arr[i - 1], arr[i]);
+			return i;
+		}
+	return -1;
+}
+int MyArray::BinarySearch(int key)
+{
+	int low = 0;
+	int high = length - 1;
+
+	while (low <= high) {
+		int mid = (low + high) / 2;
+
+		if (arr[mid] == key)
+			return mid;
+		else if (arr[mid] > key)
+			high = mid - 1;
+		else if (arr[mid] < key)
+			low = mid + 1;
+	}
+	return -1;
+}
+int MyArray::RBinarySearch(int low, int high, int key)
+{
+	int low = 0;
+	int high = length - 1;
+	while (low <= high) {
+		int mid = (low + high) / 2;
+		if (arr[mid] == key)
+			return mid;
+		else if (arr[mid] > key)
+			return RBinarySearch(low, mid - 1, key);
+		else if (arr[mid] < key)
+			return RBinarySearch(mid + 1, high, key);
+	}
+	return -1;
+}
+
+
 
 void MyArray::TestBehavior()
 {

@@ -28,6 +28,10 @@ public:
 	void RotateLeft();
 	void RotateRight();
 
+	int LinearSearch(int key);
+	int ImprovedLinearSearch(int key);
+	int BinarySearch(int key);
+	int RBinarySearch(int low, int high, int key);
 
 	void static TestBehavior();
 	~MyArray();
