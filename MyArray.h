@@ -56,6 +56,9 @@ public:
 	static DuplicateElement** FindAllDuplicateElementsInUnsortedArrayUsingHash(int* arr, int size);
 	static DuplicateElement** FindAllDuplicateElementsInUnsortedArrayUsingLoops(int* arr, int size);
 
+	static PairOfElements** FindAllPairsOfElementsWithSumUsingLoops(int* arr, int size, int sum);
+	static PairOfElements** FindAllPairsOfElementsWithSumUsingHash(int* arr, int size, int sum);
+
 	void static TestBehavior();
 	~MyArray();
 };
@@ -85,4 +88,27 @@ public:
 	~DuplicateElement() {}
 
 };
-
+class PairOfElements
+{
+private:
+	int first;
+	int second;
+public:
+	PairOfElements(int first, int second) {
+		this->first = first;
+		this->second = second;
+	}
+	int GetFirst() {
+		return first;
+	}
+	int GetSecond() {
+		return second;
+	}
+	int GetSum() {
+		return first + second;
+	}
+	void Display() {
+		std::cout << "First: " << first << " Second: " << second << std::endl;
+	}
+	~PairOfElements() {}
+};

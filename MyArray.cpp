@@ -613,22 +613,19 @@ DuplicateElement** MyArray::FindAllDuplicateElementsInUnsortedArrayUsingLoops(in
 
 	for(int i=0; i<size; i++)
 	{
-		if(arr[i] != NULL)
-		{
+
 			count = 0;
 			for(int j = 0; j < size; j++)
 			{
 				if(arr[i] == arr[j] && i != j)
 				{
 					count++;
-					arr[j] = NULL;
 				}
 			}
 			if(count > 1)
 			{
 				temp[k++] = new DuplicateElement(arr[i], count);
 			}
-		}
 
 	DuplicateElement** result = new DuplicateElement*[k];
 	for(int i = 0; i < k; i++)
@@ -638,6 +635,81 @@ DuplicateElement** MyArray::FindAllDuplicateElementsInUnsortedArrayUsingLoops(in
 	delete [] temp;
 	return result;
 }
+}
+PairOfElements** MyArray::FindAllPairsOfElementsWithSumUsingLoops(int* arr, int size, int sum)
+{
+	PairOfElements** temp = new PairOfElements*[size]{nullptr};
+	int sumOfPair = 0,k =0;
+
+	for(int i=0; i<size; i++)
+	{
+		for(int j = 1; j < size; j++)
+		{
+			if(arr[j] + arr[i] == sum)
+			{
+				temp[k++] = new PairOfElements(arr[i], arr[j]);
+			}
+		}
+	}
+
+	PairOfElements** result = new PairOfElements*[k];
+	for(int i = 0; i < k; i++)
+	{
+		result[i] = temp[i];
+	}
+	delete [] temp;
+	return result;
+}
+
+PairOfElements** MyArray::FindAllPairsOfElementsWithSumUsingHash(int* arr, int size, int sum)
+{
+	// use Hash Array
+
+	int max = arr[0];
+	int min = arr[0];
+	for(int i=1; i<size; i++)
+	{
+		if(arr[i] > max)
+		{
+			max = arr[i];
+		}else if(arr[i] < min)
+		{
+			min = arr[i];
+		}
+	}
+PairOfElements** temp = new PairOfElements*[size]{nullptr};
+	int* hash = new int[max - min + 1] {0};
+
+	for(int i=0; i<size; i++)
+	{
+		hash[arr[i] - min]++;
+	}
+
+	int countPair = 0;
+
+	for(int i = 0; i < max - min + 1; i++)
+	{
+		int first = min + i;
+		int sec = sum - first;
+		int secIndexInHash = sec - min;
+
+		if(i == secIndexInHash && hash[i] > 1)
+		{
+			temp[countPair++] = new PairOfElements(first, first);
+			
+		}else if(hash[secIndexInHash] > 0 && hash[i] > 0 && i < secIndexInHash)
+		{
+			temp[countPair++] = new PairOfElements(min + i, min + secIndexInHash);
+		}
+	}
+
+	PairOfElements** result = new PairOfElements*[countPair];
+	for(int i = 0; i < countPair; i++)
+	{
+		result[i] = temp[i];
+	}
+	delete [] temp;
+	return result;
 }
 
 
