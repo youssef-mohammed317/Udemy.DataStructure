@@ -1,4 +1,8 @@
 #pragma once
+#include <iostream>
+class DuplicateElement;
+class PairOfElements;
+
 class MyArray
 {
 private:
@@ -30,7 +34,7 @@ public:
 
 	int LinearSearch(int key);
 	int ImprovedLinearSearch(int key);
-	int BinarySearch(int key);
+	int BinarySearchInSortedAsc(int key);
 	int RBinarySearch(int low, int high, int key);
 
 	bool IsSortedAsc();
@@ -42,9 +46,9 @@ public:
 	static int* UnionTwoUnsortedArraysIntoUnSortedOne(int* arr1, int size1, int* arr2, int size2);
 
 	static int* IntersectionTwoSortedAscArraysIntoSortedOne(int* arr1, int size1, int* arr2, int size2);
-	static int* IntersectionTwoUnsortedArraysIntoSortedOne(int* arr1, int size1, int* arr2, int size2);
-	
-	static int* DifferenceTwoUnsortedArraysIntoSortedOne(int* arr1, int size1, int* arr2, int size2);
+	static int* IntersectionTwoUnsortedArraysIntoUnSortedOne(int* arr1, int size1, int* arr2, int size2);
+
+	static int* DifferenceTwoUnsortedArraysIntoUnSortedOne(int* arr1, int size1, int* arr2, int size2);
 	static int* DifferenceTwoSortedAscArraysIntoSortedOne(int* arr1, int size1, int* arr2, int size2);
 
 	static int FindSingleMissingElementInSortedAscArray(int* arr, int size);
