@@ -46,8 +46,43 @@ public:
 	
 	static int* DifferenceTwoUnsortedArraysIntoSortedOne(int* arr1, int size1, int* arr2, int size2);
 	static int* DifferenceTwoSortedAscArraysIntoSortedOne(int* arr1, int size1, int* arr2, int size2);
-	
+
+	static int FindSingleMissingElementInSortedAscArray(int* arr, int size);
+	static int FindSingleMissingElementInUnsortedArray(int* arr, int size);
+
+	static int* FindAllMissingElementsInSortedAscArray(int* arr, int size);
+	static int* FindAllMissingElementsInUnsortedArray(int* arr, int size);
+
+	static DuplicateElement** FindAllDuplicateElementsInUnsortedArrayUsingHash(int* arr, int size);
+	static DuplicateElement** FindAllDuplicateElementsInUnsortedArrayUsingLoops(int* arr, int size);
+
 	void static TestBehavior();
 	~MyArray();
+};
+class DuplicateElement
+{
+private:
+	int value;
+	int count;
+public:
+	DuplicateElement(int value, int count) {
+
+		this->value = value;
+		this->count = count;
+
+	}
+	int GetValue() {
+		return value;
+	}
+	int GetCount() {
+		return count;
+	}
+
+	void Display() {
+		std::cout << "Value: " << value << " Count: " << count << std::endl;
+	}
+
+	~DuplicateElement() {}
+
 };
 

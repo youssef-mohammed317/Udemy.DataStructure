@@ -450,6 +450,195 @@ int* MyArray::DifferenceTwoSortedAscArraysIntoSortedOne(int* arr1, int size1, in
 	
 	return arr;
 }
+int MyArray::FindSingleMissingElementInSortedAscArray(int* arr, int size) 
+{
+	int diff = arr[0];
+	for(int i = 1; i < size; i++)
+	{
+		if(arr[i] - i != diff)
+		{
+			return arr[i] - 1;
+		}
+	}
+
+}
+int MyArray::FindSingleMissingElementInUnsortedArray(int* arr, int size)
+{
+	int max = arr[0];
+	int min = arr[0];
+	int sum = 0;
+	for(int i=1; i<size; i++)
+	{
+		if(arr[i] > max)
+		{
+			max = arr[i];
+		}else if(arr[i] < min)
+		{
+			min = arr[i];
+		}
+		sum += arr[i];
+	}
+
+	return (max*(max+1)/2) - (min*(min-1)/2) - sum;
+}
+int* MyArray::FindAllMissingElementsInSortedAscArray(int* arr, int size) 
+{
+	// use Bitwise if size less than 64
+	int max = arr[size -1];
+	int min = arr[0];
+	int countMessing = 0;
+	unsigned long long hash = 0;
+	int* temp = new int[max - min + 1];
+
+	for(int i=0; i<size; i++)
+	{
+		hash = hash | (1 << (arr[i] - min));
+
+	}
+
+	for(int i=0; i<size; i++)
+	{
+		hash = hash >> 1;
+		int bit = hash & 1;
+		if(bit == 0)
+		{
+			temp[countMessing++] = min + i;
+		}
+	}
+	int* result = new int[countMessing];
+	for(int i=0; i<countMessing; i++)
+	{
+		result[i] = temp[i];
+	}
+	delete[] temp;
+
+	return result;
+
+}
+int* MyArray::FindAllMissingElementsInUnsortedArray(int* arr, int size)
+{
+	// use Hash Array
+	int max = arr[0];
+	int min = arr[0];
+	for(int i=1; i<size; i++)
+	{
+		if(arr[i] > max)
+		{
+			max = arr[i];
+		}else if(arr[i] < min)
+		{
+			min = arr[i];
+		}
+	}
+
+	int* hash = new int[max - min + 1] {0};
+
+	for(int i=0; i<size; i++)
+	{
+		hash[arr[i] - min] = 1;
+	}
+
+	int countMessing = 0;
+
+	for(int i = 0; i < max - min + 1; i++)
+	{
+		if(hash[i] == 0)
+		{
+			countMessing++;
+		}
+	}
+
+	int* result = new int[countMessing];
+
+	for(int i = 0, j = 0; i < max - min + 1; i++)
+	{
+		if(hash[i] == 0)
+		{
+			result[j++] = min + i;
+		}
+	}
+	delete [] hash;
+	return result;
+}
+DuplicateElement** MyArray::FindAllDuplicateElementsInUnsortedArrayUsingHash(int* arr, int size)
+{
+	// use Hash Array
+	int max = arr[0]; // if sorted get min and max directly
+	int min = arr[0];
+	for(int i=1; i<size; i++)
+	{
+		if(arr[i] > max)
+		{
+			max = arr[i];
+		}else if(arr[i] < min)
+		{
+			min = arr[i];
+		}
+	}
+	int* hash = new int[max - min + 1] {0};
+
+	for(int i=0; i<size; i++)
+	{
+		hash[arr[i] - min]++;
+	}
+
+	int countDuplicate = 0;
+
+	for(int i = 0; i < max - min + 1; i++)
+	{
+		if(hash[i] > 1)
+		{
+			countDuplicate++;
+		}
+	}
+
+	DuplicateElement** result = new DuplicateElement*[countDuplicate];
+
+	for(int i = 0, j = 0; i < max - min + 1; i++)
+	{
+		if(hash[i] > 1)
+		{
+			result[j++] = new DuplicateElement(min + i, hash[i]);
+		}
+	}
+
+	delete [] hash;
+	return result;
+}
+
+DuplicateElement** MyArray::FindAllDuplicateElementsInUnsortedArrayUsingLoops(int* arr, int size)
+{
+	DuplicateElement** temp = new DuplicateElement*[size]{nullptr};
+	int count = 0,k =0;
+
+	for(int i=0; i<size; i++)
+	{
+		if(arr[i] != NULL)
+		{
+			count = 0;
+			for(int j = 0; j < size; j++)
+			{
+				if(arr[i] == arr[j] && i != j)
+				{
+					count++;
+					arr[j] = NULL;
+				}
+			}
+			if(count > 1)
+			{
+				temp[k++] = new DuplicateElement(arr[i], count);
+			}
+		}
+
+	DuplicateElement** result = new DuplicateElement*[k];
+	for(int i = 0; i < k; i++)
+	{
+		result[i] = temp[i];
+	}
+	delete [] temp;
+	return result;
+}
+}
 
 
 void MyArray::TestBehavior()
