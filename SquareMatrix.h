@@ -6,6 +6,7 @@ enum MatrixType {
 	UPPER_TRIANGULAR,
 	SYMMETRIC,
 	TRIDIAGONAL,
+	TOEPLITZ,
 	FULL
 };
 
@@ -17,8 +18,11 @@ private:
 	int* A;
 	MatrixType type;
 	void ThrowIfRowOrColOutOfRange(int i, int j);
-	int GetTargetRowMajorIndex(int i, int j);
-	int GetTargetColMajorIndex(int i, int j);
+	int GetTargetRowMajorLowerTriangularIndex(int i, int j);
+	int GetTargetColMajorUpperTriangularIndex(int i, int j);
+	int GetTargetTridiagonalIndex(int i, int j);
+	int GetTargetColMajorToeplitzIndex(int i, int j);
+	int GetTargetRowMajorFullIndex(int i, int j);
 public:
 	SquareMatrix(int r, MatrixType t);
 
