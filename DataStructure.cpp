@@ -2,10 +2,11 @@
 //
 
 #include <iostream>
+#include "SquareMatrix.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    SquareMatrix::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
