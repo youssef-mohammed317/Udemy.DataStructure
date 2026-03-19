@@ -221,6 +221,235 @@ int MyArray::RBinarySearch(int low, int high, int key)
 	return -1;
 }
 
+void MyArray::InsertInSortedAsc(int value)
+{
+	ThrowIfFull();
+	int j = 0;
+	for(j = length-1;arr[j]>value;j--)
+	{
+		Swap(arr[j], arr[j + 1]);
+	}
+	arr[j] = value;
+
+	length++;
+}
+bool MyArray::IsSortedAsc()
+{
+	for (int i = 0; i < length - 1; i++)
+	{
+		if (arr[i] > arr[i + 1])
+			return false;
+	}
+	return true;
+}
+
+void MyArray::ArrangingNegativesToLeftSide()
+{
+	int j = length-1,i=0;
+	while(i<j)
+	{
+		
+		while(arr[i]<0) {
+			i++;
+		}
+		while (arr[j]>=0)
+		{
+			j--;
+		}
+		if(i<j)
+		{
+			Swap(arr[i], arr[j]);
+		}
+	}
+}
+void MyArray::MergeWithSortedAscArray( int* arr2, int size2)
+{
+	int *arr = new int[this->length + size2];
+	int i = 0, j = 0, k = 0;
+	
+	while(i < this->length && j < size2)
+	{
+		if(arr[i] == arr2[j])
+		{
+			arr[k++] = arr[i];
+			i++;j++;
+		}
+		else if(arr[i]<arr2[j])
+		{
+			arr[k++] = arr[i++];
+		}else if(arr[i]>arr2[j])
+		{
+			arr[k++] = arr2[j++];
+		}
+	}
+	while (i < this->length)
+	{
+		arr[k++] = arr[i++];
+	}
+	while (j < size2)
+	{
+		arr[k++] = arr2[j++];
+	}
+}
+
+
+int* MyArray::UnionTwoSortedAscArraysIntoSortedOne(int* arr1, int size1, int* arr2, int size2)
+{
+	int *arr = new int[size1 + size2];
+	int i = 0, j = 0, k = 0;
+	
+	while(i < size1 && j < size2)
+	{
+		if(arr1[i] == arr2[j])
+		{
+			arr[k++] = arr1[i];
+			i++;j++;
+		}
+		else if(arr1[i]<arr2[j])
+		{
+			arr[k++] = arr1[i++];
+		}else if(arr1[i]>arr2[j])
+		{
+			arr[k++] = arr2[j++];
+		}
+	}
+	while (i < size1)
+	{
+		arr[k++] = arr1[i++];
+	}
+	while (j < size2)
+	{
+		arr[k++] = arr2[j++];
+	}
+	return arr;
+}
+int* MyArray::UnionTwoUnsortedArraysIntoUnSortedOne(int* arr1, int size1, int* arr2, int size2)
+{
+	int *arr = new int[size1 + size2];
+	int i = 0, j = 0, k = 0;
+	
+	while (i < size1)
+	{
+		arr[k++] = arr1[i++];
+	}
+
+	while (j < size2)
+	{
+
+		bool found = false;
+		for (int l = 0; l < k; l++)
+		{
+			if (arr[l] == arr2[j])
+			{
+				found = true;
+				break;
+			}
+		}
+		if (!found)
+		{
+			arr[k++] = arr2[j++];
+		}
+	}
+	return arr;
+}
+int* MyArray::IntersectionTwoSortedAscArraysIntoSortedOne(int* arr1, int size1, int* arr2, int size2)
+{
+
+	int *arr = new int[size1> size2 ? size1:size2];
+	int i = 0, j = 0, k = 0;
+	while (j < size2 && i<size1)
+	{
+		if(arr1[i] == arr2[j])
+		{
+			arr[k++] = arr1[i++];
+			j++;
+		}
+		else if(arr1[i]<arr2[j])
+		{
+			i++;
+		}else if(arr1[i]>arr2[j]){
+			j++;
+		}
+	}
+	return arr;
+}
+int* MyArray::IntersectionTwoUnsortedArraysIntoSortedOne(int* arr1, int size1, int* arr2, int size2)
+{
+
+	int *arr = new int[size1> size2 ? size1:size2];
+	int i = 0, j = 0, k = 0;
+	while (j < size2)
+	{
+
+		bool found = false;
+		for (int l = 0; l < size1; l++)
+		{
+			if (arr1[l] == arr2[j])
+			{
+				found = true;
+				break;
+			}
+		}
+		if (found)
+		{
+			arr[k++] = arr2[j];
+		}
+		j++;
+	}
+	return arr;
+}
+int* MyArray::DifferenceTwoUnsortedArraysIntoSortedOne(int* arr1, int size1, int* arr2, int size2)
+{
+
+	int *arr = new int[size1];
+	int i = 0, j = 0, k = 0;
+	while (i < size1)
+	{
+
+		bool found = false;
+		for (int l = 0; l < size2; l++)
+		{
+			if (arr1[i] == arr2[l])
+			{
+				found = true;
+				break;
+			}
+		}
+		if (!found)
+		{
+			arr[k++] = arr1[i];
+		}
+		i++;
+	}
+	return arr;
+}
+int* MyArray::DifferenceTwoSortedAscArraysIntoSortedOne(int* arr1, int size1, int* arr2, int size2)
+{
+
+	int *arr = new int[size1];
+	int i = 0, j = 0, k = 0;
+	while (i < size1 && j<size2)
+	{
+
+		if(arr1[i] < arr2[j])
+		{
+			arr[k++] = arr1[i++];
+		}else if(arr1[i] > arr2[j])
+		{
+			j++;
+		}else if(arr1[i] == arr2[j])
+		{
+			i++;
+			j++;
+		}
+	}
+	while (i < size1)
+	{
+		arr[k++] = arr1[i++];
+	}
+	
+	return arr;
+}
 
 
 void MyArray::TestBehavior()
