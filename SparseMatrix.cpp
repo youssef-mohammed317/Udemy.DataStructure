@@ -177,6 +177,76 @@ void SparseMatrix::Display()
 	}
 }
 
+SparseMatrix SparseMatrix::operator+(SparseMatrix& s)
+{
+	if (this->rows != s.GetRows() || this->cols != s.GetCols())
+		throw invalid_argument("Matrices dimensions must be the same");
+
+	int i, j, k;
+	i = j = k = 0;
+	SparseMatrix sum = SparseMatrix(this->rows, this->cols, this->length + s.GetLength());
+
+	while (i < this->length && j < s.length)
+	{
+		int r1 = this->elements[i]->GetRow();
+		int c1 = this->elements[i]->GetCol();
+		int v1 = this->elements[i]->GetValue();
+
+		int r2 = s.elements[j]->GetRow();
+		int c2 = s.elements[j]->GetCol();
+		int v2 = s.elements[j]->GetValue();
+		if (r1 < r2 || (r1 == r2 && c1 < c2))
+		{
+			sum.elements[sum.length] = new SparseElement(r1, c1, v1);
+			sum.length++;
+			i++;
+		}
+		else if (r2 < r1 || (r1 == r2 && c2 < c1))
+		{
+			sum.elements[sum.length] = new SparseElement(r2, c2, v2);
+			sum.length++;
+			j++;
+		}
+		else
+		{
+			int newValue = v1 + v2;
+
+			if (newValue != 0)
+			{
+				sum.elements[sum.length] = new SparseElement(r1, c1, newValue);
+				sum.length++;
+			}
+
+			i++;
+			j++;
+		}
+	}
+	while (i < this->length)
+	{
+		sum.elements[sum.length] = new SparseElement(
+			this->elements[i]->GetRow(),
+			this->elements[i]->GetCol(),
+			this->elements[i]->GetValue()
+		);
+		sum.length++;
+		i++;
+	}
+
+	while (j < s.length)
+	{
+		sum.elements[sum.length] = new SparseElement(
+			s.elements[j]->GetRow(),
+			s.elements[j]->GetCol(),
+			s.elements[j]->GetValue()
+		);
+		sum.length++;
+		j++;
+	}
+
+	return sum;
+
+}
+
 void SparseMatrix::TestBehavior()
 {
 	cout << "========== SparseMatrix TestBehavior ==========\n\n";
@@ -282,6 +352,64 @@ void SparseMatrix::TestBehavior()
 
 		cout << "\nFinal matrix:\n";
 		sm.Display();
+
+
+		cout << "========== SparseMatrix operator+ Test ==========\n\n";
+
+		try
+		{
+			SparseMatrix a(4, 4, 4);
+			SparseMatrix b(4, 4, 4);
+
+			// Matrix A
+			a.Set(1, 1, 5);
+			a.Set(2, 3, 7);
+			a.Set(4, 4, 10);
+
+			// Matrix B
+			b.Set(1, 1, 3);    // same position as A -> 5 + 3 = 8
+			b.Set(2, 2, 8);    // new position
+			b.Set(4, 4, -10);  // same position as A -> 10 + (-10) = 0
+
+			cout << "Matrix A:\n";
+			a.Display();
+
+			cout << "\nMatrix B:\n";
+			b.Display();
+
+			SparseMatrix c = a + b;
+
+			cout << "\nMatrix C = A + B:\n";
+			c.Display();
+
+			cout << "\nCheck values:\n";
+			cout << "C(1,1) = " << c.Get(1, 1) << "  expected: 8\n";
+			cout << "C(2,2) = " << c.Get(2, 2) << "  expected: 8\n";
+			cout << "C(2,3) = " << c.Get(2, 3) << "  expected: 7\n";
+			cout << "C(4,4) = " << c.Get(4, 4) << "  expected: 0\n";
+
+			cout << "\n=============================\n";
+			cout << "Test different sizes\n";
+
+			try
+			{
+				SparseMatrix x(3, 3, 3);
+				SparseMatrix y(4, 4, 3);
+
+				SparseMatrix z = x + y;
+				cout << "No exception thrown\n";
+			}
+			catch (const exception& e)
+			{
+				cout << "Caught exception: " << e.what() << endl;
+			}
+
+			cout << "\n========== End of operator+ Test ==========\n";
+		}
+		catch (const exception& e)
+		{
+			cout << "Unexpected exception: " << e.what() << endl;
+		}
 
 		cout << "\n========== End of TestBehavior ==========\n";
 	}

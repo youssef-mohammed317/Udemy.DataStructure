@@ -12,7 +12,6 @@ private:
 	SparseElement** elements;
 	void ThrowIfFull();
 	void ThrowIfIndexOutOfRange(int r, int c);
-	int FindIndex(int row, int col);
 public:
 
 	SparseMatrix(int rows, int cols, int cap);
@@ -24,10 +23,12 @@ public:
 
 	void Set(int row, int col, int value);
 	int Get(int row, int col);
+	int FindIndex(int row, int col);
 	void Display();
 
 	static void TestBehavior();
 
+	SparseMatrix operator+(SparseMatrix& s);
 
 };
 
