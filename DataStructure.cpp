@@ -3,10 +3,13 @@
 
 #include <iostream>
 #include "SparseMatrix.h"
+#include "Polynomial.h"
 
 int main()
 {
-	SparseMatrix::TestBehavior();  return 0;
+	//SparseMatrix::TestBehavior();  
+	Polynomial::TestBehavior();
+	return 0;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
