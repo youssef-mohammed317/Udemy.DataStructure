@@ -21,6 +21,11 @@ public:
 	static int GetFibonacciTermByLoop(int numberOfTerm = 7);
 	static void PrintFibonacciByRecursion(int numberOfTerms = 7);
 	static void PrintFibonacciByLoop(int numberOfTerms = 7);
+	static int GetCominationByFormula(int n, int r);
+	static int GetCominationByPascalTriangle(int n, int r);
+	static void PrintPascalTriangleByLoop(int numberOfRows = 5);
+	static void PrintPascalRowByRecursion(int row = 5, int col = 0);
+	static void PrintPascalTriangleByRecursion(int numberOfRows = 5, int col = 0);
 	static void TestBehavior();
 };
 

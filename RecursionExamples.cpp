@@ -189,6 +189,65 @@ void RecursionExamples::PrintFibonacciByRecursion(int numberOfTerms)
 	for (int i = 1; i <= numberOfTerms; i++)
 		cout << GetFibonacciTermRecursion(i) << " ";
 }
+
+int RecursionExamples::GetCominationByFormula(int n, int r)
+{
+	int t1 = GetFactorialByRecursion(n);
+	int t2 = GetFactorialByRecursion(r);
+	int t3 = GetFactorialByRecursion(n - r);
+
+	return t1 / (t2 * t3);
+
+}
+int RecursionExamples::GetCominationByPascalTriangle(int n, int r)
+{
+	if (r == 0 || r == n)
+	{
+		return 1;
+	}
+	else {
+		return GetCominationByPascalTriangle(n - 1, r) + GetCominationByPascalTriangle(n - 1, r - 1);
+	}
+}
+void RecursionExamples::PrintPascalTriangleByLoop(int numberOfRows)
+{
+	for (int i = 0; i < numberOfRows; i++)
+	{
+		for (int j = 0; j < (numberOfRows - i); j++)
+			cout << " ";
+		for (int j = 0; j <= i; j++)
+		{
+			cout << GetCominationByPascalTriangle(i, j) << " ";
+		}
+		cout << endl;
+	}
+
+}
+
+
+
+void RecursionExamples::PrintPascalRowByRecursion(int row, int col)
+{
+	if (col > row)
+		return;
+
+	cout << GetCominationByPascalTriangle(row, col) << " ";
+	return PrintPascalRowByRecursion(row, col + 1);
+}
+
+void RecursionExamples::PrintPascalTriangleByRecursion(int n, int row)
+{
+	if (row >= n)
+		return;
+
+	PrintPascalRowByRecursion(row);
+	cout << endl;
+
+	PrintPascalTriangleByRecursion(n, row + 1);
+
+}
+
+
 void RecursionExamples::TestBehavior()
 {
 	cout.setf(ios::fixed);
@@ -281,5 +340,50 @@ void RecursionExamples::TestBehavior()
 	cout << "PrintFibonacciByRecursion(8): ";
 	PrintFibonacciByRecursion(8);
 	cout << "   expected: 0 1 1 2 3 5 8 13" << endl;
+	cout << endl;
+	cout << "========== COMBINATION ==========" << endl;
+	PrintIntTest("GetCominationByFormula(5, 2)", GetCominationByFormula(5, 2), 10);
+	PrintIntTest("GetCominationByFormula(6, 0)", GetCominationByFormula(6, 0), 1);
+	PrintIntTest("GetCominationByFormula(6, 6)", GetCominationByFormula(6, 6), 1);
+
+	PrintIntTest("GetCominationByPascalTriangle(5, 2)", GetCominationByPascalTriangle(5, 2), 10);
+	PrintIntTest("GetCominationByPascalTriangle(6, 0)", GetCominationByPascalTriangle(6, 0), 1);
+	PrintIntTest("GetCominationByPascalTriangle(6, 6)", GetCominationByPascalTriangle(6, 6), 1);
+	PrintIntTest("GetCominationByPascalTriangle(7, 3)", GetCominationByPascalTriangle(7, 3), 35);
+
+	cout << endl;
+	cout << "========== PASCAL ROW ==========" << endl;
+	cout << "PrintPascalRowByRecursion(0): ";
+	PrintPascalRowByRecursion(0);
+	cout << "   expected: 1" << endl;
+
+	cout << "PrintPascalRowByRecursion(4): ";
+	PrintPascalRowByRecursion(4);
+	cout << "   expected: 1 4 6 4 1" << endl;
+
+	cout << endl;
+	cout << "========== PASCAL TRIANGLE ==========" << endl;
+
+	cout << "PrintPascalTriangleByLoop(5):" << endl;
+	PrintPascalTriangleByLoop(5);
+	cout << "Expected shape:" << endl;
+	cout << "      1" << endl;
+	cout << "     1 1" << endl;
+	cout << "    1 2 1" << endl;
+	cout << "   1 3 3 1" << endl;
+	cout << "  1 4 6 4 1" << endl;
+
+	cout << endl;
+	cout << "PrintPascalTriangleByRecursion(5):" << endl;
+	PrintPascalTriangleByRecursion(5);
+	cout << "Expected shape:" << endl;
+	cout << "1" << endl;
+	cout << "1 1" << endl;
+	cout << "1 2 1" << endl;
+	cout << "1 3 3 1" << endl;
+	cout << "1 4 6 4 1" << endl;
+
+	cout << endl;
+	cout << "========== DONE ==========" << endl;
 
 }
