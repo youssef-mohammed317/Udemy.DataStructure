@@ -2,11 +2,13 @@
 //
 
 #include <iostream>
-#include "RecursionTypes.h"
+//#include "RecursionTypes.h"
+#include "RecursionExamples.h"
 
 int main()
 {
-	RecursionTypes::TestBehavior();
+	//RecursionTypes::TestBehavior();
+	RecursionExamples::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

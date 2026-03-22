@@ -129,9 +129,11 @@
   <ItemGroup>
     <ClCompile Include="DataStructure.cpp" />
     <ClCompile Include="RecursionTypes.cpp" />
+    <ClCompile Include="RecursionExamples.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RecursionTypes.h" />
+    <ClInclude Include="RecursionExamples.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
