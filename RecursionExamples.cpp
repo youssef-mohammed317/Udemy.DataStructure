@@ -246,7 +246,15 @@ void RecursionExamples::PrintPascalTriangleByRecursion(int n, int row)
 	PrintPascalTriangleByRecursion(n, row + 1);
 
 }
-
+void RecursionExamples::PrintStepsToSolveTowerOfHonoi(int numerOfDisks, int A, int B, int C)
+{
+	if (numerOfDisks > 0)
+	{
+		PrintStepsToSolveTowerOfHonoi(numerOfDisks - 1, A, C, B);
+		cout << "form " << A << " to " << C << "\n";
+		PrintStepsToSolveTowerOfHonoi(numerOfDisks - 1, B, A, C);
+	}
+}
 
 void RecursionExamples::TestBehavior()
 {
@@ -382,6 +390,11 @@ void RecursionExamples::TestBehavior()
 	cout << "1 2 1" << endl;
 	cout << "1 3 3 1" << endl;
 	cout << "1 4 6 4 1" << endl;
+
+	cout << endl;
+	cout << "========== TOH ==========" << endl;
+
+	PrintStepsToSolveTowerOfHonoi(3, 1, 2, 3);
 
 	cout << endl;
 	cout << "========== DONE ==========" << endl;

@@ -26,6 +26,7 @@ public:
 	static void PrintPascalTriangleByLoop(int numberOfRows = 5);
 	static void PrintPascalRowByRecursion(int row = 5, int col = 0);
 	static void PrintPascalTriangleByRecursion(int numberOfRows = 5, int col = 0);
+	static void PrintStepsToSolveTowerOfHonoi(int numerOfDisks, int A, int B, int C);
 	static void TestBehavior();
 };
 
