@@ -2,10 +2,11 @@
 //
 
 #include <iostream>
+#include "RecursionTypes.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	RecursionTypes::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
