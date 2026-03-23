@@ -172,6 +172,99 @@ int LinkedList::R2Max(Node* temp)
 		return maxInTheRest;
 	}
 }
+
+Node* LinkedList::Search(int key)
+{
+
+	Node* temp = head;
+
+	while (temp != nullptr)
+	{
+
+		if (temp->GetData() == key)
+		{
+			return temp;
+		}
+		temp = temp->GetNext();
+	}
+	return nullptr;
+}
+
+Node* LinkedList::RSearch(int key)
+{
+	return RSearch(head, key);
+}
+Node* LinkedList::RSearch(Node* temp, int key)
+{
+	if (temp == nullptr)
+	{
+		return nullptr;
+	}
+
+	if (temp->GetData() == key)
+	{
+		return temp;
+	}
+
+	return  RSearch(temp->GetNext(), key);
+}
+
+
+Node* LinkedList::SearchAndMoveToFront(int key)
+{
+	if (head == nullptr)
+		return nullptr;
+
+	if (head->GetData() == key)
+	{
+		return head;
+	}
+
+	Node* temp = head->GetNext();
+	Node* prev = head;
+
+	while (temp != nullptr)
+	{
+		if (temp->GetData() == key)
+		{
+			prev->SetNext(temp->GetNext());
+			temp->SetNext(head);
+			head = temp;
+			return temp;
+		}
+		prev = temp;
+		temp = temp->GetNext();
+	}
+	return nullptr;
+}
+
+Node* LinkedList::RSearchAndMoveToFront(int key)
+{
+	return RSearchAndMoveToFront(head, nullptr, key);
+}
+Node* LinkedList::RSearchAndMoveToFront(Node* temp, Node* prev, int key)
+{
+	if (temp == nullptr)
+	{
+		return nullptr;
+	}
+
+	if (temp->GetData() == key)
+	{
+		if (prev == nullptr)
+			return temp;
+
+		prev->SetNext(temp->GetNext());
+		temp->SetNext(head);
+		head = temp;
+		return temp;
+	}
+
+	return  RSearchAndMoveToFront(temp->GetNext(), temp, key);
+}
+
+
+
 void LinkedList::TestBehavior()
 {
 	cout << "========== LinkedList TestBehavior ==========\n";

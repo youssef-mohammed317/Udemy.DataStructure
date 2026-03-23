@@ -26,6 +26,8 @@ class LinkedList
 	int RSum(Node* temp);
 	int RMax(Node* temp, int currentMax);
 	int R2Max(Node* temp);
+	Node* RSearch(Node* temp, int key);
+	Node* RSearchAndMoveToFront(Node* temp, Node* prev, int key);
 public:
 	LinkedList();
 	~LinkedList();
@@ -39,6 +41,13 @@ public:
 	int Max();
 	int RMax();
 	int R2Max();
+
+	Node* Search(int key);
+	Node* RSearch(int key);
+	Node* SearchAndMoveToFront(int key);
+	Node* RSearchAndMoveToFront(int key);
+
+
 
 
 	static void TestBehavior();
