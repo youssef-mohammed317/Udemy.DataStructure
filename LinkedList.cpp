@@ -1,4 +1,4 @@
-#include "LinkedList.h"
+﻿#include "LinkedList.h"
 Node::Node(int data, Node* next)
 {
 	this->next = next;
@@ -25,6 +25,7 @@ void Node::SetNext(Node* next)
 LinkedList::LinkedList() {
 	length = 0;
 	head = nullptr;
+	tail = nullptr;
 }
 LinkedList::~LinkedList() {
 	while (head != nullptr)
@@ -34,6 +35,7 @@ LinkedList::~LinkedList() {
 		delete temp;
 	}
 	length = 0;
+	head = tail = nullptr;
 }
 int LinkedList::GetLength()
 {
@@ -46,6 +48,7 @@ void LinkedList::Append(int data)
 	if (head == nullptr)
 	{
 		head = node;
+		tail = node; // for insert last
 		length++;
 		return;
 	}
@@ -56,6 +59,7 @@ void LinkedList::Append(int data)
 		temp = temp->GetNext();
 	}
 	temp->SetNext(node);
+	tail = node; // for insert last
 	length++;
 }
 void LinkedList::Display()
@@ -228,6 +232,10 @@ Node* LinkedList::SearchAndMoveToFront(int key)
 		if (temp->GetData() == key)
 		{
 			prev->SetNext(temp->GetNext());
+
+			if (temp == tail)
+				tail = prev;
+
 			temp->SetNext(head);
 			head = temp;
 			return temp;
@@ -255,6 +263,10 @@ Node* LinkedList::RSearchAndMoveToFront(Node* temp, Node* prev, int key)
 			return temp;
 
 		prev->SetNext(temp->GetNext());
+
+		if (temp == tail)
+			tail = prev;
+
 		temp->SetNext(head);
 		head = temp;
 		return temp;
@@ -262,9 +274,94 @@ Node* LinkedList::RSearchAndMoveToFront(Node* temp, Node* prev, int key)
 
 	return  RSearchAndMoveToFront(temp->GetNext(), temp, key);
 }
+void LinkedList::Insert(int pos, int data) {
+	if (pos < 0 || pos > length)
+		throw runtime_error("Pos is not valid");
 
+	Node* node = new Node(data, nullptr);
 
+	if (pos == 0)
+	{
+		if (head == nullptr)
+		{
+			head = tail = node;
+		}
+		else {
+			node->SetNext(head);
+			head = node;
+		}
+	}
+	else if (pos == length)
+	{
+		InsertLastUsingTail(data);
+		return;
+	}
+	else {
 
+		Node* temp = head;
+		for (int i = 0; i < pos - 1; i++)
+			temp = temp->GetNext();
+
+		node->SetNext(temp->GetNext());
+		temp->SetNext(node);
+	}
+	length++;
+}
+void LinkedList::RInsert(int pos, int data) {
+	if (pos < 0 || pos > length)
+		throw runtime_error("Pos is not valid");
+
+	if (pos == 0)
+	{
+		if (head == nullptr)
+		{
+			head = tail = new Node(data, nullptr);
+		}
+		else {
+			head = new Node(data, head);
+		}
+		length++;
+		return;
+	}
+	else if (pos == length)
+	{
+
+		InsertLastUsingTail(data);
+		return;
+	}
+
+	RInsert(head, 0, pos, data);
+}
+void LinkedList::RInsert(Node* temp, int index, int pos, int data) {
+	if (temp == nullptr)
+		return;
+
+	if (index == pos - 1)
+	{
+		Node* node = new Node(data, temp->GetNext());
+		temp->SetNext(node);
+		length++;
+		return;
+	}
+
+	RInsert(temp->GetNext(), index + 1, pos, data);
+}
+
+void LinkedList::InsertLastUsingTail(int data)
+{
+	Node* node = new Node(data, nullptr);
+
+	if (head == nullptr)
+	{
+		head = tail = node;
+	}
+	else {
+		tail->SetNext(node);
+		tail = node;
+	}
+
+	length++;
+}
 void LinkedList::TestBehavior()
 {
 	cout << "========== LinkedList TestBehavior ==========\n";
@@ -285,6 +382,26 @@ void LinkedList::TestBehavior()
 		cout << "RDisplay expected: {}\nActual:   {";
 		list.RDisplay();
 		cout << "}\n";
+
+		Node* found1 = list.Search(10);
+		cout << "Search(10) = "
+			<< (found1 ? to_string(found1->GetData()) : "nullptr")
+			<< "   expected: nullptr\n";
+
+		Node* found2 = list.RSearch(10);
+		cout << "RSearch(10) = "
+			<< (found2 ? to_string(found2->GetData()) : "nullptr")
+			<< "   expected: nullptr\n";
+
+		Node* moved1 = list.SearchAndMoveToFront(10);
+		cout << "SearchAndMoveToFront(10) = "
+			<< (moved1 ? to_string(moved1->GetData()) : "nullptr")
+			<< "   expected: nullptr\n";
+
+		Node* moved2 = list.RSearchAndMoveToFront(10);
+		cout << "RSearchAndMoveToFront(10) = "
+			<< (moved2 ? to_string(moved2->GetData()) : "nullptr")
+			<< "   expected: nullptr\n";
 
 		try
 		{
@@ -315,7 +432,7 @@ void LinkedList::TestBehavior()
 	}
 
 	// =============================
-	// 2) One node
+	// 2) Single node
 	// =============================
 	{
 		LinkedList list;
@@ -420,6 +537,291 @@ void LinkedList::TestBehavior()
 		cout << "Max()  = " << list.Max() << "   expected: 9\n";
 		cout << "RMax() = " << list.RMax() << "   expected: 9\n";
 		cout << "R2Max()= " << list.R2Max() << "   expected: 9\n";
+	}
+
+	// =============================
+	// 6) Search and RSearch
+	// =============================
+	{
+		LinkedList list;
+		list.Append(10);
+		list.Append(20);
+		list.Append(30);
+		list.Append(20);
+
+		cout << "\n---------------------------------------------\n";
+		cout << "6) Search and RSearch\n";
+		cout << "Expected list: {10, 20, 30, 20}\nActual:   ";
+		list.Display();
+
+		Node* found1 = list.Search(20);
+		cout << "Search(20) = "
+			<< (found1 ? to_string(found1->GetData()) : "nullptr")
+			<< "   expected: 20\n";
+
+		Node* found2 = list.RSearch(30);
+		cout << "RSearch(30) = "
+			<< (found2 ? to_string(found2->GetData()) : "nullptr")
+			<< "   expected: 30\n";
+
+		Node* found3 = list.Search(99);
+		cout << "Search(99) = "
+			<< (found3 ? to_string(found3->GetData()) : "nullptr")
+			<< "   expected: nullptr\n";
+
+		Node* found4 = list.RSearch(77);
+		cout << "RSearch(77) = "
+			<< (found4 ? to_string(found4->GetData()) : "nullptr")
+			<< "   expected: nullptr\n";
+	}
+
+	// =============================
+	// 7) SearchAndMoveToFront
+	// =============================
+	{
+		LinkedList list;
+		list.Append(10);
+		list.Append(20);
+		list.Append(30);
+		list.Append(40);
+
+		cout << "\n---------------------------------------------\n";
+		cout << "7) SearchAndMoveToFront\n";
+		cout << "Original expected: {10, 20, 30, 40}\nActual:   ";
+		list.Display();
+
+		Node* moved1 = list.SearchAndMoveToFront(30);
+		cout << "After SearchAndMoveToFront(30)\n";
+		cout << "Expected: {30, 10, 20, 40}\nActual:   ";
+		list.Display();
+		cout << "Returned = "
+			<< (moved1 ? to_string(moved1->GetData()) : "nullptr")
+			<< "   expected: 30\n";
+
+		Node* moved2 = list.SearchAndMoveToFront(99);
+		cout << "After SearchAndMoveToFront(99)\n";
+		cout << "Expected: {30, 10, 20, 40}\nActual:   ";
+		list.Display();
+		cout << "Returned = "
+			<< (moved2 ? to_string(moved2->GetData()) : "nullptr")
+			<< "   expected: nullptr\n";
+	}
+
+	// =============================
+	// 8) Move last to front + tail validity
+	// =============================
+	{
+		LinkedList list;
+		list.Append(10);
+		list.Append(20);
+		list.Append(30);
+		list.Append(40);
+
+		cout << "\n---------------------------------------------\n";
+		cout << "8) Move last to front then InsertLastUsingTail\n";
+		cout << "Original expected: {10, 20, 30, 40}\nActual:   ";
+		list.Display();
+
+		list.SearchAndMoveToFront(40);
+		cout << "After SearchAndMoveToFront(40)\n";
+		cout << "Expected: {40, 10, 20, 30}\nActual:   ";
+		list.Display();
+
+		list.InsertLastUsingTail(50);
+		cout << "After InsertLastUsingTail(50)\n";
+		cout << "Expected: {40, 10, 20, 30, 50}\nActual:   ";
+		list.Display();
+		cout << "Length = " << list.GetLength() << "   expected: 5\n";
+	}
+
+	// =============================
+	// 9) RSearchAndMoveToFront
+	// =============================
+	{
+		LinkedList list;
+		list.Append(1);
+		list.Append(2);
+		list.Append(3);
+		list.Append(4);
+
+		cout << "\n---------------------------------------------\n";
+		cout << "9) RSearchAndMoveToFront\n";
+		cout << "Original expected: {1, 2, 3, 4}\nActual:   ";
+		list.Display();
+
+		Node* moved1 = list.RSearchAndMoveToFront(3);
+		cout << "After RSearchAndMoveToFront(3)\n";
+		cout << "Expected: {3, 1, 2, 4}\nActual:   ";
+		list.Display();
+		cout << "Returned = "
+			<< (moved1 ? to_string(moved1->GetData()) : "nullptr")
+			<< "   expected: 3\n";
+
+		Node* moved2 = list.RSearchAndMoveToFront(100);
+		cout << "After RSearchAndMoveToFront(100)\n";
+		cout << "Expected: {3, 1, 2, 4}\nActual:   ";
+		list.Display();
+		cout << "Returned = "
+			<< (moved2 ? to_string(moved2->GetData()) : "nullptr")
+			<< "   expected: nullptr\n";
+	}
+
+	// =============================
+	// 10) Recursive move last to front + tail validity
+	// =============================
+	{
+		LinkedList list;
+		list.Append(11);
+		list.Append(22);
+		list.Append(33);
+		list.Append(44);
+
+		cout << "\n---------------------------------------------\n";
+		cout << "10) RSearchAndMoveToFront + InsertLastUsingTail\n";
+		cout << "Original expected: {11, 22, 33, 44}\nActual:   ";
+		list.Display();
+
+		list.RSearchAndMoveToFront(44);
+		cout << "After RSearchAndMoveToFront(44)\n";
+		cout << "Expected: {44, 11, 22, 33}\nActual:   ";
+		list.Display();
+
+		list.InsertLastUsingTail(55);
+		cout << "After InsertLastUsingTail(55)\n";
+		cout << "Expected: {44, 11, 22, 33, 55}\nActual:   ";
+		list.Display();
+		cout << "Length = " << list.GetLength() << "   expected: 5\n";
+	}
+
+	// =============================
+	// 11) Insert
+	// =============================
+	{
+		LinkedList list;
+
+		cout << "\n---------------------------------------------\n";
+		cout << "11) Insert\n";
+
+		list.Insert(0, 10);
+		cout << "After Insert(0, 10)\n";
+		cout << "Expected: {10}\nActual:   ";
+		list.Display();
+
+		list.Insert(0, 5);
+		cout << "After Insert(0, 5)\n";
+		cout << "Expected: {5, 10}\nActual:   ";
+		list.Display();
+
+		list.Insert(2, 20);
+		cout << "After Insert(2, 20)\n";
+		cout << "Expected: {5, 10, 20}\nActual:   ";
+		list.Display();
+
+		list.Insert(2, 15);
+		cout << "After Insert(2, 15)\n";
+		cout << "Expected: {5, 10, 15, 20}\nActual:   ";
+		list.Display();
+
+		cout << "Length = " << list.GetLength() << "   expected: 4\n";
+
+		try
+		{
+			list.Insert(-1, 99);
+			cout << "Insert(-1, 99) did not throw   expected: throw\n";
+		}
+		catch (const exception& ex)
+		{
+			cout << "Insert(-1, 99) throws: " << ex.what() << '\n';
+		}
+
+		try
+		{
+			list.Insert(100, 99);
+			cout << "Insert(100, 99) did not throw   expected: throw\n";
+		}
+		catch (const exception& ex)
+		{
+			cout << "Insert(100, 99) throws: " << ex.what() << '\n';
+		}
+	}
+
+	// =============================
+	// 12) RInsert
+	// =============================
+	{
+		LinkedList list;
+
+		cout << "\n---------------------------------------------\n";
+		cout << "12) RInsert\n";
+
+		list.RInsert(0, 10);
+		cout << "After RInsert(0, 10)\n";
+		cout << "Expected: {10}\nActual:   ";
+		list.Display();
+
+		list.RInsert(0, 5);
+		cout << "After RInsert(0, 5)\n";
+		cout << "Expected: {5, 10}\nActual:   ";
+		list.Display();
+
+		list.RInsert(2, 20);
+		cout << "After RInsert(2, 20)\n";
+		cout << "Expected: {5, 10, 20}\nActual:   ";
+		list.Display();
+
+		list.RInsert(2, 15);
+		cout << "After RInsert(2, 15)\n";
+		cout << "Expected: {5, 10, 15, 20}\nActual:   ";
+		list.Display();
+
+		cout << "Length = " << list.GetLength() << "   expected: 4\n";
+
+		try
+		{
+			list.RInsert(-1, 99);
+			cout << "RInsert(-1, 99) did not throw   expected: throw\n";
+		}
+		catch (const exception& ex)
+		{
+			cout << "RInsert(-1, 99) throws: " << ex.what() << '\n';
+		}
+
+		try
+		{
+			list.RInsert(100, 99);
+			cout << "RInsert(100, 99) did not throw   expected: throw\n";
+		}
+		catch (const exception& ex)
+		{
+			cout << "RInsert(100, 99) throws: " << ex.what() << '\n';
+		}
+	}
+
+	// =============================
+	// 13) InsertLastUsingTail
+	// =============================
+	{
+		LinkedList list;
+
+		cout << "\n---------------------------------------------\n";
+		cout << "13) InsertLastUsingTail\n";
+
+		list.InsertLastUsingTail(10);
+		cout << "After InsertLastUsingTail(10)\n";
+		cout << "Expected: {10}\nActual:   ";
+		list.Display();
+
+		list.InsertLastUsingTail(20);
+		cout << "After InsertLastUsingTail(20)\n";
+		cout << "Expected: {10, 20}\nActual:   ";
+		list.Display();
+
+		list.InsertLastUsingTail(30);
+		cout << "After InsertLastUsingTail(30)\n";
+		cout << "Expected: {10, 20, 30}\nActual:   ";
+		list.Display();
+
+		cout << "Length = " << list.GetLength() << "   expected: 3\n";
 	}
 
 	cout << "\n========== End LinkedList TestBehavior ==========\n";

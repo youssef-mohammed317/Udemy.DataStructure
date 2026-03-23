@@ -1,7 +1,7 @@
 #pragma once
 #include<iostream>
 #include <climits>
-
+#include<string>
 #include <stdexcept>
 using namespace std;
 class Node {
@@ -22,12 +22,15 @@ class LinkedList
 {
 	int length;
 	Node* head;
+	Node* tail; //added for insert last
 	void RDisplay(Node* temp);
 	int RSum(Node* temp);
 	int RMax(Node* temp, int currentMax);
 	int R2Max(Node* temp);
 	Node* RSearch(Node* temp, int key);
 	Node* RSearchAndMoveToFront(Node* temp, Node* prev, int key);
+	void RInsert(Node* temp, int index, int pos, int data);
+
 public:
 	LinkedList();
 	~LinkedList();
@@ -47,7 +50,9 @@ public:
 	Node* SearchAndMoveToFront(int key);
 	Node* RSearchAndMoveToFront(int key);
 
-
+	void Insert(int pos, int data);
+	void RInsert(int pos, int data);
+	void InsertLastUsingTail(int data);
 
 
 	static void TestBehavior();
