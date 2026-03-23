@@ -2,10 +2,12 @@
 //
 
 #include <iostream>
+#include "LinkedList.h"
 
 int main()
 {
-    std::cout << "Hello World!\n";
+	std::cout << "Hello World!\n";
+	LinkedList::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
