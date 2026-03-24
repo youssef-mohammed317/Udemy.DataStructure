@@ -362,6 +362,211 @@ void LinkedList::InsertLastUsingTail(int data)
 
 	length++;
 }
+
+void LinkedList::InsertInSortedAsc(int data)
+{
+	if (head == nullptr)
+	{
+		head = tail = new Node(data, nullptr);
+
+	}
+	else if (data < head->GetData())
+	{
+		head = new Node(data, head);
+	}
+	else {
+		Node* temp = head->GetNext();
+		Node* prev = head;
+		Node* node = new Node(data, nullptr);
+		while (temp != nullptr && temp->GetData() < data)
+		{
+			prev = temp;
+			temp = temp->GetNext();
+		}
+		node->SetNext(temp);
+		prev->SetNext(node);
+
+		if (temp == nullptr)
+		{
+			tail = node;
+		}
+	}
+	length++;
+}
+bool LinkedList::CheckSortedAsc()
+{
+	if (head == nullptr)
+	{
+		return true;
+	}
+
+	Node* temp = head->GetNext();
+	int prevData = head->GetData();
+
+	while (temp != nullptr)
+	{
+		if (prevData > temp->GetData())
+			return false;
+
+		prevData = temp->GetData();
+		temp = temp->GetNext();
+
+	}
+	return true;
+}
+
+void LinkedList::RemoveDuplicatesInSortedAscList()
+{
+	if (head == nullptr)
+		return;
+
+	Node* prev = head;
+	Node* curr = head->GetNext();
+	Node* temp;
+
+	while (curr != nullptr)
+	{
+		if (prev->GetData() == curr->GetData())
+		{
+			temp = curr;
+			curr = curr->GetNext();
+			prev->SetNext(curr);
+			delete temp;
+			length--;
+		}
+		else {
+			prev = curr;
+			curr = curr->GetNext();
+		}
+	}
+	tail = prev;
+}
+void LinkedList::Delete(int pos)
+{
+	if (pos < 0 || pos >= length)
+		throw runtime_error("Pos is not valid");
+
+	Node* curr = head;
+	Node* prev = nullptr;
+
+	for (int i = 0; i < pos; i++)
+	{
+		prev = curr;
+		curr = curr->GetNext();
+	}
+
+	if (prev == nullptr)
+	{
+		head = head->GetNext();
+	}
+	else
+	{
+		prev->SetNext(curr->GetNext());
+	}
+
+	if (curr == tail)
+	{
+		tail = prev;
+	}
+
+	delete curr;
+	length--;
+
+	if (length == 0)
+	{
+		head = tail = nullptr;
+	}
+}
+
+void LinkedList::ReverseLinks()
+{
+	Node* temp = nullptr;
+	Node* prev = nullptr;
+	Node* curr = head;
+	tail = head;
+	while (curr != nullptr)
+	{
+		temp = curr;
+		curr = curr->GetNext();
+		temp->SetNext(prev);
+		prev = temp;
+	}
+	head = prev;
+}
+void LinkedList::ReverseLinksCourseMethod()
+{
+	Node* prevPrev = nullptr;
+	Node* prev = nullptr;
+	Node* curr = head;
+	tail = head;
+	while (curr != nullptr)
+	{
+		prevPrev = prev;
+		prev = curr;
+		curr = curr->GetNext();
+		prev->SetNext(prevPrev);
+	}
+	head = prev;
+}
+void LinkedList::ReverseElements()
+{
+	if (length <= 1)
+		return;
+	int* arr = new int[length];
+	int i = 0;
+	Node* curr = head;
+	while (curr != nullptr && i < length)
+	{
+		arr[i] = curr->GetData();
+		curr = curr->GetNext();
+		i++;
+	}
+	curr = head;
+	i = length - 1;
+	while (curr != nullptr && i >= 0)
+	{
+		curr->SetData(arr[i]);
+		curr = curr->GetNext();
+		i--;
+	}
+	delete[] arr;
+}
+void LinkedList::RReverseLinks()
+{
+	tail = head;
+	RReverseLinks(nullptr, head);
+
+}
+void LinkedList::RReverseLinks(Node* prev, Node* curr)
+{
+	if (curr == nullptr)
+	{
+		head = prev;
+		return;
+	}
+	Node* next = curr->GetNext();
+	curr->SetNext(prev);
+
+	RReverseLinks(curr, next);
+}
+void LinkedList::RReverseLinksCourseMethod()
+{
+	tail = head;
+	RReverseLinksCourseMethod(nullptr, head);
+
+}
+void LinkedList::RReverseLinks(Node* prev, Node* curr)
+{
+	if (curr == nullptr)
+	{
+		head = prev;
+		return;
+	}
+	RReverseLinks(curr, curr->GetNext());
+	curr->SetNext(prev);
+}
+
+
 void LinkedList::TestBehavior()
 {
 	cout << "========== LinkedList TestBehavior ==========\n";

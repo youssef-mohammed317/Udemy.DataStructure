@@ -31,6 +31,9 @@ class LinkedList
 	Node* RSearchAndMoveToFront(Node* temp, Node* prev, int key);
 	void RInsert(Node* temp, int index, int pos, int data);
 
+	void RReverseLinks(Node* prev, Node* curr);
+	void RReverseLinksCourseMethod(Node* prev, Node* curr);
+
 public:
 	LinkedList();
 	~LinkedList();
@@ -53,6 +56,17 @@ public:
 	void Insert(int pos, int data);
 	void RInsert(int pos, int data);
 	void InsertLastUsingTail(int data);
+
+	void InsertInSortedAsc(int data);
+	bool CheckSortedAsc();
+	void RemoveDuplicatesInSortedAscList();
+	void Delete(int pos);
+
+	void ReverseLinks();
+	void ReverseLinksCourseMethod();
+	void ReverseElements();
+	void RReverseLinks();
+	void RReverseLinksCourseMethod();
 
 
 	static void TestBehavior();
