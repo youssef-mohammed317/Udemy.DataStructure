@@ -23,6 +23,7 @@ class LinkedList
 	int length;
 	Node* head;
 	Node* tail; //added for insert last
+
 	void RDisplay(Node* temp);
 	int RSum(Node* temp);
 	int RMax(Node* temp, int currentMax);
@@ -30,7 +31,6 @@ class LinkedList
 	Node* RSearch(Node* temp, int key);
 	Node* RSearchAndMoveToFront(Node* temp, Node* prev, int key);
 	void RInsert(Node* temp, int index, int pos, int data);
-
 	void RReverseLinks(Node* prev, Node* curr);
 	void RReverseLinksCourseMethod(Node* prev, Node* curr);
 
@@ -68,6 +68,10 @@ public:
 	void RReverseLinks();
 	void RReverseLinksCourseMethod();
 
+	bool IsLoop();
+	void ConcatWith(LinkedList* other);
+	void Clear();
+	void MergeWith(LinkedList* other); // merge need to be sorted
 
 	static void TestBehavior();
 };

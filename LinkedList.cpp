@@ -28,14 +28,7 @@ LinkedList::LinkedList() {
 	tail = nullptr;
 }
 LinkedList::~LinkedList() {
-	while (head != nullptr)
-	{
-		Node* temp = head;
-		head = head->GetNext();
-		delete temp;
-	}
-	length = 0;
-	head = tail = nullptr;
+	this->Clear();
 }
 int LinkedList::GetLength()
 {
@@ -65,7 +58,7 @@ void LinkedList::Append(int data)
 void LinkedList::Display()
 {
 	Node* temp = head;
-	cout << "\n{";
+	cout << "{";
 	while (temp != nullptr)
 	{
 		cout << temp->GetData();
@@ -549,13 +542,14 @@ void LinkedList::RReverseLinks(Node* prev, Node* curr)
 
 	RReverseLinks(curr, next);
 }
+
 void LinkedList::RReverseLinksCourseMethod()
 {
 	tail = head;
 	RReverseLinksCourseMethod(nullptr, head);
 
 }
-void LinkedList::RReverseLinks(Node* prev, Node* curr)
+void LinkedList::RReverseLinksCourseMethod(Node* prev, Node* curr)
 {
 	if (curr == nullptr)
 	{
@@ -565,8 +559,106 @@ void LinkedList::RReverseLinks(Node* prev, Node* curr)
 	RReverseLinks(curr, curr->GetNext());
 	curr->SetNext(prev);
 }
+bool LinkedList::IsLoop() {
+	Node* p = head;
+	Node* q = head;
+	while (q != nullptr && q->GetNext() != nullptr)
+	{
+		p = p->GetNext();
 
+		q = q->GetNext()->GetNext();
 
+		if (q == p)
+			return true;
+
+	}
+	return false;
+}
+void LinkedList::ConcatWith(LinkedList* other)
+{
+	if (other == nullptr || other->head == nullptr || this == other)
+		return;
+
+	if (head == nullptr)
+	{
+		head = other->head;
+		tail = other->tail;
+	}
+	else {
+		tail->SetNext(other->head);
+		tail = other->tail;
+	}
+	length += other->length;
+	other->head = nullptr;
+	other->tail = nullptr;
+	other->length = 0;
+}
+
+void LinkedList::Clear()
+{
+	while (head != nullptr)
+	{
+		Node* temp = head;
+		head = head->GetNext();
+		delete temp;
+	}
+	length = 0;
+	head = tail = nullptr;
+}
+
+void LinkedList::MergeWith(LinkedList* other)
+{
+	if (other == nullptr || this == other)
+		return;
+
+	Node* p = head;
+	Node* q = other->head;
+
+	LinkedList merged;
+
+	while (q != nullptr && p != nullptr)
+	{
+		if (p->GetData() == q->GetData())
+		{
+			merged.Append(p->GetData());
+			p = p->GetNext();
+			q = q->GetNext();
+		}
+		else if (p->GetData() < q->GetData())
+		{
+			merged.Append(p->GetData());
+			p = p->GetNext();
+		}
+		else
+		{
+			merged.Append(q->GetData());
+			q = q->GetNext();
+		}
+	}
+
+	while (q != nullptr)
+	{
+		merged.Append(q->GetData());
+		q = q->GetNext();
+	}
+
+	while (p != nullptr)
+	{
+		merged.Append(p->GetData());
+		p = p->GetNext();
+	}
+
+	this->Clear();
+	other->Clear();
+
+	head = merged.head;
+	tail = merged.tail;
+	length = merged.length;
+
+	merged.head = nullptr;
+	merged.tail = nullptr;
+	merged.length = 0;
+}
 void LinkedList::TestBehavior()
 {
 	cout << "========== LinkedList TestBehavior ==========\n";
@@ -1028,6 +1120,342 @@ void LinkedList::TestBehavior()
 
 		cout << "Length = " << list.GetLength() << "   expected: 3\n";
 	}
+	// =============================
+// 14) ReverseLinks
+// =============================
+	{
+		LinkedList list;
+		list.Append(10);
+		list.Append(20);
+		list.Append(30);
+		list.Append(40);
 
+		cout << "\n---------------------------------------------\n";
+		cout << "14) ReverseLinks\n";
+		cout << "Original expected: {10, 20, 30, 40}\nActual:   ";
+		list.Display();
+
+		list.ReverseLinks();
+		cout << "After ReverseLinks()\n";
+		cout << "Expected: {40, 30, 20, 10}\nActual:   ";
+		list.Display();
+
+		list.InsertLastUsingTail(50);
+		cout << "After InsertLastUsingTail(50)\n";
+		cout << "Expected: {40, 30, 20, 10, 50}\nActual:   ";
+		list.Display();
+	}
+
+	// =============================
+	// 15) ReverseLinksCourseMethod
+	// =============================
+	{
+		LinkedList list;
+		list.Append(1);
+		list.Append(2);
+		list.Append(3);
+		list.Append(4);
+
+		cout << "\n---------------------------------------------\n";
+		cout << "15) ReverseLinksCourseMethod\n";
+		cout << "Original expected: {1, 2, 3, 4}\nActual:   ";
+		list.Display();
+
+		list.ReverseLinksCourseMethod();
+		cout << "After ReverseLinksCourseMethod()\n";
+		cout << "Expected: {4, 3, 2, 1}\nActual:   ";
+		list.Display();
+
+		list.InsertLastUsingTail(5);
+		cout << "After InsertLastUsingTail(5)\n";
+		cout << "Expected: {4, 3, 2, 1, 5}\nActual:   ";
+		list.Display();
+	}
+
+	// =============================
+	// 16) ReverseElements
+	// =============================
+	{
+		LinkedList list;
+		list.Append(5);
+		list.Append(10);
+		list.Append(15);
+		list.Append(20);
+
+		cout << "\n---------------------------------------------\n";
+		cout << "16) ReverseElements\n";
+		cout << "Original expected: {5, 10, 15, 20}\nActual:   ";
+		list.Display();
+
+		list.ReverseElements();
+		cout << "After ReverseElements()\n";
+		cout << "Expected: {20, 15, 10, 5}\nActual:   ";
+		list.Display();
+	}
+
+	// =============================
+	// 17) RReverseLinks
+	// =============================
+	{
+		LinkedList list;
+		list.Append(7);
+		list.Append(14);
+		list.Append(21);
+		list.Append(28);
+
+		cout << "\n---------------------------------------------\n";
+		cout << "17) RReverseLinks\n";
+		cout << "Original expected: {7, 14, 21, 28}\nActual:   ";
+		list.Display();
+
+		list.RReverseLinks();
+		cout << "After RReverseLinks()\n";
+		cout << "Expected: {28, 21, 14, 7}\nActual:   ";
+		list.Display();
+
+		list.InsertLastUsingTail(35);
+		cout << "After InsertLastUsingTail(35)\n";
+		cout << "Expected: {28, 21, 14, 7, 35}\nActual:   ";
+		list.Display();
+	}
+
+	// =============================
+	// 18) RReverseLinksCourseMethod
+	// =============================
+	{
+		LinkedList list;
+		list.Append(2);
+		list.Append(4);
+		list.Append(6);
+		list.Append(8);
+
+		cout << "\n---------------------------------------------\n";
+		cout << "18) RReverseLinksCourseMethod\n";
+		cout << "Original expected: {2, 4, 6, 8}\nActual:   ";
+		list.Display();
+
+		list.RReverseLinksCourseMethod();
+		cout << "After RReverseLinksCourseMethod()\n";
+		cout << "Expected: {8, 6, 4, 2}\nActual:   ";
+		list.Display();
+
+		list.InsertLastUsingTail(10);
+		cout << "After InsertLastUsingTail(10)\n";
+		cout << "Expected: {8, 6, 4, 2, 10}\nActual:   ";
+		list.Display();
+	}
+
+	// =============================
+	// 19) IsLoop on normal list
+	// =============================
+	{
+		LinkedList list;
+		list.Append(10);
+		list.Append(20);
+		list.Append(30);
+
+		cout << "\n---------------------------------------------\n";
+		cout << "19) IsLoop on normal list\n";
+		cout << "Expected: false\n";
+		cout << "Actual:   " << (list.IsLoop() ? "true" : "false") << '\n';
+	}
+
+	// =============================
+	// 20) ConcatWith
+	// =============================
+	{
+		LinkedList list1;
+		LinkedList list2;
+
+		list1.Append(10);
+		list1.Append(20);
+		list1.Append(30);
+
+		list2.Append(40);
+		list2.Append(50);
+
+		cout << "\n---------------------------------------------\n";
+		cout << "20) ConcatWith\n";
+		cout << "List1 before expected: {10, 20, 30}\nActual:   ";
+		list1.Display();
+
+		cout << "List2 before expected: {40, 50}\nActual:   ";
+		list2.Display();
+
+		list1.ConcatWith(&list2);
+
+		cout << "List1 after ConcatWith expected: {10, 20, 30, 40, 50}\nActual:   ";
+		list1.Display();
+
+		cout << "List2 after ConcatWith expected: {}\nActual:   ";
+		list2.Display();
+
+		cout << "List1 Length = " << list1.GetLength() << "   expected: 5\n";
+		cout << "List2 Length = " << list2.GetLength() << "   expected: 0\n";
+
+		list1.InsertLastUsingTail(60);
+		cout << "After InsertLastUsingTail(60)\n";
+		cout << "Expected: {10, 20, 30, 40, 50, 60}\nActual:   ";
+		list1.Display();
+	}
+
+	// =============================
+	// 21) ConcatWith when this list is empty
+	// =============================
+	{
+		LinkedList list1;
+		LinkedList list2;
+
+		list2.Append(1);
+		list2.Append(2);
+		list2.Append(3);
+
+		cout << "\n---------------------------------------------\n";
+		cout << "21) ConcatWith when first list is empty\n";
+		cout << "List1 before expected: {}\nActual:   ";
+		list1.Display();
+
+		cout << "List2 before expected: {1, 2, 3}\nActual:   ";
+		list2.Display();
+
+		list1.ConcatWith(&list2);
+
+		cout << "List1 after expected: {1, 2, 3}\nActual:   ";
+		list1.Display();
+
+		cout << "List2 after expected: {}\nActual:   ";
+		list2.Display();
+
+		cout << "List1 Length = " << list1.GetLength() << "   expected: 3\n";
+		cout << "List2 Length = " << list2.GetLength() << "   expected: 0\n";
+	}
+
+	// =============================
+	// 22) Clear
+	// =============================
+	{
+		LinkedList list;
+		list.Append(100);
+		list.Append(200);
+		list.Append(300);
+
+		cout << "\n---------------------------------------------\n";
+		cout << "22) Clear\n";
+		cout << "Before Clear expected: {100, 200, 300}\nActual:   ";
+		list.Display();
+
+		list.Clear();
+
+		cout << "After Clear expected: {}\nActual:   ";
+		list.Display();
+		cout << "Length = " << list.GetLength() << "   expected: 0\n";
+
+		list.Append(400);
+		cout << "After Append(400)\n";
+		cout << "Expected: {400}\nActual:   ";
+		list.Display();
+	}
+
+	// =============================
+	// 23) MergeWith sorted lists
+	// =============================
+	{
+		LinkedList list1;
+		LinkedList list2;
+
+		list1.Append(10);
+		list1.Append(20);
+		list1.Append(30);
+		list1.Append(40);
+
+		list2.Append(15);
+		list2.Append(25);
+		list2.Append(35);
+		list2.Append(45);
+
+		cout << "\n---------------------------------------------\n";
+		cout << "23) MergeWith sorted lists\n";
+		cout << "List1 before expected: {10, 20, 30, 40}\nActual:   ";
+		list1.Display();
+
+		cout << "List2 before expected: {15, 25, 35, 45}\nActual:   ";
+		list2.Display();
+
+		list1.MergeWith(&list2);
+
+		cout << "List1 after MergeWith expected: {10, 15, 20, 25, 30, 35, 40, 45}\nActual:   ";
+		list1.Display();
+
+		cout << "List2 after MergeWith expected: {}\nActual:   ";
+		list2.Display();
+
+		cout << "List1 Length = " << list1.GetLength() << "   expected: 8\n";
+		cout << "List2 Length = " << list2.GetLength() << "   expected: 0\n";
+	}
+
+	// =============================
+	// 24) MergeWith with equal values
+	// =============================
+	{
+		LinkedList list1;
+		LinkedList list2;
+
+		list1.Append(10);
+		list1.Append(20);
+		list1.Append(30);
+
+		list2.Append(10);
+		list2.Append(15);
+		list2.Append(30);
+		list2.Append(40);
+
+		cout << "\n---------------------------------------------\n";
+		cout << "24) MergeWith with equal values\n";
+		cout << "List1 before expected: {10, 20, 30}\nActual:   ";
+		list1.Display();
+
+		cout << "List2 before expected: {10, 15, 30, 40}\nActual:   ";
+		list2.Display();
+
+		list1.MergeWith(&list2);
+
+		cout << "Because current MergeWith removes duplicate when values are equal once,\n";
+		cout << "expected: {10, 15, 20, 30, 40}\nActual:   ";
+		list1.Display();
+
+		cout << "List1 Length = " << list1.GetLength() << "   expected: 5\n";
+		cout << "List2 Length = " << list2.GetLength() << "   expected: 0\n";
+	}
+
+	// =============================
+	// 25) MergeWith when first list is empty
+	// =============================
+	{
+		LinkedList list1;
+		LinkedList list2;
+
+		list2.Append(5);
+		list2.Append(10);
+		list2.Append(15);
+
+		cout << "\n---------------------------------------------\n";
+		cout << "25) MergeWith when first list is empty\n";
+		cout << "List1 before expected: {}\nActual:   ";
+		list1.Display();
+
+		cout << "List2 before expected: {5, 10, 15}\nActual:   ";
+		list2.Display();
+
+		list1.MergeWith(&list2);
+
+		cout << "List1 after expected: {5, 10, 15}\nActual:   ";
+		list1.Display();
+
+		cout << "List2 after expected: {}\nActual:   ";
+		list2.Display();
+
+		cout << "List1 Length = " << list1.GetLength() << "   expected: 3\n";
+		cout << "List2 Length = " << list2.GetLength() << "   expected: 0\n";
+	}
 	cout << "\n========== End LinkedList TestBehavior ==========\n";
 }
