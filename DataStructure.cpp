@@ -4,12 +4,14 @@
 #include <iostream>
 #include "LinkedList.h"
 #include "CircularLinkedList.h"
+#include "DoublyLinkedList.h"
 
 int main()
 {
 	std::cout << "Hello World!\n";
 	//LinkedList::TestBehavior();
-	CircularLinkedList::TestBehavior();
+	//CircularLinkedList::TestBehavior();
+	DoublyLinkedList::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
