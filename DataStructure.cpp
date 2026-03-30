@@ -5,13 +5,15 @@
 #include "Queue.h"
 #include "QueueByLinkedListOnePointer.h"
 #include "QueueByArray.h"
+#include "CircularQueue.h"
 
 int main()
 {
 	std::cout << "Hello World!\n";
 	//Queue::TestBehavior();
 	//QueueByLinkedListOnePointer::TestBehavior();
-	QueueByArray::TestBehavior();
+	//QueueByArray::TestBehavior();
+	CircularQueue::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
