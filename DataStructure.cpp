@@ -7,6 +7,7 @@
 #include "QueueByArray.h"
 #include "CircularQueue.h"
 #include "PriorityQueue.h"
+#include "DoubleEndedQueue.h"
 
 int main()
 {
@@ -15,7 +16,8 @@ int main()
 	//QueueByLinkedListOnePointer::TestBehavior();
 	//QueueByArray::TestBehavior();
 	//CircularQueue::TestBehavior();
-	PriorityQueue::TestBehavior();
+	//PriorityQueue::TestBehavior();
+	DoubleEndedQueue::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
