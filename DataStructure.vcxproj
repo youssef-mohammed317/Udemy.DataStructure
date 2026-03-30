@@ -133,6 +133,7 @@
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="PriorityQueue.cpp" />
     <ClCompile Include="Queue.cpp" />
+    <ClCompile Include="QueueBy2Stack.cpp" />
     <ClCompile Include="QueueByArray.cpp" />
     <ClCompile Include="QueueByLinkedListOnePointer.cpp" />
   </ItemGroup>
@@ -142,6 +143,7 @@
     <ClInclude Include="Node.h" />
     <ClInclude Include="PriorityQueue.h" />
     <ClInclude Include="Queue.h" />
+    <ClInclude Include="QueueBy2Stack.h" />
     <ClInclude Include="QueueByArray.h" />
     <ClInclude Include="QueueByLinkedListOnePointer.h" />
   </ItemGroup>

@@ -7,7 +7,7 @@
 #include "QueueByArray.h"
 #include "CircularQueue.h"
 #include "PriorityQueue.h"
-#include "DoubleEndedQueue.h"
+#include "QueueBy2Stack.h"
 
 int main()
 {
@@ -17,7 +17,8 @@ int main()
 	//QueueByArray::TestBehavior();
 	//CircularQueue::TestBehavior();
 	//PriorityQueue::TestBehavior();
-	DoubleEndedQueue::TestBehavior();
+	//DoubleEndedQueue::TestBehavior();
+	QueueBy2Stack::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
