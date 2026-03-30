@@ -29,11 +29,11 @@ bool StackExamples::ParenthesisMatching(const char* exp)
 
 	return s.IsEmpty();
 }
-bool StackExamples::IsEqualOrHigherPriority(const char c1, const char c2)
+bool StackExamples::IsEqualOrHigherPriority(const char in, const char out)
 {
-	return ((c1 == '+' || c1 == '-') && (c2 == '+' || c2 == '-'))
-		|| ((c1 == '*' || c1 == '/') && (c2 == '*' || c2 == '/'))
-		|| ((c1 == '*' || c1 == '/') && (c2 == '+' || c2 == '-'));
+	return ((in == '+' || in == '-') && (out == '+' || out == '-'))
+		|| ((in == '*' || in == '/') && (out == '*' || out == '/'))
+		|| ((in == '*' || in == '/') && (out == '+' || out == '-'));
 
 }
 
@@ -55,6 +55,10 @@ bool StackExamples::IsHigherPriority(const char in, const char out)
 bool StackExamples::IsOperator(const char c)
 {
 	return (c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == ')' || c == '(');
+}
+bool StackExamples::IsDigit(const char c)
+{
+	return (c >= '0' && c <= '9');
 }
 
 string StackExamples::InfixToPostfix(const char* exp)
@@ -148,6 +152,69 @@ string StackExamples::AdvancdInfixToPostfix(const char* exp)
 	}
 	return result;
 }
+
+int StackExamples::Calc(const int c1, const int c2, const char op)
+{
+	switch (op)
+	{
+	case '+':
+		return c1 + c2;
+
+	case '-':
+		return c1 - c2;
+
+	case '*':
+		return c1 * c2;
+
+	case '/':
+		return c1 / c2;
+
+	case '^':
+		return (int)pow(c1, c2);
+
+	default:
+		return 0;
+	}
+}
+
+int StackExamples::EvaluatePostfix(const char* exp)
+{
+	string postfix = AdvancdInfixToPostfix(exp);
+	Stack s = Stack();
+	char c;
+	int num1, num2, result;
+	for (int i = 0; postfix[i] != '\0'; i++)
+	{
+		c = postfix[i];
+		if (IsOperator(c))
+		{
+			if (s.Size() >= 2)
+			{
+				num2 = s.Top(); s.Pop();
+				num1 = s.Top(); s.Pop();
+				result = Calc(num1, num2, c);
+				s.Push(result);
+			}
+			else {
+				throw invalid_argument("invalid postfix expression");
+			}
+		}
+		else if (IsDigit(c)) {
+			s.Push(c - '0');
+		}
+		else if (c == ' ')
+		{
+			continue;
+		}
+		else
+		{
+			throw invalid_argument("invalid character in expression");
+		}
+	}
+
+	return !s.IsEmpty() ? s.Top() : 0;
+}
+
 void StackExamples::TestBehavior()
 {
 	cout << "===============================" << endl;
@@ -436,6 +503,139 @@ void StackExamples::TestBehavior()
 		cout << "Expected   : " << expected << endl;
 		cout << "Actual     : " << actual << endl;
 		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+	cout << "===============================" << endl;
+	cout << " EvaluatePostfix Tests" << endl;
+	cout << "===============================" << endl;
+
+	{
+		const char* exp = "2+3";
+		int expected = 5;
+		int actual = EvaluatePostfix(exp);
+
+		cout << "Test 1" << endl;
+		cout << "Infix    : " << exp << endl;
+		cout << "Expected : " << expected << endl;
+		cout << "Actual   : " << actual << endl;
+		cout << "Result   : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "2+3*4";
+		int expected = 14;
+		int actual = EvaluatePostfix(exp);
+
+		cout << "Test 2" << endl;
+		cout << "Infix    : " << exp << endl;
+		cout << "Expected : " << expected << endl;
+		cout << "Actual   : " << actual << endl;
+		cout << "Result   : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "(2+3)*4";
+		int expected = 20;
+		int actual = EvaluatePostfix(exp);
+
+		cout << "Test 3" << endl;
+		cout << "Infix    : " << exp << endl;
+		cout << "Expected : " << expected << endl;
+		cout << "Actual   : " << actual << endl;
+		cout << "Result   : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "8/2";
+		int expected = 4;
+		int actual = EvaluatePostfix(exp);
+
+		cout << "Test 4" << endl;
+		cout << "Infix    : " << exp << endl;
+		cout << "Expected : " << expected << endl;
+		cout << "Actual   : " << actual << endl;
+		cout << "Result   : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "8-3";
+		int expected = 5;
+		int actual = EvaluatePostfix(exp);
+
+		cout << "Test 5" << endl;
+		cout << "Infix    : " << exp << endl;
+		cout << "Expected : " << expected << endl;
+		cout << "Actual   : " << actual << endl;
+		cout << "Result   : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "2^3";
+		int expected = 8;
+		int actual = EvaluatePostfix(exp);
+
+		cout << "Test 6" << endl;
+		cout << "Infix    : " << exp << endl;
+		cout << "Expected : " << expected << endl;
+		cout << "Actual   : " << actual << endl;
+		cout << "Result   : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "2^3^2";
+		int expected = 512;
+		int actual = EvaluatePostfix(exp);
+
+		cout << "Test 7" << endl;
+		cout << "Infix    : " << exp << endl;
+		cout << "Expected : " << expected << endl;
+		cout << "Actual   : " << actual << endl;
+		cout << "Result   : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "2^(3+1)";
+		int expected = 16;
+		int actual = EvaluatePostfix(exp);
+
+		cout << "Test 8" << endl;
+		cout << "Infix    : " << exp << endl;
+		cout << "Expected : " << expected << endl;
+		cout << "Actual   : " << actual << endl;
+		cout << "Result   : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "3+4*2/(1-5)^2";
+		int expected = 3;
+		int actual = EvaluatePostfix(exp);
+
+		cout << "Test 9" << endl;
+		cout << "Infix    : " << exp << endl;
+		cout << "Expected : " << expected << endl;
+		cout << "Actual   : " << actual << endl;
+		cout << "Result   : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "9-(5-2)";
+		int expected = 6;
+		int actual = EvaluatePostfix(exp);
+
+		cout << "Test 10" << endl;
+		cout << "Infix    : " << exp << endl;
+		cout << "Expected : " << expected << endl;
+		cout << "Actual   : " << actual << endl;
+		cout << "Result   : " << (expected == actual ? "PASS" : "FAIL") << endl;
 		cout << endl;
 	}
 }
