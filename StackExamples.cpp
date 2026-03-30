@@ -36,9 +36,25 @@ bool StackExamples::IsEqualOrHigherPriority(const char c1, const char c2)
 		|| ((c1 == '*' || c1 == '/') && (c2 == '+' || c2 == '-'));
 
 }
+
+bool StackExamples::IsEqualPriority(const char in, const char out)
+{
+	return ((in == '(') && (out == ')'));
+
+}
+bool StackExamples::IsHigherPriority(const char in, const char out)
+{
+	return
+		((in == '+' || in == '-') && (out == '+' || out == '-' || out == ')'))
+		||
+		((in == '*' || in == '/') && (out == '+' || out == '-' || out == '*' || out == '/' || out == ')'))
+		||
+		((in == '^' && (out == '+' || out == '-' || out == '/' || out == '*' || out == ')')))
+		;
+}
 bool StackExamples::IsOperator(const char c)
 {
-	return (c == '+' || c == '-' || c == '*' || c == '/');
+	return (c == '+' || c == '-' || c == '*' || c == '/' || c == '^' || c == ')' || c == '(');
 }
 
 string StackExamples::InfixToPostfix(const char* exp)
@@ -85,56 +101,341 @@ string StackExamples::InfixToPostfix(const char* exp)
 	return result;
 }
 
+string StackExamples::AdvancdInfixToPostfix(const char* exp)
+{
 
+	string result = "";
+	Stack s = Stack();
+	char out, in;
+	for (int i = 0; exp[i] != '\0'; i++)
+	{
+		out = exp[i];
 
+		if (IsOperator(out))
+		{
+			if (!s.IsEmpty())
+			{
+				in = s.Top();
+				if (IsEqualPriority(in, out))
+				{
+					s.Pop();
+				}
+				else if (IsHigherPriority(in, out))
+				{
+					result += in;
+					s.Pop();
+					i--;
+				}
+				else
+				{
+					s.Push(out);
+				}
+			}
+			else
+			{
+				s.Push(out);
+			}
+		}
+		else
+		{
+			result += out;
+		}
+	}
+	while (!s.IsEmpty())
+	{
+		result += s.Top();
+		s.Pop();
+	}
+	return result;
+}
 void StackExamples::TestBehavior()
 {
-	char test1[] = "a+b*c-d/e";
-	cout << "Test 1" << endl;
-	cout << "Infix    : " << test1 << endl;
-	cout << "Expected : abc*+de/-" << endl;
-	cout << "Actual   : " << InfixToPostfix(test1) << endl;
-	cout << endl;
+	cout << "===============================" << endl;
+	cout << " ParenthesisMatching Tests" << endl;
+	cout << "===============================" << endl;
 
-	char test2[] = "a*b+c/d-e";
-	cout << "Test 2" << endl;
-	cout << "Infix    : " << test2 << endl;
-	cout << "Expected : ab*cd/+e-" << endl;
-	cout << "Actual   : " << InfixToPostfix(test2) << endl;
-	cout << endl;
+	{
+		const char* exp = "(a+b)*(c-d)";
+		bool expected = true;
+		bool actual = ParenthesisMatching(exp);
 
-	char test3[] = "a+b*c/d-e*f";
-	cout << "Test 3" << endl;
-	cout << "Infix    : " << test3 << endl;
-	cout << "Expected : abc*d/+ef*-" << endl;
-	cout << "Actual   : " << InfixToPostfix(test3) << endl;
-	cout << endl;
+		cout << "Test 1" << endl;
+		cout << "Expression : " << exp << endl;
+		cout << "Expected   : " << (expected ? "true" : "false") << endl;
+		cout << "Actual     : " << (actual ? "true" : "false") << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
 
-	char test4[] = "a*b-c+d/e";
-	cout << "Test 4" << endl;
-	cout << "Infix    : " << test4 << endl;
-	cout << "Expected : ab*c-de/+" << endl;
-	cout << "Actual   : " << InfixToPostfix(test4) << endl;
-	cout << endl;
+	{
+		const char* exp = "((a+b)*c)";
+		bool expected = true;
+		bool actual = ParenthesisMatching(exp);
 
-	char test5[] = "a+b-c*d/e+f";
-	cout << "Test 5" << endl;
-	cout << "Infix    : " << test5 << endl;
-	cout << "Expected : ab+cd*e/-f+" << endl;
-	cout << "Actual   : " << InfixToPostfix(test5) << endl;
-	cout << endl;
+		cout << "Test 2" << endl;
+		cout << "Expression : " << exp << endl;
+		cout << "Expected   : " << (expected ? "true" : "false") << endl;
+		cout << "Actual     : " << (actual ? "true" : "false") << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
 
-	char test6[] = "a*b/c+d-e*f";
-	cout << "Test 6" << endl;
-	cout << "Infix    : " << test6 << endl;
-	cout << "Expected : ab*c/d+ef*-" << endl;
-	cout << "Actual   : " << InfixToPostfix(test6) << endl;
-	cout << endl;
+	{
+		const char* exp = "{[(a+b)*c]-d}";
+		bool expected = true;
+		bool actual = ParenthesisMatching(exp);
 
-	char test7[] = "a+b*c-d/e+f*g";
-	cout << "Test 7" << endl;
-	cout << "Infix    : " << test7 << endl;
-	cout << "Expected : abc*+de/-fg*+" << endl;
-	cout << "Actual   : " << InfixToPostfix(test7) << endl;
-	cout << endl;
+		cout << "Test 3" << endl;
+		cout << "Expression : " << exp << endl;
+		cout << "Expected   : " << (expected ? "true" : "false") << endl;
+		cout << "Actual     : " << (actual ? "true" : "false") << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "(a+b]*(c-d)";
+		bool expected = false;
+		bool actual = ParenthesisMatching(exp);
+
+		cout << "Test 4" << endl;
+		cout << "Expression : " << exp << endl;
+		cout << "Expected   : " << (expected ? "true" : "false") << endl;
+		cout << "Actual     : " << (actual ? "true" : "false") << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "((a+b)";
+		bool expected = false;
+		bool actual = ParenthesisMatching(exp);
+
+		cout << "Test 5" << endl;
+		cout << "Expression : " << exp << endl;
+		cout << "Expected   : " << (expected ? "true" : "false") << endl;
+		cout << "Actual     : " << (actual ? "true" : "false") << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "a+b)";
+		bool expected = false;
+		bool actual = ParenthesisMatching(exp);
+
+		cout << "Test 6" << endl;
+		cout << "Expression : " << exp << endl;
+		cout << "Expected   : " << (expected ? "true" : "false") << endl;
+		cout << "Actual     : " << (actual ? "true" : "false") << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+
+	cout << "===============================" << endl;
+	cout << " InfixToPostfix Tests" << endl;
+	cout << " (Only +, -, *, /)" << endl;
+	cout << "===============================" << endl;
+
+	{
+		const char* exp = "a+b*c";
+		string expected = "abc*+";
+		string actual = InfixToPostfix(exp);
+
+		cout << "Test 1" << endl;
+		cout << "Infix      : " << exp << endl;
+		cout << "Expected   : " << expected << endl;
+		cout << "Actual     : " << actual << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "a*b+c/d";
+		string expected = "ab*cd/+";
+		string actual = InfixToPostfix(exp);
+
+		cout << "Test 2" << endl;
+		cout << "Infix      : " << exp << endl;
+		cout << "Expected   : " << expected << endl;
+		cout << "Actual     : " << actual << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "a+b*c-d/e";
+		string expected = "abc*+de/-";
+		string actual = InfixToPostfix(exp);
+
+		cout << "Test 3" << endl;
+		cout << "Infix      : " << exp << endl;
+		cout << "Expected   : " << expected << endl;
+		cout << "Actual     : " << actual << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "a*b/c+d-e";
+		string expected = "ab*c/d+e-";
+		string actual = InfixToPostfix(exp);
+
+		cout << "Test 4" << endl;
+		cout << "Infix      : " << exp << endl;
+		cout << "Expected   : " << expected << endl;
+		cout << "Actual     : " << actual << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "a+b-c*d/e+f";
+		string expected = "ab+cd*e/-f+";
+		string actual = InfixToPostfix(exp);
+
+		cout << "Test 5" << endl;
+		cout << "Infix      : " << exp << endl;
+		cout << "Expected   : " << expected << endl;
+		cout << "Actual     : " << actual << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+
+	cout << "===============================" << endl;
+	cout << " AdvancdInfixToPostfix Tests" << endl;
+	cout << " (+, -, *, /, ^, ())" << endl;
+	cout << "===============================" << endl;
+
+	{
+		const char* exp = "a+b*(c-d)";
+		string expected = "abcd-*+";
+		string actual = AdvancdInfixToPostfix(exp);
+
+		cout << "Test 1" << endl;
+		cout << "Infix      : " << exp << endl;
+		cout << "Expected   : " << expected << endl;
+		cout << "Actual     : " << actual << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "(a+b)*c";
+		string expected = "ab+c*";
+		string actual = AdvancdInfixToPostfix(exp);
+
+		cout << "Test 2" << endl;
+		cout << "Infix      : " << exp << endl;
+		cout << "Expected   : " << expected << endl;
+		cout << "Actual     : " << actual << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "a^(b+c)";
+		string expected = "abc+^";
+		string actual = AdvancdInfixToPostfix(exp);
+
+		cout << "Test 3" << endl;
+		cout << "Infix      : " << exp << endl;
+		cout << "Expected   : " << expected << endl;
+		cout << "Actual     : " << actual << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "(a+b)^c";
+		string expected = "ab+c^";
+		string actual = AdvancdInfixToPostfix(exp);
+
+		cout << "Test 4" << endl;
+		cout << "Infix      : " << exp << endl;
+		cout << "Expected   : " << expected << endl;
+		cout << "Actual     : " << actual << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "a+b*(c^d-e)";
+		string expected = "abcd^e-*+";
+		string actual = AdvancdInfixToPostfix(exp);
+
+		cout << "Test 5" << endl;
+		cout << "Infix      : " << exp << endl;
+		cout << "Expected   : " << expected << endl;
+		cout << "Actual     : " << actual << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "(a+b)*(c-d)";
+		string expected = "ab+cd-*";
+		string actual = AdvancdInfixToPostfix(exp);
+
+		cout << "Test 6" << endl;
+		cout << "Infix      : " << exp << endl;
+		cout << "Expected   : " << expected << endl;
+		cout << "Actual     : " << actual << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "a^b^c";
+		string expected = "abc^^";
+		string actual = AdvancdInfixToPostfix(exp);
+
+		cout << "Test 7" << endl;
+		cout << "Infix      : " << exp << endl;
+		cout << "Expected   : " << expected << endl;
+		cout << "Actual     : " << actual << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "((a+b)*c)^d";
+		string expected = "ab+c*d^";
+		string actual = AdvancdInfixToPostfix(exp);
+
+		cout << "Test 8" << endl;
+		cout << "Infix      : " << exp << endl;
+		cout << "Expected   : " << expected << endl;
+		cout << "Actual     : " << actual << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "a+(b*c-(d/e^f)*g)*h";
+		string expected = "abc*def^/g*-h*+";
+		string actual = AdvancdInfixToPostfix(exp);
+
+		cout << "Test 9" << endl;
+		cout << "Infix      : " << exp << endl;
+		cout << "Expected   : " << expected << endl;
+		cout << "Actual     : " << actual << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
+
+	{
+		const char* exp = "((a+b)^c-d)^(e+f)";
+		string expected = "ab+c^d-ef+^";
+		string actual = AdvancdInfixToPostfix(exp);
+
+		cout << "Test 10" << endl;
+		cout << "Infix      : " << exp << endl;
+		cout << "Expected   : " << expected << endl;
+		cout << "Actual     : " << actual << endl;
+		cout << "Result     : " << (expected == actual ? "PASS" : "FAIL") << endl;
+		cout << endl;
+	}
 }

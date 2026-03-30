@@ -5,12 +5,16 @@
 using namespace std;
 class StackExamples
 {
+	static bool IsEqualPriority(const char c1, const char c2);
+	static bool IsHigherPriority(const char c1, const char c2);
+
 	static bool IsEqualOrHigherPriority(const char c1, const char c2);
 	static bool IsOperator(char c);
 public:
 	static bool ParenthesisMatching(const char* exp);
 
 	static string InfixToPostfix(const char* exp);
+	static string AdvancdInfixToPostfix(const char* exp);
 
 	static void TestBehavior();
 };
