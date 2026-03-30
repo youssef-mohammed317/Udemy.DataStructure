@@ -29,55 +29,112 @@ bool StackExamples::ParenthesisMatching(const char* exp)
 
 	return s.IsEmpty();
 }
+bool StackExamples::IsEqualOrHigherPriority(const char c1, const char c2)
+{
+	return ((c1 == '+' || c1 == '-') && (c2 == '+' || c2 == '-'))
+		|| ((c1 == '*' || c1 == '/') && (c2 == '*' || c2 == '/'))
+		|| ((c1 == '*' || c1 == '/') && (c2 == '+' || c2 == '-'));
+
+}
+bool StackExamples::IsOperator(const char c)
+{
+	return (c == '+' || c == '-' || c == '*' || c == '/');
+}
+
+string StackExamples::InfixToPostfix(const char* exp)
+{
+
+	string result = "";
+	Stack s = Stack();
+	char out, in;
+	for (int i = 0; exp[i] != '\0'; i++)
+	{
+		out = exp[i];
+
+		if (IsOperator(out))
+		{
+			if (!s.IsEmpty())
+			{
+				in = s.Top();
+				if (IsEqualOrHigherPriority(in, out))
+				{
+					result += in;
+					s.Pop();
+					i--;
+				}
+				else
+				{
+					s.Push(out);
+				}
+			}
+			else
+			{
+				s.Push(out);
+			}
+		}
+		else
+		{
+			result += out;
+		}
+	}
+	while (!s.IsEmpty())
+	{
+		result += s.Top();
+		s.Pop();
+	}
+	return result;
+}
+
+
+
 void StackExamples::TestBehavior()
 {
-	struct TestCase
-	{
-		const char* exp;
-		bool expected;
-	};
+	char test1[] = "a+b*c-d/e";
+	cout << "Test 1" << endl;
+	cout << "Infix    : " << test1 << endl;
+	cout << "Expected : abc*+de/-" << endl;
+	cout << "Actual   : " << InfixToPostfix(test1) << endl;
+	cout << endl;
 
-	TestCase tests[] =
-	{
-		{"()", true},
-		{"[]", true},
-		{"{}", true},
-		{"()[]{}", true},
-		{"({[]})", true},
-		{"a+b*(c-d)", true},
-		{"[a+(b*c)-{d/e}]", true},
-		{"(", false},
-		{")", false},
-		{"(]", false},
-		{"([)]", false},
-		{"{[()]}", true},
-		{"{[(])}", false},
-		{"((()))", true},
-		{"(()", false},
-		{"())", false},
-		{"", true}
-	};
+	char test2[] = "a*b+c/d-e";
+	cout << "Test 2" << endl;
+	cout << "Infix    : " << test2 << endl;
+	cout << "Expected : ab*cd/+e-" << endl;
+	cout << "Actual   : " << InfixToPostfix(test2) << endl;
+	cout << endl;
 
-	int count = sizeof(tests) / sizeof(tests[0]);
-	int passedCount = 0;
+	char test3[] = "a+b*c/d-e*f";
+	cout << "Test 3" << endl;
+	cout << "Infix    : " << test3 << endl;
+	cout << "Expected : abc*d/+ef*-" << endl;
+	cout << "Actual   : " << InfixToPostfix(test3) << endl;
+	cout << endl;
 
-	std::cout << "===== ParenthesisMatching Test Start =====\n\n";
+	char test4[] = "a*b-c+d/e";
+	cout << "Test 4" << endl;
+	cout << "Infix    : " << test4 << endl;
+	cout << "Expected : ab*c-de/+" << endl;
+	cout << "Actual   : " << InfixToPostfix(test4) << endl;
+	cout << endl;
 
-	for (int i = 0; i < count; i++)
-	{
-		bool actual = ParenthesisMatching(tests[i].exp);
-		bool passed = (actual == tests[i].expected);
+	char test5[] = "a+b-c*d/e+f";
+	cout << "Test 5" << endl;
+	cout << "Infix    : " << test5 << endl;
+	cout << "Expected : ab+cd*e/-f+" << endl;
+	cout << "Actual   : " << InfixToPostfix(test5) << endl;
+	cout << endl;
 
-		std::cout << "Test " << i + 1 << ": \"" << tests[i].exp << "\"\n";
-		std::cout << "Expected: " << (tests[i].expected ? "Valid" : "Invalid") << "\n";
-		std::cout << "Actual  : " << (actual ? "Valid" : "Invalid") << "\n";
-		std::cout << "Result  : " << (passed ? "PASSED" : "FAILED") << "\n";
-		std::cout << "-----------------------------\n";
+	char test6[] = "a*b/c+d-e*f";
+	cout << "Test 6" << endl;
+	cout << "Infix    : " << test6 << endl;
+	cout << "Expected : ab*c/d+ef*-" << endl;
+	cout << "Actual   : " << InfixToPostfix(test6) << endl;
+	cout << endl;
 
-		if (passed)
-			passedCount++;
-	}
-
-	std::cout << "\nSummary: " << passedCount << "/" << count << " tests passed.\n";
-	std::cout << "===== ParenthesisMatching Test End =====\n";
+	char test7[] = "a+b*c-d/e+f*g";
+	cout << "Test 7" << endl;
+	cout << "Infix    : " << test7 << endl;
+	cout << "Expected : abc*+de/-fg*+" << endl;
+	cout << "Actual   : " << InfixToPostfix(test7) << endl;
+	cout << endl;
 }
