@@ -262,6 +262,9 @@ void QueueBy2Stack::TestBehavior()
 	cout << "   Expected output : {2, 3, 4}" << endl;
 	cout << "   Actual output   : ";
 	qDisplay.Display();
+	cout << "   Expected output : {2, 3, 4}" << endl;
+	cout << "   Actual output   : ";
+	qDisplay.Display();
 
 	cout << "   State post-display : ";
 	// If Display() breaks the stacks, these dequeues will return wrong values
