@@ -4,12 +4,14 @@
 #include <iostream>
 #include "Stack.h"
 #include "StackByArray.h"
+#include "StackExamples.h"
 
 int main()
 {
 	std::cout << "Hello World!\n";
 	//Stack::TestBehavior();
-	StackByArray::TestBehavior();
+	//StackByArray::TestBehavior();
+	StackExamples::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
