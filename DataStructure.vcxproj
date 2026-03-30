@@ -130,10 +130,12 @@
     <ClCompile Include="DataStructure.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Stack.cpp" />
+    <ClCompile Include="StackByArray.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Node.h" />
     <ClInclude Include="Stack.h" />
+    <ClInclude Include="StackByArray.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

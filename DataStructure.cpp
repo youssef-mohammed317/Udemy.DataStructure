@@ -3,11 +3,13 @@
 
 #include <iostream>
 #include "Stack.h"
+#include "StackByArray.h"
 
 int main()
 {
 	std::cout << "Hello World!\n";
-	Stack::TestBehavior();
+	//Stack::TestBehavior();
+	StackByArray::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
