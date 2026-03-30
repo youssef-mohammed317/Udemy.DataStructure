@@ -39,8 +39,9 @@ int QueueByArray::Dequeue()
 {
 	if (IsEmpty())
 		throw runtime_error("the queue is empty");
-
-	return arr[++front];
+	int data = arr[++front];
+	length--;
+	return data;
 }
 int QueueByArray::Size()
 {

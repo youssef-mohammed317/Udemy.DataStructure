@@ -4,12 +4,14 @@
 #include <iostream>
 #include "Queue.h"
 #include "QueueByLinkedListOnePointer.h"
+#include "QueueByArray.h"
 
 int main()
 {
 	std::cout << "Hello World!\n";
 	//Queue::TestBehavior();
-	QueueByLinkedListOnePointer::TestBehavior();
+	//QueueByLinkedListOnePointer::TestBehavior();
+	QueueByArray::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
