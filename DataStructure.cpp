@@ -3,11 +3,13 @@
 
 #include <iostream>
 #include "Queue.h"
+#include "QueueByLinkedListOnePointer.h"
 
 int main()
 {
 	std::cout << "Hello World!\n";
-	Queue::TestBehavior();
+	//Queue::TestBehavior();
+	QueueByLinkedListOnePointer::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

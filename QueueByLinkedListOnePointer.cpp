@@ -1,10 +1,10 @@
-#include "Queue.h"
-Queue::Queue()
+#include "QueueByLinkedListOnePointer.h"
+QueueByLinkedListOnePointer::QueueByLinkedListOnePointer()
 {
-	rear = front = nullptr;
+	front = nullptr;
 	size = 0;
 }
-void Queue::Clear()
+void QueueByLinkedListOnePointer::Clear()
 {
 	Node* temp;
 	while (front != nullptr)
@@ -13,15 +13,15 @@ void Queue::Clear()
 		front = front->GetNext();
 		delete temp;
 	}
-	front = rear = nullptr;
+	front = nullptr;
 	size = 0;
 }
-Queue::~Queue()
+QueueByLinkedListOnePointer::~QueueByLinkedListOnePointer()
 {
 	Clear();
 }
 
-bool Queue::IsFull()
+bool QueueByLinkedListOnePointer::IsFull()
 {
 	try {
 		Node* temp = new Node(10);
@@ -34,11 +34,11 @@ bool Queue::IsFull()
 	}
 }
 
-bool Queue::IsEmpty()
+bool QueueByLinkedListOnePointer::IsEmpty()
 {
 	return front == nullptr;
 }
-void Queue::Enqueue(int data)
+void QueueByLinkedListOnePointer::Enqueue(int data)
 {
 	if (IsFull())
 		throw runtime_error("the queue is full");
@@ -46,15 +46,19 @@ void Queue::Enqueue(int data)
 	Node* node = new Node(data);
 	if (front == nullptr)
 	{
-		front = rear = node;
+		front = node;
 	}
 	else {
-		rear->SetNext(node);
-		rear = node;
+		Node* temp = front;
+
+		while (temp->GetNext() != nullptr)
+			temp = temp->GetNext();
+
+		temp->SetNext(node);
 	}
 	size++;
 }
-int Queue::Dequeue()
+int QueueByLinkedListOnePointer::Dequeue()
 {
 	if (IsEmpty())
 		throw runtime_error("the queue is empty");
@@ -64,31 +68,29 @@ int Queue::Dequeue()
 	int data = temp->GetData();
 	delete temp;
 	size--;
-
-	if (front == nullptr)
-		rear = nullptr;
-
 	return data;
 }
-int Queue::Size()
+int QueueByLinkedListOnePointer::Size()
 {
 	return size;
 }
-int Queue::First()
+int QueueByLinkedListOnePointer::First()
 {
 	if (IsEmpty())
 		throw runtime_error("the queue is empty");
 
 	return front->GetData();
 }
-int Queue::Last()
+int QueueByLinkedListOnePointer::Last()
 {
 	if (IsEmpty())
 		throw runtime_error("the queue is empty");
-
-	return rear->GetData();
+	Node* temp = front;
+	while (temp->GetNext() != nullptr)
+		temp = temp->GetNext();
+	return temp->GetData();
 }
-void Queue::Display()
+void QueueByLinkedListOnePointer::Display()
 {
 	cout << "{";
 	Node* curr = front;
@@ -101,31 +103,31 @@ void Queue::Display()
 	}
 	cout << "}\n";
 }
-void Queue::TestBehavior()
+void QueueByLinkedListOnePointer::TestBehavior()
 {
-	cout << "===== Queue TestBehavior Start =====\n";
+	cout << "===== QueueByLinkedListOnePointer TestBehavior Start =====\n";
 
 	// Test 1: Initial state
 	cout << "\n========== Test 1: Initial State ==========\n";
 	{
-		Queue q;
-		cout << "Queue content: ";
+		QueueByLinkedListOnePointer q;
+		cout << "QueueByLinkedListOnePointer content: ";
 		q.Display();
 
-		cout << (q.IsEmpty() ? "[PASS] " : "[FAIL] ") << "Queue should be empty" << endl;
-		cout << ((q.Size() == 0) ? "[PASS] " : "[FAIL] ") << "Queue size should be 0" << endl;
+		cout << (q.IsEmpty() ? "[PASS] " : "[FAIL] ") << "QueueByLinkedListOnePointer should be empty" << endl;
+		cout << ((q.Size() == 0) ? "[PASS] " : "[FAIL] ") << "QueueByLinkedListOnePointer size should be 0" << endl;
 	}
 
 	// Test 2: Enqueue one item
 	cout << "\n========== Test 2: Enqueue One Item ==========\n";
 	{
-		Queue q;
+		QueueByLinkedListOnePointer q;
 		q.Enqueue(10);
 
-		cout << "Queue content after Enqueue(10): ";
+		cout << "QueueByLinkedListOnePointer content after Enqueue(10): ";
 		q.Display();
 
-		cout << (!q.IsEmpty() ? "[PASS] " : "[FAIL] ") << "Queue should not be empty" << endl;
+		cout << (!q.IsEmpty() ? "[PASS] " : "[FAIL] ") << "QueueByLinkedListOnePointer should not be empty" << endl;
 		cout << ((q.Size() == 1) ? "[PASS] " : "[FAIL] ") << "Size should be 1" << endl;
 		cout << ((q.First() == 10) ? "[PASS] " : "[FAIL] ") << "First should be 10" << endl;
 		cout << ((q.Last() == 10) ? "[PASS] " : "[FAIL] ") << "Last should be 10" << endl;
@@ -134,12 +136,12 @@ void Queue::TestBehavior()
 	// Test 3: Enqueue multiple items
 	cout << "\n========== Test 3: Enqueue Multiple Items ==========\n";
 	{
-		Queue q;
+		QueueByLinkedListOnePointer q;
 		q.Enqueue(10);
 		q.Enqueue(20);
 		q.Enqueue(30);
 
-		cout << "Queue content after Enqueue(10), Enqueue(20), Enqueue(30): ";
+		cout << "QueueByLinkedListOnePointer content after Enqueue(10), Enqueue(20), Enqueue(30): ";
 		q.Display();
 
 		cout << ((q.Size() == 3) ? "[PASS] " : "[FAIL] ") << "Size should be 3" << endl;
@@ -150,50 +152,50 @@ void Queue::TestBehavior()
 	// Test 4: FIFO behavior
 	cout << "\n========== Test 4: FIFO Behavior ==========\n";
 	{
-		Queue q;
+		QueueByLinkedListOnePointer q;
 		q.Enqueue(10);
 		q.Enqueue(20);
 		q.Enqueue(30);
 
-		cout << "Queue before dequeues: ";
+		cout << "QueueByLinkedListOnePointer before dequeues: ";
 		q.Display();
 
 		bool passed = true;
 
 		int x1 = q.Dequeue();
-		cout << "After first Dequeue() -> removed: " << x1 << ", Queue: ";
+		cout << "After first Dequeue() -> removed: " << x1 << ", QueueByLinkedListOnePointer: ";
 		q.Display();
 		passed &= (x1 == 10);
 
 		int x2 = q.Dequeue();
-		cout << "After second Dequeue() -> removed: " << x2 << ", Queue: ";
+		cout << "After second Dequeue() -> removed: " << x2 << ", QueueByLinkedListOnePointer: ";
 		q.Display();
 		passed &= (x2 == 20);
 
 		int x3 = q.Dequeue();
-		cout << "After third Dequeue() -> removed: " << x3 << ", Queue: ";
+		cout << "After third Dequeue() -> removed: " << x3 << ", QueueByLinkedListOnePointer: ";
 		q.Display();
 		passed &= (x3 == 30);
 
-		cout << (passed ? "[PASS] " : "[FAIL] ") << "Queue should follow FIFO" << endl;
-		cout << (q.IsEmpty() ? "[PASS] " : "[FAIL] ") << "Queue should be empty after all dequeues" << endl;
+		cout << (passed ? "[PASS] " : "[FAIL] ") << "QueueByLinkedListOnePointer should follow FIFO" << endl;
+		cout << (q.IsEmpty() ? "[PASS] " : "[FAIL] ") << "QueueByLinkedListOnePointer should be empty after all dequeues" << endl;
 		cout << ((q.Size() == 0) ? "[PASS] " : "[FAIL] ") << "Size should be 0 after all dequeues" << endl;
 	}
 
 	// Test 5: First and Last after dequeue
 	cout << "\n========== Test 5: First and Last After Dequeue ==========\n";
 	{
-		Queue q;
+		QueueByLinkedListOnePointer q;
 		q.Enqueue(5);
 		q.Enqueue(10);
 		q.Enqueue(15);
 
-		cout << "Queue before Dequeue(): ";
+		cout << "QueueByLinkedListOnePointer before Dequeue(): ";
 		q.Display();
 
 		q.Dequeue();
 
-		cout << "Queue after one Dequeue(): ";
+		cout << "QueueByLinkedListOnePointer after one Dequeue(): ";
 		q.Display();
 
 		cout << ((q.First() == 10) ? "[PASS] " : "[FAIL] ") << "First should become 10" << endl;
@@ -204,15 +206,15 @@ void Queue::TestBehavior()
 	// Test 6: Single element case
 	cout << "\n========== Test 6: Single Element Case ==========\n";
 	{
-		Queue q;
+		QueueByLinkedListOnePointer q;
 		q.Enqueue(42);
 
-		cout << "Queue after Enqueue(42): ";
+		cout << "QueueByLinkedListOnePointer after Enqueue(42): ";
 		q.Display();
 
 		int removed = q.Dequeue();
 
-		cout << "Queue after Dequeue(): ";
+		cout << "QueueByLinkedListOnePointer after Dequeue(): ";
 		q.Display();
 
 		bool passed = (removed == 42) && q.IsEmpty() && q.Size() == 0;
@@ -222,43 +224,43 @@ void Queue::TestBehavior()
 	// Test 7: Clear
 	cout << "\n========== Test 7: Clear ==========\n";
 	{
-		Queue q;
+		QueueByLinkedListOnePointer q;
 		q.Enqueue(1);
 		q.Enqueue(2);
 		q.Enqueue(3);
 
-		cout << "Queue before Clear(): ";
+		cout << "QueueByLinkedListOnePointer before Clear(): ";
 		q.Display();
 
 		q.Clear();
 
-		cout << "Queue after Clear(): ";
+		cout << "QueueByLinkedListOnePointer after Clear(): ";
 		q.Display();
 
-		cout << (q.IsEmpty() ? "[PASS] " : "[FAIL] ") << "Queue should be empty after Clear()" << endl;
+		cout << (q.IsEmpty() ? "[PASS] " : "[FAIL] ") << "QueueByLinkedListOnePointer should be empty after Clear()" << endl;
 		cout << ((q.Size() == 0) ? "[PASS] " : "[FAIL] ") << "Size should be 0 after Clear()" << endl;
 	}
 
 	// Test 8: Reuse after clear
 	cout << "\n========== Test 8: Reuse After Clear ==========\n";
 	{
-		Queue q;
+		QueueByLinkedListOnePointer q;
 		q.Enqueue(1);
 		q.Enqueue(2);
 		q.Clear();
 		q.Enqueue(100);
 
-		cout << "Queue after Clear() then Enqueue(100): ";
+		cout << "QueueByLinkedListOnePointer after Clear() then Enqueue(100): ";
 		q.Display();
 
 		bool passed = (q.First() == 100) && (q.Last() == 100) && (q.Size() == 1);
-		cout << (passed ? "[PASS] " : "[FAIL] ") << "Queue can be reused after Clear()" << endl;
+		cout << (passed ? "[PASS] " : "[FAIL] ") << "QueueByLinkedListOnePointer can be reused after Clear()" << endl;
 	}
 
 	// Test 9: Dequeue on empty
 	cout << "\n========== Test 9: Exception - Dequeue on Empty ==========\n";
 	{
-		Queue q;
+		QueueByLinkedListOnePointer q;
 		bool passed = false;
 
 		try
@@ -277,7 +279,7 @@ void Queue::TestBehavior()
 	// Test 10: First on empty
 	cout << "\n========== Test 10: Exception - First on Empty ==========\n";
 	{
-		Queue q;
+		QueueByLinkedListOnePointer q;
 		bool passed = false;
 
 		try
@@ -296,7 +298,7 @@ void Queue::TestBehavior()
 	// Test 11: Last on empty
 	cout << "\n========== Test 11: Exception - Last on Empty ==========\n";
 	{
-		Queue q;
+		QueueByLinkedListOnePointer q;
 		bool passed = false;
 
 		try
@@ -312,5 +314,5 @@ void Queue::TestBehavior()
 		cout << (passed ? "[PASS] " : "[FAIL] ") << "Last on empty should throw exception" << endl;
 	}
 
-	cout << "\n===== Queue TestBehavior End =====\n";
+	cout << "\n===== QueueByLinkedListOnePointer TestBehavior End =====\n";
 }
