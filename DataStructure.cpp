@@ -8,6 +8,7 @@
 #include "CircularQueue.h"
 #include "PriorityQueue.h"
 #include "QueueBy2Stack.h"
+#include "ElementPriorityQueue.h"
 
 int main()
 {
@@ -18,7 +19,9 @@ int main()
 	//CircularQueue::TestBehavior();
 	//PriorityQueue::TestBehavior();
 	//DoubleEndedQueue::TestBehavior();
-	QueueBy2Stack::TestBehavior();
+	//QueueBy2Stack::TestBehavior();
+	ElementPriorityQueue::TestBehavior();
+
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

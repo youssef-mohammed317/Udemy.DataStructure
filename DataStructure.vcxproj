@@ -130,6 +130,7 @@
     <ClCompile Include="CircularQueue.cpp" />
     <ClCompile Include="DataStructure.cpp" />
     <ClCompile Include="DoubleEndedQueue.cpp" />
+    <ClCompile Include="ElementPriorityQueue.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="PriorityQueue.cpp" />
     <ClCompile Include="Queue.cpp" />
@@ -140,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="CircularQueue.h" />
     <ClInclude Include="DoubleEndedQueue.h" />
+    <ClInclude Include="ElementPriorityQueue.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="PriorityQueue.h" />
     <ClInclude Include="Queue.h" />
