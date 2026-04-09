@@ -5,12 +5,14 @@
 #include "SparseMatrix.h"
 #include "Polynomial.h"
 #include "SparseMatrixByLinkedList.h"
+#include "PolynomialByLinkedList.h"
 
 int main()
 {
 	//SparseMatrix::TestBehavior();  
 	//Polynomial::TestBehavior();
-	SparseMatrixByLinkedList::TestBehavior();
+	//SparseMatrixByLinkedList::TestBehavior();
+	PolynomialByLinkedList::TestBehavior();
 	return 0;
 }
 

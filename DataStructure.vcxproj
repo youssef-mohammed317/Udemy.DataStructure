@@ -129,12 +129,16 @@
   <ItemGroup>
     <ClCompile Include="DataStructure.cpp" />
     <ClCompile Include="Polynomial.cpp" />
+    <ClCompile Include="PolynomialByLinkedList.cpp" />
+    <ClCompile Include="PolynomialNode.cpp" />
     <ClCompile Include="SparseMatrixByLinkedList.cpp" />
     <ClCompile Include="SparseMatrix.cpp" />
     <ClCompile Include="SparseNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Polynomial.h" />
+    <ClInclude Include="PolynomialByLinkedList.h" />
+    <ClInclude Include="PolynomialNode.h" />
     <ClInclude Include="SparseMatrixByLinkedList.h" />
     <ClInclude Include="SparseMatrix.h" />
     <ClInclude Include="SparseNode.h" />
