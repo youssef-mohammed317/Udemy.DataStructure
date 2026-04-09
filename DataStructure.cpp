@@ -4,11 +4,13 @@
 #include <iostream>
 #include "SparseMatrix.h"
 #include "Polynomial.h"
+#include "SparseMatrixByLinkedList.h"
 
 int main()
 {
 	//SparseMatrix::TestBehavior();  
-	Polynomial::TestBehavior();
+	//Polynomial::TestBehavior();
+	SparseMatrixByLinkedList::TestBehavior();
 	return 0;
 }
 

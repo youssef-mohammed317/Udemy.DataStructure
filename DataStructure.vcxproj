@@ -129,11 +129,15 @@
   <ItemGroup>
     <ClCompile Include="DataStructure.cpp" />
     <ClCompile Include="Polynomial.cpp" />
+    <ClCompile Include="SparseMatrixByLinkedList.cpp" />
     <ClCompile Include="SparseMatrix.cpp" />
+    <ClCompile Include="SparseNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Polynomial.h" />
+    <ClInclude Include="SparseMatrixByLinkedList.h" />
     <ClInclude Include="SparseMatrix.h" />
+    <ClInclude Include="SparseNode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
