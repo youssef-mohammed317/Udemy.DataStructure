@@ -8,9 +8,11 @@ using namespace std;
 class BinaryTree
 {
 	Node* root;
-	int count;
 	void RClear(Node* node);
-	Node* RSearch(Node* node,int val);
+	Node* RSearch(Node* node, int val);
+	void RCountByDegree(Node* node, int degree, int& count);
+	int GetHeight(Node* node);
+
 public:
 	BinaryTree();
 	~BinaryTree();
@@ -42,7 +44,7 @@ public:
 	void RInDisplay();
 	void IInDisplay();
 	void RLevelDisplay();
-	void ILeverDisplay();
+	void ILeveLDisplay();
 
 	static void TestBehavior();
 };

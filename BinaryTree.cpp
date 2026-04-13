@@ -2,7 +2,6 @@
 BinaryTree::BinaryTree()
 {
 	root = nullptr;
-	count = 0;
 }
 
 BinaryTree::~BinaryTree()
@@ -35,7 +34,6 @@ void BinaryTree::IClear()
 	}
 
 	root = nullptr;
-	count = 0;
 }
 
 void BinaryTree::RClear(Node* node)
@@ -52,7 +50,6 @@ void BinaryTree::RClear()
 {
 	RClear(root);
 	root = nullptr;
-	count = 0;
 }
 
 
@@ -89,7 +86,6 @@ void BinaryTree::IInsert(int data)
 			}
 		}
 	}
-	count++;
 }
 
 
@@ -118,11 +114,12 @@ Node* BinaryTree::ISearch(int val)
 	if (root == nullptr) return nullptr;
 
 	std::queue<Node*> q;
+	Node* ptr;
 	q.push(root);
 
 	while (!q.empty())
 	{
-		Node* ptr = q.front();
+		ptr = q.front();
 
 		if (ptr->GetData() == val)
 			return ptr;
@@ -157,36 +154,218 @@ void BinaryTree::IDelete(int val)
 
 int BinaryTree::GetMaxDegree()
 {
+	if (root == nullptr) return 0;
 
+	int maxDegree = 0;
+	queue<Node*>q;
+	q.push(root);
+	Node* ptr;
+	while (!q.empty())
+	{
+		ptr = q.front();
+
+		q.pop();
+
+		if (ptr->GetLeft() != nullptr)
+		{
+			q.push(ptr->GetLeft());
+			maxDegree = 1;
+		}
+		if (ptr->GetRight() != nullptr)
+		{
+			q.push(ptr->GetRight());
+			maxDegree = 1;
+		}
+		if (ptr->GetLeft() != nullptr && ptr->GetRight() != nullptr)
+			return 2;
+
+	}
+	return maxDegree;
 }
 
+int BinaryTree::GetHeight(Node* node)
+{
+	if (node == nullptr) return 0;
+
+	int x = GetHeight(node->GetLeft());
+	int y = GetHeight(node->GetRight());
+
+	return (x > y ? x : y) + 1;
+}
 int BinaryTree::GetHeight()
 {
-
+	return GetHeight(root) - 1; // height start form 0
 }
 
 int BinaryTree::CountNodes()
 {
+	if (root == nullptr) return 0;
 
+	int count = 0;
+	queue<Node*>q;
+	q.push(root);
+	Node* ptr;
+	while (!q.empty())
+	{
+		ptr = q.front();
+
+		q.pop();
+		count++;
+
+		if (ptr->GetLeft() != nullptr)
+		{
+			q.push(ptr->GetLeft());
+		}
+		if (ptr->GetRight() != nullptr)
+		{
+			q.push(ptr->GetRight());
+		}
+
+	}
+	return count;
 }
 
 int BinaryTree::CountInternal()
 {
+	if (root == nullptr) return -1;
 
+	int count = 0;
+	queue<Node*>q;
+	q.push(root);
+	Node* ptr;
+	while (!q.empty())
+	{
+		ptr = q.front();
+		q.pop();
+
+		if (ptr->GetLeft() != nullptr)
+		{
+			q.push(ptr->GetLeft());
+		}
+		if (ptr->GetRight() != nullptr)
+		{
+			q.push(ptr->GetRight());
+		}
+
+		if (ptr->GetLeft() != nullptr || ptr->GetRight() != nullptr)
+			count++;
+
+	}
+	return count;
 }
 
 int BinaryTree::CountExternal()
 {
+	if (root == nullptr) return -1;
 
+	int count = 0;
+	queue<Node*>q;
+	q.push(root);
+	Node* ptr;
+	while (!q.empty())
+	{
+		ptr = q.front();
+		q.pop();
+
+		if (ptr->GetLeft() != nullptr)
+		{
+			q.push(ptr->GetLeft());
+		}
+		if (ptr->GetRight() != nullptr)
+		{
+			q.push(ptr->GetRight());
+		}
+
+		if (ptr->GetLeft() == nullptr && ptr->GetRight() == nullptr)
+			count++;
+
+	}
+	return count;
 }
 
 int BinaryTree::ICountByDegree(int degree)
 {
+	if (root == nullptr) return 0;
 
+	if (degree > 2 || degree < 0)return 0;
+
+	int count = 0;
+	queue<Node*>q;
+	q.push(root);
+	Node* ptr;
+	while (!q.empty())
+	{
+		ptr = q.front();
+		q.pop();
+
+		if (ptr->GetLeft() != nullptr)
+		{
+			q.push(ptr->GetLeft());
+		}
+		if (ptr->GetRight() != nullptr)
+		{
+			q.push(ptr->GetRight());
+		}
+
+
+		if (degree == 0)
+		{
+			if (ptr->GetLeft() == nullptr && ptr->GetRight() == nullptr)
+				count++;
+		}
+		else if (degree == 1)
+		{
+			if ((ptr->GetLeft() != nullptr) ^ (ptr->GetRight() != nullptr))
+				count++;
+		}
+		else if (degree == 2)
+		{
+			if (ptr->GetLeft() != nullptr && ptr->GetRight() != nullptr)
+				count++;
+		}
+		else
+			return 0;
+
+
+
+	}
+	return count;
 }
 
+void BinaryTree::RCountByDegree(Node* ptr, int degree, int& count)
+{
+	if (ptr == nullptr) return;
+
+	if (degree == 0)
+	{
+		if (ptr->GetLeft() == nullptr && ptr->GetRight() == nullptr)
+			count++;
+	}
+	else if (degree == 1)
+	{
+		if ((ptr->GetLeft() != nullptr) ^ (ptr->GetRight() != nullptr))
+			count++;
+	}
+	else if (degree == 2)
+	{
+		if (ptr->GetLeft() != nullptr && ptr->GetRight() != nullptr)
+			count++;
+	}
+
+	RCountByDegree(ptr->GetLeft(), degree, count);
+	RCountByDegree(ptr->GetRight(), degree, count);
+}
 int BinaryTree::RCountByDegree(int degree)
 {
+	if (root == nullptr) return 0;
+
+	if (degree > 2 || degree < 0) return 0;
+
+	int count = 0;
+
+	RCountByDegree(root, degree, count);
+
+	return count;
 
 }
 
@@ -225,7 +404,7 @@ void BinaryTree::RLevelDisplay()
 
 }
 
-void BinaryTree::ILeverDisplay()
+void BinaryTree::ILeveLDisplay()
 {
 
 }
