@@ -15,6 +15,7 @@ class BinaryTree
 	void RPostDisplay(Node* node);
 	void RPreDisplay(Node* node);
 	void RInDisplay(Node* node);
+	void RLevelDisplay(Node* node, int level);
 
 public:
 	BinaryTree();
@@ -27,10 +28,7 @@ public:
 	Node* RSearch(int val);
 	Node* ISearch(int val);
 
-	void RDelete(int val);
 	void IDelete(int val);
-
-
 
 	int GetMaxDegree();
 	int GetHeight();
@@ -39,6 +37,11 @@ public:
 	int CountExternal();
 	int ICountByDegree(int degree);
 	int RCountByDegree(int degree);
+
+	bool IsStrict();
+	bool IsComplete();
+	bool IsFull();
+
 
 	void RPostDisplay();
 	void IPostDisplay();
