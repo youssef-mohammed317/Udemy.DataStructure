@@ -8,6 +8,10 @@ using namespace std;
 class BinarySearchTree
 {
 	Node* root;
+	void RLevelClear(Node* ptr, int level);
+	void RPreClear(Node* ptr);
+	void RInClear(Node* ptr);
+	void RPostClear(Node* ptr);
 public:
 	BinarySearchTree();
 	~BinarySearchTree();
@@ -16,6 +20,11 @@ public:
 	void IPreClear();
 	void IInClear();
 	void IPostClear();
+
+	void RLevelClear();
+	void RPreClear();
+	void RInClear();
+	void RPostClear();
 
 	void IInsert(int val);
 	void IDelete(int val);

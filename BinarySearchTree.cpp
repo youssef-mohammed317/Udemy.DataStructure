@@ -151,6 +151,78 @@ void BinarySearchTree::IPostClear() {
 }
 
 
+void BinarySearchTree::RPreClear(Node* ptr) {
+	if (ptr != nullptr)
+	{
+		Node* right = ptr->GetRight();
+		Node* left = ptr->GetLeft();
+		delete ptr;
+		RPreClear(left);
+		RPreClear(right);
+	}
+}
+void BinarySearchTree::RPreClear() {
+	if (root == nullptr) return;
+	RPreClear(root);
+	root = nullptr;
+}
+
+void BinarySearchTree::RInClear(Node* ptr) {
+	if (ptr != nullptr)
+	{
+		Node* right = ptr->GetRight();
+		RInClear(ptr->GetLeft());
+		delete ptr;
+		RInClear(right);
+	}
+}
+void BinarySearchTree::RInClear() {
+	if (root == nullptr) return;
+	RInClear(root);
+	root = nullptr;
+}
+
+void BinarySearchTree::RPostClear(Node* ptr) {
+	if (ptr != nullptr)
+	{
+		RPostClear(ptr->GetLeft());
+		RPostClear(ptr->GetRight());
+		delete ptr;
+	}
+}
+void BinarySearchTree::RPostClear() {
+	if (root == nullptr) return;
+	RPostClear(root);
+	root = nullptr;
+}
+
+void BinarySearchTree::RLevelClear(Node* ptr, int level) {
+
+	if (ptr != nullptr)
+	{
+		if (level == 1)
+		{
+			delete ptr;
+		}
+		else
+		{
+			RLevelClear(ptr->GetLeft(), level - 1);
+			RLevelClear(ptr->GetRight(), level - 1);
+		}
+	}
+}
+void BinarySearchTree::RLevelClear() {
+	if (root == nullptr) return;
+
+	int levels = GetHeight(); // root is at level 1
+
+	for (int level = levels; level >= 1; level--)
+	{
+		RLevelClear(root, level);
+	}
+	root = nullptr;
+}
+
 void BinarySearchTree::IInsert(int val) {
 
 }
