@@ -12,6 +12,9 @@ class BinaryTree
 	Node* RSearch(Node* node, int val);
 	void RCountByDegree(Node* node, int degree, int& count);
 	int GetHeight(Node* node);
+	void RPostDisplay(Node* node);
+	void RPreDisplay(Node* node);
+	void RInDisplay(Node* node);
 
 public:
 	BinaryTree();

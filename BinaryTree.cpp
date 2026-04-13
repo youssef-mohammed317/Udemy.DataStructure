@@ -369,17 +369,51 @@ int BinaryTree::RCountByDegree(int degree)
 
 }
 
+void BinaryTree::RPostDisplay(Node* node)
+{
+	if (node != nullptr)
+	{
+		RPostDisplay(node->GetLeft());
+		RPostDisplay(node->GetRight());
+		cout << node->GetData() << " ";
+	}
+}
 void BinaryTree::RPostDisplay()
 {
-
+	RPostDisplay(root);
 }
 
-void BinaryTree::IPostDisplay()
+void BinaryTree::RPreDisplay(Node* node)
 {
-
+	if (node != nullptr)
+	{
+		cout << node->GetData() << " ";
+		RPreDisplay(node->GetLeft());
+		RPreDisplay(node->GetRight());
+	}
 }
 
 void BinaryTree::RPreDisplay()
+{
+	RPreDisplay(root);
+}
+void BinaryTree::RInDisplay(Node* node)
+{
+	if (node != nullptr)
+	{
+		RInDisplay(node->GetLeft());
+		cout << node->GetData() << " ";
+		RInDisplay(node->GetRight());
+	}
+}
+
+void BinaryTree::RInDisplay()
+{
+	RInDisplay(root);
+
+}
+
+void BinaryTree::RLevelDisplay()
 {
 
 }
@@ -389,24 +423,38 @@ void BinaryTree::IPreDisplay()
 
 }
 
-void BinaryTree::RInDisplay()
+void BinaryTree::IPostDisplay()
 {
 
 }
-
 void BinaryTree::IInDisplay()
 {
 
 }
 
-void BinaryTree::RLevelDisplay()
-{
-
-}
 
 void BinaryTree::ILeveLDisplay()
 {
+	if (root == nullptr) return;
 
+	std::queue<Node*> q;
+	Node* ptr;
+	q.push(root);
+
+	while (!q.empty())
+	{
+		ptr = q.front();
+		q.pop();
+		cout << ptr->GetData() << " ";
+		if (ptr->GetLeft() != nullptr)
+		{
+			q.push(ptr->GetLeft());
+		}
+		if (ptr->GetRight() != nullptr)
+		{
+			q.push(ptr->GetRight());
+		}
+	}
 }
 
 void BinaryTree::TestBehavior()
