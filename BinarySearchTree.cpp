@@ -9,7 +9,6 @@ BinarySearchTree::~BinarySearchTree() {
 	ILevelClear();
 }
 
-
 void BinarySearchTree::ILevelClear() {
 
 	if (root == nullptr) return;
@@ -225,14 +224,66 @@ void BinarySearchTree::RLevelClear() {
 
 void BinarySearchTree::IInsert(int val) {
 
-}
+	if (root == nullptr)
+	{
+		root = new Node(val);
+		return;
+	}
 
+	Node* ptr = root;
+
+	while (ptr != nullptr)
+	{
+		if (val == ptr->GetData())
+			return;
+
+
+		if (val > ptr->GetData())
+		{
+			if (ptr->GetRight() == nullptr)
+			{
+				ptr->SetRight(new Node(val));
+				return;
+			}
+
+			ptr = ptr->GetRight();
+		}
+		else
+		{
+			if (ptr->GetLeft() == nullptr)
+			{
+				ptr->SetLeft(new Node(val));
+				return;
+			}
+
+			ptr = ptr->GetLeft();
+		}
+	}
+}
 void BinarySearchTree::IDelete(int val) {
 
 }
 
 Node* BinarySearchTree::ISearch(int val) {
+	if (root == nullptr) return nullptr;
 
+	Node* ptr = root;
+
+	while (ptr != nullptr)
+	{
+		if (ptr->GetData() == val)return ptr;
+
+		if (val > ptr->GetData())
+		{
+			ptr = ptr->GetRight();
+		}
+		else
+		{
+			ptr = ptr->GetLeft();
+		}
+	}
+
+	return nullptr;
 }
 
 
