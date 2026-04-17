@@ -3,9 +3,9 @@
 // min or max
 // delete only largest or smallest
 // swap with parent in inserting
+// insert: as leaf then compare // direction of adjustment is up
+// delete: delete root then move leaf to its place then comapare until go to leaf // direction of adjustment is down
 // heapify:related to the creation
-//			insert: as leaf then compare // direction of adjustment is up
-//			delete: delete root then move leaf to its place then comapare until go to leaf // direction of adjustment is down
 #include<iostream>
 class HeapBinaryTreeByArray
 {

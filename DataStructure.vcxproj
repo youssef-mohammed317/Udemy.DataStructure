@@ -128,13 +128,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DataStructure.cpp" />
-    <ClCompile Include="HeapBinaryTree.cpp" />
     <ClCompile Include="HeapBinaryTreeByArray.cpp" />
+    <ClCompile Include="HeapBinaryTree.cpp" />
+    <ClCompile Include="LinkedListNode.cpp" />
     <ClCompile Include="Node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="HeapBinaryTree.h" />
     <ClInclude Include="HeapBinaryTreeByArray.h" />
+    <ClInclude Include="LinkedListNode.h" />
     <ClInclude Include="Node.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

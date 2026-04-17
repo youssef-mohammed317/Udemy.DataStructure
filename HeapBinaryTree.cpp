@@ -1,200 +1,293 @@
-#include "HeapBinaryTreeByArray.h"
-
-void HeapBinaryTreeByArray::DoubleCapacity()
+#include "HeapBinaryTree.h"
+HeapBinaryTree::HeapBinaryTree(bool maxHeap)
 {
-	if (length == capacity - 1)
-	{
-		capacity *= 2;
-		int* newArr = new int[capacity] {0};
-		for (int i = 1; i <= length; i++)
-		{
-			newArr[i] = arr[i];
-		};
-
-		delete[]arr;
-		arr = newArr;
-	}
-}
-void HeapBinaryTreeByArray::Swap(int& x, int& y)
-{
-	int temp = x;
-	x = y;
-	y = temp;
-}
-
-HeapBinaryTreeByArray::HeapBinaryTreeByArray(bool maxHeap)
-{
-	capacity = 8;
-	length = 0;
+	root = nullptr;
 	this->maxHeap = maxHeap;
-	arr = new int[capacity] {0};
 }
-HeapBinaryTreeByArray::~HeapBinaryTreeByArray()
+HeapBinaryTree::~HeapBinaryTree()
 {
-	delete[] arr;
+	Clear();
 }
-
-bool HeapBinaryTreeByArray::IsEmpty()
+void HeapBinaryTree::Clear(Node* ptr)
 {
-	return length == 0;
+	if (ptr == nullptr)return;
+
+	Clear(ptr->GetLeft());
+	Clear(ptr->GetRight());
+	delete ptr;
 }
-
-void HeapBinaryTreeByArray::Clear()
+void HeapBinaryTree::Clear()
 {
-	delete[] arr;
-	capacity = 8;
-	arr = new int[capacity] {0};
-	length = 0;
+	Clear(root);
+	root = nullptr;
 }
-void HeapBinaryTreeByArray::Insert(int val)
+bool HeapBinaryTree::IsFull(Node* ptr)
 {
-	DoubleCapacity();
-	arr[++length] = val;
+	if (ptr == nullptr) return true;
 
-	int childIndex = length;
-	int parentIndex = length / 2; // int take floor value
-
-	if (maxHeap)
+	if (ptr->GetLeft() == nullptr && ptr->GetRight() == nullptr)
 	{
-		while (parentIndex > 0 && arr[childIndex] > arr[parentIndex])
-		{
-			Swap(arr[childIndex], arr[parentIndex]);
-			childIndex = parentIndex;
-			parentIndex = childIndex / 2;
-		}
+		return true; // degree 0
+	}
+	else if ((ptr->GetLeft() != nullptr) ^ (ptr->GetRight() != nullptr))
+	{
+		return false; // degree 1
 	}
 	else
 	{
-		while (parentIndex > 0 && arr[childIndex] < arr[parentIndex])
-		{
-			Swap(arr[childIndex], arr[parentIndex]);
-			childIndex = parentIndex;
-			parentIndex = childIndex / 2;
-		}
+		return IsFull(ptr->GetLeft()) && IsFull(ptr->GetRight()) && GetHeight(ptr->GetLeft()) == GetHeight(ptr->GetRight());
 	}
 }
-void HeapBinaryTreeByArray::Delete()
+
+bool HeapBinaryTree::IsFull()
 {
-	if (IsEmpty()) return;
+	return IsFull(root);
+}
+int HeapBinaryTree::GetHeight(Node* ptr)
+{
+	if (ptr == nullptr)return 0;
 
-	Swap(arr[1], arr[length]);
-	length--;
+	int x = GetHeight(ptr->GetLeft());
+	int y = GetHeight(ptr->GetRight());
 
-	int parentIndex = 1;
-	int lChildIndex = 2;
-	int rChildIndex = 3;
+	return 1 + (x > y ? x : y);
+}
+int HeapBinaryTree::GetHeight()
+{
+	return GetHeight(root);
+}
+void HeapBinaryTree::Insert(Node* ptr, int val)
+{
+	if (ptr == nullptr)return;
+	int currData = ptr->GetData();
 
-	while (lChildIndex <= length)
+	if (maxHeap && val > currData)
 	{
-		int targetIndex = parentIndex;
+		ptr->SetData(val);
+		Insert(ptr, currData);
+	}
+	else if (!maxHeap && val < currData)
+	{
+		ptr->SetData(val);
+		Insert(ptr, currData);
+	}
+	else {
 
-		if (maxHeap)
+		if (ptr->GetLeft() == nullptr)
 		{
-			if (arr[lChildIndex] > arr[targetIndex])
-				targetIndex = lChildIndex;
-
-			if (rChildIndex <= length && arr[rChildIndex] > arr[targetIndex])
-				targetIndex = rChildIndex;
+			ptr->SetLeft(new Node(val));
+		}
+		else if (ptr->GetRight() == nullptr)
+		{
+			ptr->SetRight(new Node(val));
 		}
 		else
 		{
-			if (arr[lChildIndex] < arr[targetIndex])
-				targetIndex = lChildIndex;
-
-			if (rChildIndex <= length && arr[rChildIndex] < arr[targetIndex])
-				targetIndex = rChildIndex;
+			if (IsFull(ptr->GetLeft()) && !IsFull(ptr->GetRight()))
+			{
+				Insert(ptr->GetRight(), val);
+			}
+			else {
+				Insert(ptr->GetLeft(), val);
+			}
 		}
 
-		if (targetIndex == parentIndex)
-			break;
-
-		Swap(arr[parentIndex], arr[targetIndex]);
-		parentIndex = targetIndex;
-		lChildIndex = parentIndex * 2;
-		rChildIndex = parentIndex * 2 + 1;
 	}
 }
 
-int HeapBinaryTreeByArray::GetLength()
+void HeapBinaryTree::Insert(int val)
 {
-	return length;
+	if (root == nullptr)
+	{
+		root = new Node(val);
+	}
+	else {
+		Insert(root, val);
+	}
 }
-int* HeapBinaryTreeByArray::Sort()
+Node* HeapBinaryTree::Search(Node* ptr, int val)
 {
-	int* sortedArr = new int[length];
+	if (ptr == nullptr)return nullptr;
 
-	int oldLength = length;
-	while (!IsEmpty())
-	{
-		Delete();
-	}
-	// now sorted asc if max and desc if min
-	for (int i = 1; i <= oldLength; i++)
-	{
-		sortedArr[i - 1] = arr[i];
-	}
-	// re insert old values to the heap
-	for (int i = 0; i < oldLength; i++)
-	{
-		Insert(sortedArr[i]);
-	}
-	return sortedArr;
+	if (val == ptr->GetData())return ptr;
+
+	if (maxHeap && val > ptr->GetData())return nullptr;
+	if (!maxHeap && val < ptr->GetData())return nullptr;
+
+	Node* temp = Search(ptr->GetLeft(), val);
+	if (temp != nullptr) return temp;
+	return Search(ptr->GetRight(), val);
 }
-void HeapBinaryTreeByArray::Display()
+Node* HeapBinaryTree::Search(int val)
 {
-	int* sortedArr = Sort();
+	return Search(root, val);
+}
+
+
+Node* HeapBinaryTree::Delete()
+{
+	if (root == nullptr) return nullptr;
+	int deletedData = root->GetData();
+	queue<Node*>q;
+	Node* curr, * lastParent;
+	curr = lastParent = nullptr;
+	q.push(root);
+
+	while (!q.empty())
+	{
+		lastParent = curr;
+		curr = q.front(); q.pop();
+
+		if (curr->GetLeft() == nullptr && curr->GetRight() == nullptr)
+		{
+			while (!q.empty())
+			{
+				curr = q.front(); q.pop();
+			}
+		}
+		else
+		{
+			if (curr->GetLeft() != nullptr)
+				q.push(curr->GetLeft());
+			if (curr->GetRight() != nullptr)
+				q.push(curr->GetRight());
+		}
+	}
+
+	if (lastParent == nullptr)
+	{
+		// only root
+		delete root;
+		root = nullptr;
+	}
+	else
+	{
+		if (lastParent->GetRight() == curr)
+		{
+			lastParent->SetRight(nullptr);
+		}
+		else if (lastParent->GetLeft() == curr)
+		{
+			lastParent->SetLeft(lastParent->GetRight());// not matter because right already nullptr(complete tree)
+			lastParent->SetRight(nullptr); // not matter because right already nullptr(complete tree)
+		}
+		root->SetData(curr->GetData());
+		delete curr;
+
+		// rearrange the tree
+		Rearrange(root);
+	}
+	return new Node(deletedData);
+}
+void HeapBinaryTree::Rearrange(Node* ptr)
+{
+	if (ptr == nullptr)return;
+
+	if (ptr->GetLeft() == nullptr && ptr->GetRight() == nullptr)return;
+
+	if ((ptr->GetLeft() != nullptr) ^ (ptr->GetRight() != nullptr))
+	{
+		// degree 1
+		int currData = ptr->GetData();
+		if (ptr->GetLeft() != nullptr)
+		{
+			int leftData = ptr->GetLeft()->GetData();
+			if (maxHeap && (currData < leftData) || !maxHeap && (currData > leftData))
+			{
+				ptr->SetData(leftData);
+				ptr->GetLeft()->SetData(currData);
+				Rearrange(ptr->GetLeft());
+
+			}
+		}
+		else if (ptr->GetRight() != nullptr) {
+			// never get here
+			int rightData = ptr->GetRight()->GetData();
+			if (maxHeap && (currData < rightData) || !maxHeap && (currData > rightData))
+			{
+				ptr->SetData(rightData);
+				ptr->GetRight()->SetData(currData);
+				Rearrange(ptr->GetRight());
+			}
+		}
+	}
+	else {
+
+		int currData = ptr->GetData();
+		int leftData = ptr->GetLeft()->GetData();
+		int rightData = ptr->GetRight()->GetData();
+
+
+		if ((maxHeap) && (currData < rightData && currData < leftData))
+		{
+
+			if (rightData > leftData)
+			{
+				ptr->SetData(rightData);
+				ptr->GetRight()->SetData(currData);
+				Rearrange(ptr->GetRight());
+			}
+			else
+			{
+				ptr->SetData(leftData);
+				ptr->GetLeft()->SetData(currData);
+				Rearrange(ptr->GetLeft());
+			}
+		}
+		if (!(maxHeap) && (currData > rightData && currData > leftData))
+		{
+
+			if (rightData < leftData)
+			{
+				ptr->SetData(rightData);
+				ptr->GetRight()->SetData(currData);
+				Rearrange(ptr->GetRight());
+			}
+			else
+			{
+				ptr->SetData(leftData);
+				ptr->GetLeft()->SetData(currData);
+				Rearrange(ptr->GetLeft());
+			}
+		}
+	}
+}
+
+
+LinkedListNode* HeapBinaryTree::GetSortedLinkedList()
+{
+	if (root == nullptr)return;
+	LinkedListNode* ptr;
+	LinkedListNode* head = new LinkedListNode(Delete()->GetData(), nullptr);
+	while (root != nullptr)
+	{
+		ptr = new LinkedListNode(Delete()->GetData(), nullptr);
+		ptr->SetNext(head);
+		head = ptr;
+	}
+	ptr = head;
+	while (ptr != nullptr)
+	{
+		Insert(ptr->GetData());
+		ptr = ptr->GetNext();
+	}
+	return head;
+}
+
+void HeapBinaryTree::Display()
+{
+	LinkedListNode* head = GetSortedLinkedList();
 	std::cout << "{";
-	for (int i = 0; i < length; i++)
+	while (head != nullptr)
 	{
-		std::cout << sortedArr[i];
-		if (i < length - 1)
+		std::cout << head->GetData();
+
+		if (head->GetNext() != nullptr)
+		{
 			std::cout << ", ";
+		}
+
+		head = head->GetNext();
 	}
 	std::cout << "}\n";
-	delete[] sortedArr;
-}
-
-void HeapBinaryTreeByArray::TestBehavior()
-{
-	std::cout << "========== Testing Max Heap ==========\n";
-	HeapBinaryTreeByArray maxH(true);
-
-	// إدخال بيانات عشوائية
-	maxH.Insert(50);
-	maxH.Insert(30);
-	maxH.Insert(80);
-	maxH.Insert(20);
-	maxH.Insert(90);
-	maxH.Insert(10);
-
-	std::cout << "Original Heap values sorted (Ascending for Max Heap):\n";
-	maxH.Display(); // Expected: {10, 20, 30, 50, 80, 90}
-
-	maxH.Delete();
-	std::cout << "\nAfter Deleting Root (The Max value 90):\n";
-	maxH.Display(); // Expected: {10, 20, 30, 50, 80}
-
-	maxH.Clear();
-	std::cout << "\nAfter Clear, Is Empty? " << (maxH.IsEmpty() ? "Yes" : "No") << "\n\n";
-
-
-	std::cout << "========== Testing Min Heap ==========\n";
-	HeapBinaryTreeByArray minH(false);
-
-	// إدخال نفس البيانات
-	minH.Insert(50);
-	minH.Insert(30);
-	minH.Insert(80);
-	minH.Insert(20);
-	minH.Insert(90);
-	minH.Insert(10);
-
-	std::cout << "Original Heap values sorted (Descending for Min Heap):\n";
-	minH.Display(); // Expected: {90, 80, 50, 30, 20, 10}
-
-	minH.Delete();
-	std::cout << "\nAfter Deleting Root (The Min value 10):\n";
-	minH.Display(); // Expected: {90, 80, 50, 30, 20}
-
-	std::cout << "======================================\n";
 }

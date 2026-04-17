@@ -3,11 +3,13 @@
 
 #include <iostream>
 #include "HeapBinaryTreeByArray.h"
+#include "HeapBinaryTree.h"
 
 int main()
 {
 	std::cout << "Hello World!\n";
 	HeapBinaryTreeByArray::TestBehavior();
+	HeapBinaryTree::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
