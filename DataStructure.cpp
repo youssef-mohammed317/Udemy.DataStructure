@@ -3,11 +3,13 @@
 
 #include <iostream>
 #include "BinaryTree.h"
+#include "BinaryTreeByArray.h"
 
 int main()
 {
 	std::cout << "Hello World!\n";
-	BinaryTree::TestBehavior();
+	//BinaryTree::TestBehavior();
+	BinaryTreeByArray::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
