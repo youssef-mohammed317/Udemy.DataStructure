@@ -11,7 +11,7 @@ class HeapBinaryTree
 	void Clear(Node* ptr);
 	void Insert(Node* ptr, int val);
 	int GetHeight(Node* ptr);
-	bool IsFull(Node* ptr);
+	bool IsPerfect(Node* ptr);
 	Node* Search(Node* ptr, int val);
 	void Rearrange(Node* ptr);
 public:
@@ -23,7 +23,7 @@ public:
 	Node* Search(int val);
 	Node* Delete();
 	int GetHeight();
-	bool IsFull();
+	bool IsPerfect();
 	LinkedListNode* GetSortedLinkedList();
 	void Display();
 

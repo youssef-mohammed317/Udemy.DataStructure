@@ -8,7 +8,7 @@
 int main()
 {
 	std::cout << "Hello World!\n";
-	HeapBinaryTreeByArray::TestBehavior();
+	//HeapBinaryTreeByArray::TestBehavior();
 	HeapBinaryTree::TestBehavior();
 }
 

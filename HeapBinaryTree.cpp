@@ -21,7 +21,7 @@ void HeapBinaryTree::Clear()
 	Clear(root);
 	root = nullptr;
 }
-bool HeapBinaryTree::IsFull(Node* ptr)
+bool HeapBinaryTree::IsPerfect(Node* ptr)
 {
 	if (ptr == nullptr) return true;
 
@@ -35,13 +35,13 @@ bool HeapBinaryTree::IsFull(Node* ptr)
 	}
 	else
 	{
-		return IsFull(ptr->GetLeft()) && IsFull(ptr->GetRight()) && GetHeight(ptr->GetLeft()) == GetHeight(ptr->GetRight());
+		return IsPerfect(ptr->GetLeft()) && IsPerfect(ptr->GetRight()) && GetHeight(ptr->GetLeft()) == GetHeight(ptr->GetRight());
 	}
 }
 
-bool HeapBinaryTree::IsFull()
+bool HeapBinaryTree::IsPerfect()
 {
-	return IsFull(root);
+	return IsPerfect(root);
 }
 int HeapBinaryTree::GetHeight(Node* ptr)
 {
@@ -83,7 +83,17 @@ void HeapBinaryTree::Insert(Node* ptr, int val)
 		}
 		else
 		{
-			if (IsFull(ptr->GetLeft()) && !IsFull(ptr->GetRight()))
+			if (IsPerfect(ptr->GetLeft()) && IsPerfect(ptr->GetRight()))
+			{
+				if (GetHeight(ptr->GetLeft()) == GetHeight(ptr->GetRight()))
+				{
+					Insert(ptr->GetLeft(), val);
+				}
+				else {
+					Insert(ptr->GetRight(), val);
+				}
+			}
+			else if (IsPerfect(ptr->GetLeft()) && !IsPerfect(ptr->GetRight()))
 			{
 				Insert(ptr->GetRight(), val);
 			}
@@ -105,6 +115,7 @@ void HeapBinaryTree::Insert(int val)
 		Insert(root, val);
 	}
 }
+
 Node* HeapBinaryTree::Search(Node* ptr, int val)
 {
 	if (ptr == nullptr)return nullptr;
@@ -217,37 +228,32 @@ void HeapBinaryTree::Rearrange(Node* ptr)
 		int leftData = ptr->GetLeft()->GetData();
 		int rightData = ptr->GetRight()->GetData();
 
-
-		if ((maxHeap) && (currData < rightData && currData < leftData))
-		{
-
-			if (rightData > leftData)
-			{
-				ptr->SetData(rightData);
-				ptr->GetRight()->SetData(currData);
-				Rearrange(ptr->GetRight());
-			}
-			else
-			{
-				ptr->SetData(leftData);
-				ptr->GetLeft()->SetData(currData);
-				Rearrange(ptr->GetLeft());
+		if (maxHeap) {
+			if (currData < rightData || currData < leftData) {
+				if (rightData > leftData) {
+					ptr->SetData(rightData);
+					ptr->GetRight()->SetData(currData);
+					Rearrange(ptr->GetRight());
+				}
+				else {
+					ptr->SetData(leftData);
+					ptr->GetLeft()->SetData(currData);
+					Rearrange(ptr->GetLeft());
+				}
 			}
 		}
-		if (!(maxHeap) && (currData > rightData && currData > leftData))
-		{
-
-			if (rightData < leftData)
-			{
-				ptr->SetData(rightData);
-				ptr->GetRight()->SetData(currData);
-				Rearrange(ptr->GetRight());
-			}
-			else
-			{
-				ptr->SetData(leftData);
-				ptr->GetLeft()->SetData(currData);
-				Rearrange(ptr->GetLeft());
+		else {
+			if (currData > rightData || currData > leftData) {
+				if (rightData < leftData) {
+					ptr->SetData(rightData);
+					ptr->GetRight()->SetData(currData);
+					Rearrange(ptr->GetRight());
+				}
+				else {
+					ptr->SetData(leftData);
+					ptr->GetLeft()->SetData(currData);
+					Rearrange(ptr->GetLeft());
+				}
 			}
 		}
 	}
@@ -256,7 +262,7 @@ void HeapBinaryTree::Rearrange(Node* ptr)
 
 LinkedListNode* HeapBinaryTree::GetSortedLinkedList()
 {
-	if (root == nullptr)return;
+	if (root == nullptr)return nullptr;
 	LinkedListNode* ptr;
 	LinkedListNode* head = new LinkedListNode(Delete()->GetData(), nullptr);
 	while (root != nullptr)
@@ -290,4 +296,70 @@ void HeapBinaryTree::Display()
 		head = head->GetNext();
 	}
 	std::cout << "}\n";
+}
+void HeapBinaryTree::TestBehavior()
+{
+	std::cout << "\n========== Advanced Edge-Case Testing ==========\n";
+
+	std::cout << "\n--- Test 1: Empty Heap Deletion ---\n";
+	HeapBinaryTree emptyHeap(true);
+	Node* delNode = emptyHeap.Delete();
+	if (delNode == nullptr) {
+		std::cout << "Success: Handled empty heap deletion safely (Returned nullptr).\n";
+	}
+
+	std::cout << "\n--- Test 2: Single Node Heap ---\n";
+	HeapBinaryTree singleHeap(true);
+	singleHeap.Insert(42);
+	std::cout << "Inserted 42. Display: ";
+	singleHeap.Display(); // Expected: {42}
+
+	Node* deletedSingle = singleHeap.Delete();
+	std::cout << "Deleted: " << deletedSingle->GetData() << "\n";
+	delete deletedSingle; // Clean up memory
+	std::cout << "After Deletion (should be empty): ";
+	singleHeap.Display(); // Expected: {}
+
+	std::cout << "\n--- Test 3: Duplicate Values (Max Heap) ---\n";
+	HeapBinaryTree dupHeap(true);
+	dupHeap.Insert(10);
+	dupHeap.Insert(20);
+	dupHeap.Insert(10);
+	dupHeap.Insert(20);
+	dupHeap.Insert(5);
+	std::cout << "Duplicates Display (Ascending for Max Heap):\n";
+	dupHeap.Display(); // Expected: {5, 10, 10, 20, 20}
+
+	std::cout << "\n--- Test 4: Search Functionality (Min Heap) ---\n";
+	HeapBinaryTree searchHeap(false); // Min Heap
+	searchHeap.Insert(10);
+	searchHeap.Insert(20);
+	searchHeap.Insert(30);
+	searchHeap.Insert(5);
+
+	// 1. البحث عن عنصر موجود
+	Node* found1 = searchHeap.Search(20);
+	std::cout << "Search for 20: " << (found1 != nullptr ? "Found" : "Not Found") << "\n"; // Expected: Found
+
+	// 2. البحث عن عنصر غير موجود (أكبر من كل العناصر)
+	Node* found2 = searchHeap.Search(100);
+	std::cout << "Search for 100: " << (found2 != nullptr ? "Found" : "Not Found") << "\n"; // Expected: Not Found
+
+	// 3. البحث عن عنصر غير موجود (أصغر من القمة، مما يختبر الـ Optimization الخاص بك)
+	Node* found3 = searchHeap.Search(2);
+	std::cout << "Search for 2: " << (found3 != nullptr ? "Found" : "Not Found") << "\n"; // Expected: Not Found
+
+
+	std::cout << "\n--- Test 5: Sequential Worst-Case Insertion (Min Heap) ---\n";
+	HeapBinaryTree seqHeap(false);
+	// إدخال أرقام تنازلية في Min Heap يجبر الشجرة على عمل صعود (Bubble Up) في كل إضافة
+	seqHeap.Insert(50);
+	seqHeap.Insert(40);
+	seqHeap.Insert(30);
+	seqHeap.Insert(20);
+	seqHeap.Insert(10);
+	std::cout << "Sequential Insert Display (Descending for Min Heap):\n";
+	seqHeap.Display(); // Expected: {50, 40, 30, 20, 10}
+
+	std::cout << "\n================================================\n";
 }
