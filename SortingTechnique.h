@@ -1,8 +1,55 @@
 #pragma once
 #include<iostream>
+#include<stdexcept>
+#include "Node.h"
+struct MinMax
+{
+	int min;
+	int max;
+};
+struct List {
+	Node* tail = nullptr;
+	Node* head = nullptr;
+public:
+	bool IsEmpty() {
+		return head == nullptr;
+	}
+	void Append(int data)
+	{
+		Node* node = new Node(data);
+		if (head == nullptr)
+		{
+			head = tail = node;
+		}
+		else {
+			tail->SetNext(node);
+			tail = node;
+		}
+	}
+	void InsertFirst(int data)
+	{
+		head = new Node(data, head);
+		if (tail == nullptr)
+			tail = head;
+	}
+	int Front()
+	{
+		if (IsEmpty()) throw std::runtime_error("List is empty");
+		int data = head->GetData();
+		Node* temp = head;
+		head = head->GetNext();
+		delete temp;
+		if (head == nullptr)
+			head = tail = nullptr;
+
+		return data;
+	}
+};
+
 class SortingTechnique
 {
 	static void Swap(int& x, int& y);
+	static MinMax GetMinMax(int* arr, int size);
 	static void PrintArray(int* arr, int size);
 public:
 	static void BubbleAscending(int* arr, int size); // O(n^2)
@@ -13,6 +60,15 @@ public:
 
 	static void SelectionAscending(int* arr, int size);// O(n^2)
 	static void SelectionDescending(int* arr, int size);// O(n^2)
+
+	static void CountAscending(int* arr, int size);// O(n)
+	static void CountDescending(int* arr, int size);// O(n)
+
+	static void BinBucketAscending(int* arr, int size);// O(n)
+	static void BinBucketDescending(int* arr, int size);// O(n)
+
+	static void RadixAscending(int* arr, int size);//O(n)
+	static void RadixDescending(int* arr, int size);//O(n)
 
 	static void TestBehavior();
 };
