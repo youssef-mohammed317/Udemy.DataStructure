@@ -25,6 +25,81 @@ MinMax SortingTechnique::GetMinMax(int* arr, int size)
 	}
 	return minmax;
 }
+
+
+void SortingTechnique::IMergeAscending(int* arr, int low, int mid, int high)
+{
+	if (high - low + 1 <= 1 || arr == nullptr)return;
+
+	int* sortedArr = new int[high - low + 1];
+	int k = 0;
+	int i = low;
+	int j = mid + 1;
+	while (i <= mid && j <= high && k < high - low + 1)
+	{
+		if (arr[i] < arr[j])
+		{
+			sortedArr[k++] = arr[i++];
+		}
+		else
+		{
+			sortedArr[k++] = arr[j++];
+		}
+	}
+	while (i <= mid && k < high - low + 1)
+	{
+		sortedArr[k++] = arr[i++];
+	}
+	while (j <= high && k < high - low + 1)
+	{
+		sortedArr[k++] = arr[j++];
+	}
+	k = 0;
+	i = low;
+	while (k < high - low + 1 && i <= high)
+	{
+		arr[i++] = sortedArr[k++];
+	}
+	delete[]sortedArr;
+}
+
+void SortingTechnique::IMergeDescending(int* arr, int low, int mid, int high)
+{
+	if (high - low + 1 <= 1 || arr == nullptr)return;
+
+	int* sortedArr = new int[high - low + 1];
+	int k = 0;
+	int i = low;
+	int j = mid + 1;
+	while (i <= mid && j <= high && k < high - low + 1)
+	{
+		if (arr[i] > arr[j])
+		{
+			sortedArr[k++] = arr[i++];
+		}
+		else
+		{
+			sortedArr[k++] = arr[j++];
+		}
+	}
+	while (i <= mid && k < high - low + 1)
+	{
+		sortedArr[k++] = arr[i++];
+	}
+	while (j <= high && k < high - low + 1)
+	{
+		sortedArr[k++] = arr[j++];
+	}
+	k = 0;
+	i = low;
+	while (k < high - low + 1 && i <= high)
+	{
+		arr[i++] = sortedArr[k++];
+	}
+	delete[]sortedArr;
+}
+
+
 void SortingTechnique::PrintArray(int* arr, int size)
 {
 	if (size <= 1 || arr == nullptr)return;
@@ -406,6 +481,41 @@ void SortingTechnique::ShellDescending(int* arr, int size)
 	}
 }
 
+void SortingTechnique::IMergingAscending(int* arr, int size)
+{
+	int low, high, mid, p, i;
+	for (p = 2; p < size * 2; p *= 2)
+	{
+		for (i = 0; i + p / 2 < size; i += p)
+		{
+			low = i;
+			mid = low + (p / 2) - 1;
+			high = i + p - 1;
+			if (high > size - 1)
+				high = size - 1;
+
+			IMergeAscending(arr, low, mid, high);
+		}
+	}
+}
+void SortingTechnique::IMergingDescending(int* arr, int size)
+{
+	int low, high, mid, p, i;
+	for (p = 2; p <= size * 2; p *= 2)
+	{
+		for (i = 0; i + p / 2 < size; i += p)
+		{
+			low = i;
+			mid = low + (p / 2) - 1;
+			high = i + p - 1;
+			if (high > size - 1)
+				high = size - 1;
+
+			IMergeDescending(arr, low, mid, high);
+		}
+	}
+}
+
 
 void SortingTechnique::TestBehavior()
 {
@@ -532,5 +642,23 @@ void SortingTechnique::TestBehavior()
 		std::cout << "  After:  "; PrintArray(arrD, sizeD);
 	}
 
+	// =========================================================
+	// 8. Iterative Merge Sort
+	// =========================================================
+	{
+		// اختبار الترتيب التصاعدي (مصفوفة بحجم فردي لاختبار حالات الـ Tail)
+		int arrA[] = { 38, 27, 43, 3, 9,1, 82, 10 ,83,10,-3,-99 };
+		int sizeA = 12;
+		std::cout << "\n[8.1] Iterative Merge Ascending\n  Before: "; PrintArray(arrA, sizeA);
+		IMergingAscending(arrA, sizeA);
+		std::cout << "  After:  "; PrintArray(arrA, sizeA);
+
+		// اختبار الترتيب التنازلي
+		int arrD[] = { 100, 5, 20, 15, 30, 0 };
+		int sizeD = 6;
+		std::cout << "[8.2] Iterative Merge Descending\n  Before: "; PrintArray(arrD, sizeD);
+		IMergingDescending(arrD, sizeD);
+		std::cout << "  After:  "; PrintArray(arrD, sizeD);
+	}
 	std::cout << "\n======================================================" << std::endl;
 }

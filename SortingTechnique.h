@@ -50,6 +50,8 @@ class SortingTechnique
 {
 	static void Swap(int& x, int& y);
 	static MinMax GetMinMax(int* arr, int size);
+	static void IMergeDescending(int* arr, int low, int mid, int high);
+	static void IMergeAscending(int* arr, int low, int mid, int high);
 	static void PrintArray(int* arr, int size);
 public:
 	static void BubbleAscending(int* arr, int size); // O(n^2)
@@ -70,8 +72,11 @@ public:
 	static void RadixAscending(int* arr, int size);//O(n)
 	static void RadixDescending(int* arr, int size);//O(n)
 
-	static void ShellAscending(int* arr, int size);// O(nlog(n))
-	static void ShellDescending(int* arr, int size);// O(nlog(n))
+	static void ShellAscending(int* arr, int size);// O(n^2) - O(n^1.6) - O(n^1,25) - O(nlog(n))
+	static void ShellDescending(int* arr, int size);// O(n^2) - O(n^1.6) - O(n^1,25) - O(nlog(n))
+
+	static void IMergingAscending(int* arr, int size); // O(n)
+	static void IMergingDescending(int* arr, int size);// O(n)
 
 	static void TestBehavior();
 };
