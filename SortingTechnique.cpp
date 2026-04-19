@@ -350,6 +350,63 @@ void SortingTechnique::RadixDescending(int* arr, int size)
 	delete[]radix;
 }
 
+
+void SortingTechnique::ShellAscending(int* arr, int size)
+{
+	if (size <= 1 || arr == nullptr)return;
+
+	int gap = size / 2;
+	int low = 0;
+	int high = low + gap;
+	int h, l;
+	while (gap > 0)
+	{
+		while (low >= 0 && high < size)
+		{
+			h = high++;
+			l = low++;
+			while (l >= 0 && h < size && arr[l] > arr[h])
+			{
+				Swap(arr[l], arr[h]);
+				l = l - gap;
+				h = h - gap;
+			}
+		}
+		gap = gap / 2;
+		low = 0;
+		high = low + gap;
+	}
+}
+
+
+void SortingTechnique::ShellDescending(int* arr, int size)
+{
+	if (size <= 1 || arr == nullptr)return;
+
+	int gap = size / 2;
+	int low = 0;
+	int high = low + gap;
+	int h, l;
+	while (gap > 0)
+	{
+		while (low >= 0 && high < size)
+		{
+			h = high++;
+			l = low++;
+			while (l >= 0 && h < size && arr[l] < arr[h])
+			{
+				Swap(arr[l], arr[h]);
+				l = l - gap;
+				h = h - gap;
+			}
+		}
+		gap = gap / 2;
+		low = 0;
+		high = low + gap;
+	}
+}
+
+
 void SortingTechnique::TestBehavior()
 {
 	std::cout << "=========== Testing All Sorting Techniques ===========" << std::endl;
@@ -453,6 +510,25 @@ void SortingTechnique::TestBehavior()
 		int sizeD = 5;
 		std::cout << "[6.2] Radix Descending\n  Before: "; PrintArray(arrD, sizeD);
 		RadixDescending(arrD, sizeD);
+		std::cout << "  After:  "; PrintArray(arrD, sizeD);
+	}
+
+	// =========================================================
+	// 7. Shell Sort
+	// =========================================================
+	{
+		// اختبار الترتيب التصاعدي (مصفوفة عشوائية)
+		int arrA[] = { 45, 12, 89, 2, 67, 356, 24, 95, 18, 237, 5, 73 };
+		int sizeA = 12;
+		std::cout << "\n[7.1] Shell Ascending\n  Before: "; PrintArray(arrA, sizeA);
+		ShellAscending(arrA, sizeA);
+		std::cout << "  After:  "; PrintArray(arrA, sizeA);
+
+		// اختبار الترتيب التنازلي (مصفوفة تحتوي على أرقام سالبة ومكررة)
+		int arrD[] = { -10, 55, 0, 55, -20, 100, 7 };
+		int sizeD = 7;
+		std::cout << "[7.2] Shell Descending\n  Before: "; PrintArray(arrD, sizeD);
+		ShellDescending(arrD, sizeD);
 		std::cout << "  After:  "; PrintArray(arrD, sizeD);
 	}
 

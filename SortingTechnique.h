@@ -70,6 +70,9 @@ public:
 	static void RadixAscending(int* arr, int size);//O(n)
 	static void RadixDescending(int* arr, int size);//O(n)
 
+	static void ShellAscending(int* arr, int size);// O(nlog(n))
+	static void ShellDescending(int* arr, int size);// O(nlog(n))
+
 	static void TestBehavior();
 };
 
