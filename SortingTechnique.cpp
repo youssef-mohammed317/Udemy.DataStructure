@@ -122,6 +122,61 @@ void SortingTechnique::RMergeDescending(int* arr, int low, int high)
 		IMergeDescending(arr, low, mid, high);
 	}
 }
+void SortingTechnique::QuickAscending(int* arr, int low, int high)
+{
+	if (high > low)
+	{
+		int pivot = low;
+		int i = low;
+		int j = high;
+		while (i < j)
+		{
+			while (i <= high && arr[i] <= arr[pivot])
+			{
+				i++;
+			}
+			while (j >= low && arr[j] > arr[pivot])
+			{
+				j--;
+			}
+			if (i < j)
+			{
+				Swap(arr[i], arr[j]);
+
+			}
+		}
+		Swap(arr[j], arr[pivot]);
+		QuickAscending(arr, low, j - 1);
+		QuickAscending(arr, j + 1, high);
+	}
+}
+void SortingTechnique::QuickDescending(int* arr, int low, int high)
+{
+	if (high > low)
+	{
+		int pivot = arr[low];
+		int i = low;
+		int j = high;
+		while (i < j)
+		{
+			while (i <= high && arr[i] >= pivot)
+			{
+				i++;
+			}
+			while (j >= low && arr[j] < pivot)
+			{
+				j--;
+			}
+			if (i < j)
+			{
+				Swap(arr[i], arr[j]);
+			}
+		}
+		Swap(arr[j], arr[low]);
+		QuickDescending(arr, low, j - 1);
+		QuickDescending(arr, j + 1, high);
+	}
+}
 
 void SortingTechnique::PrintArray(int* arr, int size)
 {
@@ -540,11 +595,22 @@ void SortingTechnique::IMergingDescending(int* arr, int size)
 }
 void SortingTechnique::RMergingAscending(int* arr, int size)
 {
+	if (size <= 1 || arr == nullptr)return;
 	RMergeAscending(arr, 0, size - 1);
 }
 void SortingTechnique::RMergingDescending(int* arr, int size)
 {
+	if (size <= 1 || arr == nullptr)return;
 	RMergeDescending(arr, 0, size - 1);
+}
+
+void SortingTechnique::QuickAscending(int* arr, int size)
+{
+	QuickAscending(arr, 0, size - 1);
+}
+void SortingTechnique::QuickDescending(int* arr, int size)
+{
+	QuickDescending(arr, 0, size - 1);
 }
 
 
@@ -708,6 +774,25 @@ void SortingTechnique::TestBehavior()
 		int sizeD = 9;
 		std::cout << "[9.2] Recursive Merge Descending\n  Before: "; PrintArray(arrD, sizeD);
 		RMergingDescending(arrD, sizeD);
+		std::cout << "  After:  "; PrintArray(arrD, sizeD);
+	}
+
+	// =========================================================
+	// 10. Quick Sort
+	// =========================================================
+	{
+		// اختبار الترتيب التصاعدي
+		int arrA[] = { 10, 80, 30, 90, 40, 50, 70 };
+		int sizeA = 7;
+		std::cout << "\n[10.1] Quick Ascending\n  Before: "; PrintArray(arrA, sizeA);
+		QuickAscending(arrA, sizeA); // نستخدم الـ wrapper التي تأخذ size
+		std::cout << "  After:  "; PrintArray(arrA, sizeA);
+
+		// اختبار الترتيب التنازلي (مصفوفة مكررة)
+		int arrD[] = { 5, 2, 9, 2, 5, 1, 10 };
+		int sizeD = 7;
+		std::cout << "[10.2] Quick Descending\n  Before: "; PrintArray(arrD, sizeD);
+		QuickDescending(arrD, sizeD);
 		std::cout << "  After:  "; PrintArray(arrD, sizeD);
 	}
 	std::cout << "\n======================================================" << std::endl;

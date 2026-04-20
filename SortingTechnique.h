@@ -55,6 +55,8 @@ class SortingTechnique
 	static void PrintArray(int* arr, int size);
 	static void RMergeAscending(int* arr, int low, int high);
 	static void RMergeDescending(int* arr, int low, int high);
+	static void QuickAscending(int* arr, int low, int high);
+	static void QuickDescending(int* arr, int low, int high);
 public:
 	static void BubbleAscending(int* arr, int size); // O(n^2)
 	static void BubbleDescending(int* arr, int size); // O(n^2)
@@ -77,11 +79,14 @@ public:
 	static void ShellAscending(int* arr, int size);// O(n^2) - O(n^1.6) - O(n^1,25) - O(nlog(n))
 	static void ShellDescending(int* arr, int size);// O(n^2) - O(n^1.6) - O(n^1,25) - O(nlog(n))
 
-	static void IMergingAscending(int* arr, int size); // O(n)
-	static void IMergingDescending(int* arr, int size);// O(n)
+	static void IMergingAscending(int* arr, int size); // O(nlog(n))
+	static void IMergingDescending(int* arr, int size);// O(nlog(n))
 
-	static void RMergingAscending(int* arr, int size); // O(n)
-	static void RMergingDescending(int* arr, int size);// O(n)
+	static void RMergingAscending(int* arr, int size); // O(nlog(n))
+	static void RMergingDescending(int* arr, int size);// O(nlog(n))
+
+	static void QuickAscending(int* arr, int size); // O(nlog(n))
+	static void QuickDescending(int* arr, int size); // O(nlog(n))
 
 	static void TestBehavior();
 };
