@@ -14,6 +14,7 @@ class BinaryTreeByArray
 	void RPreDisplay(int parentIndex);
 	void RInDisplay(int parentIndex);
 	void RPostDisplay(int parentIndex);
+
 public:
 	BinaryTreeByArray();
 	~BinaryTreeByArray();

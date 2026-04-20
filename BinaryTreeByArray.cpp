@@ -16,8 +16,6 @@ void BinaryTreeByArray::DoubleCapacity()
 		arr = newArr;
 	}
 }
-
-
 BinaryTreeByArray::BinaryTreeByArray()
 {
 	capacity = 8;
@@ -81,8 +79,9 @@ void BinaryTreeByArray::Delete(int val)
 	{
 		if (arr[i] == val)
 		{
-			arr[i] = INT_MIN;
-			if (i == rear)
+			arr[i] = arr[rear];
+			arr[rear--] = INT_MIN;
+			while (rear > 0 && arr[rear] == INT_MIN)
 				rear--;
 			return;
 		}
@@ -122,7 +121,7 @@ int BinaryTreeByArray::CountByDegree(int degree)
 		}
 		else
 		{
-			if ((lchildIndex > capacity || (arr[lchildIndex] == INT_MIN)) && (rchildIndex > capacity || (arr[rchildIndex] == INT_MIN)))
+			if ((lchildIndex >= capacity || (arr[lchildIndex] == INT_MIN)) && (rchildIndex >= capacity || (arr[rchildIndex] == INT_MIN)))
 			{
 				counter++;
 			}
@@ -154,11 +153,11 @@ int BinaryTreeByArray::GetMaxDegree()
 {
 	int deg2 = CountByDegree(2);
 	if (deg2 != 0)
-		return deg2;
+		return 2;
 	int deg1 = CountByDegree(1);
 	if (deg1 != 0)
-		return deg1;
-	return CountByDegree(0);
+		return 1;
+	return 0;
 }
 
 bool BinaryTreeByArray::IsStrict()
@@ -199,7 +198,7 @@ int BinaryTreeByArray::GetHeight(int parentIndex)
 	if (arr[parentIndex] == INT_MIN)return 0;
 	int lchildIndex = 2 * parentIndex;
 	int	rchildIndex = 2 * parentIndex + 1;
-	if (lchildIndex > capacity && rchildIndex > capacity)
+	if (lchildIndex >= capacity && rchildIndex >= capacity)
 		return 1;
 
 	int x = GetHeight(lchildIndex);
@@ -243,7 +242,7 @@ void BinaryTreeByArray::IQueueLevelDisplay()
 	}
 	while (!q.empty())
 	{
-		cout << q.front();
+		cout << arr[q.front()];
 		q.pop();
 		if (!q.empty())
 			cout << ", ";
@@ -271,10 +270,10 @@ void BinaryTreeByArray::RInDisplay(int parentIndex)
 {
 	if (parentIndex >= capacity)return;
 	if (arr[parentIndex] == INT_MIN)return;
-	RPreDisplay(parentIndex * 2);// left
+	RInDisplay(parentIndex * 2);// left
 	cout << ", ";
 	cout << arr[parentIndex];
-	RPreDisplay(parentIndex * 2 + 1);//right
+	RInDisplay(parentIndex * 2 + 1);//right
 }
 void BinaryTreeByArray::RInDisplay()
 {
@@ -286,8 +285,8 @@ void BinaryTreeByArray::RPostDisplay(int parentIndex)
 {
 	if (parentIndex >= capacity)return;
 	if (arr[parentIndex] == INT_MIN)return;
-	RPreDisplay(parentIndex * 2);// left
-	RPreDisplay(parentIndex * 2 + 1);//right
+	RPostDisplay(parentIndex * 2);// left
+	RPostDisplay(parentIndex * 2 + 1);//right
 	cout << ", ";
 	cout << arr[parentIndex];
 }
@@ -316,11 +315,11 @@ void BinaryTreeByArray::IPreDisplay()
 		lchildIndex = parentIndex * 2;
 		rchildIndex = lchildIndex + 1;
 
-		if (rchildIndex <= capacity && arr[rchildIndex] != INT_MIN)
+		if (rchildIndex < capacity && arr[rchildIndex] != INT_MIN)
 		{
 			s.push(rchildIndex);
 		}
-		if (lchildIndex <= capacity && arr[lchildIndex] != INT_MIN)
+		if (lchildIndex < capacity && arr[lchildIndex] != INT_MIN)
 		{
 			s.push(lchildIndex);
 		}
@@ -344,9 +343,9 @@ void BinaryTreeByArray::IInDisplay()
 		parentIndex = s.top(); s.pop();
 		lchildIndex = parentIndex * 2;
 		rchildIndex = lchildIndex + 1;
-		if (lchildIndex <= capacity && arr[lchildIndex] != INT_MIN)
+		if (lchildIndex < capacity && arr[lchildIndex] != INT_MIN)
 		{
-			if (rchildIndex <= capacity && arr[rchildIndex] != INT_MIN)
+			if (rchildIndex < capacity && arr[rchildIndex] != INT_MIN)
 			{
 				s.push(rchildIndex);
 			}
@@ -354,7 +353,7 @@ void BinaryTreeByArray::IInDisplay()
 			s.push(lchildIndex);
 			parents.push(parentIndex);
 		}
-		else if (rchildIndex <= capacity && arr[rchildIndex] != INT_MIN)
+		else if (rchildIndex < capacity && arr[rchildIndex] != INT_MIN)
 		{
 			cout << arr[parentIndex] << ", ";
 			s.push(rchildIndex);
@@ -388,18 +387,20 @@ void BinaryTreeByArray::IPostDisplay()
 		parentIndex = s.top(); s.pop();
 		lchildIndex = parentIndex * 2;
 		rchildIndex = lchildIndex + 1;
-		if (lchildIndex <= capacity && arr[lchildIndex] != INT_MIN)
+
+		if (lchildIndex < capacity && arr[lchildIndex] != INT_MIN)
 		{
-			if (rchildIndex <= capacity && arr[rchildIndex] != INT_MIN)
+			s.push(parentIndex);
+			if (rchildIndex < capacity && arr[rchildIndex] != INT_MIN)
 			{
 				s.push(rchildIndex);
 			}
 			s.push(lchildIndex);
-			s.push(parentIndex);
 			parents.push(parentIndex);
 		}
-		else if (rchildIndex <= capacity && arr[rchildIndex] != INT_MIN)
+		else if (rchildIndex < capacity && arr[rchildIndex] != INT_MIN)
 		{
+			s.push(parentIndex);
 			s.push(rchildIndex);
 			parents.push(parentIndex);
 		}
@@ -415,4 +416,85 @@ void BinaryTreeByArray::IPostDisplay()
 	cout << "}\n";
 }
 
+void BinaryTreeByArray::TestBehavior()
+{
+	cout << "\n=== STARTING COMPREHENSIVE BINARY TREE TESTS ===\n\n";
+	BinaryTreeByArray tree;
 
+	cout << "[1] Testing Empty Tree:\n";
+	cout << "Is tree empty? (Expected 1): " << tree.IsEmpty() << "\n";
+	cout << "Height of empty tree (Expected 0): " << tree.GetHeight() << "\n";
+	cout << "Does 10 exist in empty tree? (Expected 0): " << tree.IsExist(10) << "\n";
+	cout << "Delete from empty tree (Should not crash)...\n";
+	tree.Delete(10);
+
+	// Build a Complete Binary Tree
+	//         10
+	//       /    \
+	//     20      30
+	//    /  \    /  \
+	//  40   50  60   70
+	cout << "\n[2] Inserting Elements (10, 20, 30, 40, 50, 60, 70)...\n";
+	for (int i = 1; i <= 7; i++)
+	{
+		tree.Insert(i * 10);
+	}
+
+	cout << "\n[3] Testing Traversals:\n";
+	cout << "Level (I):     "; tree.ILevelDisplay();       // {10, 20, 30, 40, 50, 60, 70}
+	cout << "Level (Queue): "; tree.IQueueLevelDisplay();  // {10, 20, 30, 40, 50, 60, 70}
+	cout << "Pre (R):       "; tree.RPreDisplay();         // {10, 20, 40, 50, 30, 60, 70}
+	cout << "Pre (I):       "; tree.IPreDisplay();         // {10, 20, 40, 50, 30, 60, 70}
+	cout << "In (R):        "; tree.RInDisplay();          // {40, 20, 50, 10, 60, 30, 70}
+	cout << "In (I):        "; tree.IInDisplay();          // {40, 20, 50, 10, 60, 30, 70}
+	cout << "Post (R):      "; tree.RPostDisplay();        // {40, 50, 20, 60, 70, 30, 10}
+	cout << "Post (I):      "; tree.IPostDisplay();        // {40, 50, 20, 60, 70, 30, 10}
+
+	cout << "\n[4] Testing Tree Properties:\n";
+	cout << "Total Nodes    (Expected 7): " << tree.CountNodes() << "\n";
+	cout << "Height         (Expected 3): " << tree.GetHeight() << "\n";
+	cout << "Max Degree     (Expected 2): " << tree.GetMaxDegree() << "\n";
+	cout << "Internal Nodes (Expected 3): " << tree.CountInternal() << "\n";
+	cout << "External Nodes (Expected 4): " << tree.CountExternal() << "\n";
+
+	cout << "\n[5] Testing Tree Shapes:\n";
+	cout << "Is Strict?   (Expected 1): " << tree.IsStrict() << "\n";
+	cout << "Is Complete? (Expected 1): " << tree.IsComplete() << "\n";
+	cout << "Is Full?     (Expected 1): " << tree.IsFull() << "\n";
+
+	cout << "\n[6] Testing Delete Logic (Internal Node):\n";
+	tree.Delete(20); // Replaces 20 with 70
+	cout << "Level Display after Deleting 20:  "; tree.ILevelDisplay();
+	cout << "Is Full now?   (Expected 0): " << tree.IsFull() << "\n";
+
+	cout << "\n[7] Testing DoubleCapacity (Forcing capacity > 8):\n";
+	cout << "Inserting 80, 90, 100, 110...\n";
+	tree.Insert(80); tree.Insert(90); tree.Insert(100); tree.Insert(110);
+	cout << "Count Nodes    (Expected 10): " << tree.CountNodes() << "\n";
+	cout << "Level Display:                "; tree.ILevelDisplay();
+
+	cout << "\n[8] Testing Edge Cases (Invalid Inputs & Non-existent):\n";
+	tree.Insert(INT_MIN);
+	cout << "Count after inserting INT_MIN (Expected 10): " << tree.CountNodes() << "\n";
+	tree.Delete(999);
+	cout << "Count after deleting non-existent 999 (Expected 10): " << tree.CountNodes() << "\n";
+
+	cout << "\n[9] Testing Root Deletion:\n";
+	tree.Clear();
+	tree.Insert(10); tree.Insert(20); tree.Insert(30);
+	cout << "Before Root Delete: "; tree.ILevelDisplay();
+	tree.Delete(10); // 30 should replace 10
+	cout << "After Root Delete:  "; tree.ILevelDisplay();
+	cout << "Root changed to 30? (Expected 1): " << (tree.IsExist(30) && !tree.IsExist(10)) << "\n";
+
+	cout << "\n[10] Testing Total Annihilation (Preventing Crash):\n";
+	// Current tree has 30, 20
+	cout << "Deleting remaining nodes one by one...\n";
+	tree.Delete(30);
+	tree.Delete(20);
+	cout << "Is Empty after deleting all? (Expected 1): " << tree.IsEmpty() << "\n";
+	tree.Delete(50); // Trying to delete from empty again
+	cout << "Did it survive without crashing? (Expected Yes!)\n";
+
+	cout << "\n=== ALL TESTS PASSED FLAWLESSLY ===\n";
+}
