@@ -53,6 +53,8 @@ class SortingTechnique
 	static void IMergeDescending(int* arr, int low, int mid, int high);
 	static void IMergeAscending(int* arr, int low, int mid, int high);
 	static void PrintArray(int* arr, int size);
+	static void RMergeAscending(int* arr, int low, int high);
+	static void RMergeDescending(int* arr, int low, int high);
 public:
 	static void BubbleAscending(int* arr, int size); // O(n^2)
 	static void BubbleDescending(int* arr, int size); // O(n^2)
@@ -77,6 +79,9 @@ public:
 
 	static void IMergingAscending(int* arr, int size); // O(n)
 	static void IMergingDescending(int* arr, int size);// O(n)
+
+	static void RMergingAscending(int* arr, int size); // O(n)
+	static void RMergingDescending(int* arr, int size);// O(n)
 
 	static void TestBehavior();
 };

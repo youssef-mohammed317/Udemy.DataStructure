@@ -31,7 +31,7 @@ void SortingTechnique::IMergeAscending(int* arr, int low, int mid, int high)
 {
 	if (high - low + 1 <= 1 || arr == nullptr)return;
 
-	int* sortedArr = new int[high - low + 1];
+	int* sortedArr = new int[high - low + 1] {0};
 	int k = 0;
 	int i = low;
 	int j = mid + 1;
@@ -67,7 +67,7 @@ void SortingTechnique::IMergeDescending(int* arr, int low, int mid, int high)
 {
 	if (high - low + 1 <= 1 || arr == nullptr)return;
 
-	int* sortedArr = new int[high - low + 1];
+	int* sortedArr = new int[high - low + 1] {0};
 	int k = 0;
 	int i = low;
 	int j = mid + 1;
@@ -99,6 +99,29 @@ void SortingTechnique::IMergeDescending(int* arr, int low, int mid, int high)
 	delete[]sortedArr;
 }
 
+void SortingTechnique::RMergeAscending(int* arr, int low, int high)
+{
+	if (low < high)
+	{
+		int mid = (low + high) / 2;
+
+		RMergeAscending(arr, low, mid);
+		RMergeAscending(arr, mid + 1, high);
+		IMergeAscending(arr, low, mid, high);
+	}
+}
+
+void SortingTechnique::RMergeDescending(int* arr, int low, int high)
+{
+	if (low < high)
+	{
+		int mid = (low + high) / 2;
+
+		RMergeDescending(arr, low, mid);
+		RMergeDescending(arr, mid + 1, high);
+		IMergeDescending(arr, low, mid, high);
+	}
+}
 
 void SortingTechnique::PrintArray(int* arr, int size)
 {
@@ -515,6 +538,14 @@ void SortingTechnique::IMergingDescending(int* arr, int size)
 		}
 	}
 }
+void SortingTechnique::RMergingAscending(int* arr, int size)
+{
+	RMergeAscending(arr, 0, size - 1);
+}
+void SortingTechnique::RMergingDescending(int* arr, int size)
+{
+	RMergeDescending(arr, 0, size - 1);
+}
 
 
 void SortingTechnique::TestBehavior()
@@ -658,6 +689,25 @@ void SortingTechnique::TestBehavior()
 		int sizeD = 6;
 		std::cout << "[8.2] Iterative Merge Descending\n  Before: "; PrintArray(arrD, sizeD);
 		IMergingDescending(arrD, sizeD);
+		std::cout << "  After:  "; PrintArray(arrD, sizeD);
+	}
+
+	// =========================================================
+	// 9. Recursive Merge Sort
+	// =========================================================
+	{
+		// اختبار الترتيب التصاعدي
+		int arrA[] = { 12, 11, 13, 5, 6, 7 };
+		int sizeA = 6;
+		std::cout << "\n[9.1] Recursive Merge Ascending\n  Before: "; PrintArray(arrA, sizeA);
+		RMergingAscending(arrA, sizeA);
+		std::cout << "  After:  "; PrintArray(arrA, sizeA);
+
+		// اختبار الترتيب التنازلي (مصفوفة كبيرة قليلاً)
+		int arrD[] = { 42, 10, 100, 33, 5, 12, 1, 0, 99 };
+		int sizeD = 9;
+		std::cout << "[9.2] Recursive Merge Descending\n  Before: "; PrintArray(arrD, sizeD);
+		RMergingDescending(arrD, sizeD);
 		std::cout << "  After:  "; PrintArray(arrD, sizeD);
 	}
 	std::cout << "\n======================================================" << std::endl;
