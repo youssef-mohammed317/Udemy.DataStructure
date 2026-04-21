@@ -4,11 +4,13 @@
 #include <iostream>
 #include "ChaningTechnique.h"
 #include "linearProbingTechinque.h"
+#include "QuadraticProbingTechinque.h"
 int main()
 {
 	std::cout << "Hello World!\n";
 	//ChaningTechnique::TestBehavior();
-	linearProbingTechinque::TestBehavior();
+	//linearProbingTechinque::TestBehavior();
+	QuadraticProbingTechinque::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
