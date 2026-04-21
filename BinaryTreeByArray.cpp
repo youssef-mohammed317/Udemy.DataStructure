@@ -251,6 +251,32 @@ void BinaryTreeByArray::IQueueLevelDisplay()
 	cout << "}\n";
 }
 
+void BinaryTreeByArray::RLevelDisplay(int low, int high)
+{
+
+	if (low < 1 || low>rear)return;
+
+	for (int i = low; i <= high && i <= rear; i++)
+	{
+		if (arr[i] != INT_MIN)
+		{
+			if (i != 1)
+			{
+				cout << ", ";
+			}
+			cout << arr[i];
+		}
+	}
+	RLevelDisplay(low * 2, low * 4 - 1);
+}
+void BinaryTreeByArray::RLevelDisplay()
+{
+	cout << "{";
+	RLevelDisplay(1, 1);
+	cout << "}\n";
+}
+
+
 void BinaryTreeByArray::RPreDisplay(int parentIndex)
 {
 	if (parentIndex >= capacity)return;
@@ -415,7 +441,6 @@ void BinaryTreeByArray::IPostDisplay()
 	}
 	cout << "}\n";
 }
-
 void BinaryTreeByArray::TestBehavior()
 {
 	cout << "\n=== STARTING COMPREHENSIVE BINARY TREE TESTS ===\n\n";
@@ -439,10 +464,10 @@ void BinaryTreeByArray::TestBehavior()
 	{
 		tree.Insert(i * 10);
 	}
-
 	cout << "\n[3] Testing Traversals:\n";
 	cout << "Level (I):     "; tree.ILevelDisplay();       // {10, 20, 30, 40, 50, 60, 70}
 	cout << "Level (Queue): "; tree.IQueueLevelDisplay();  // {10, 20, 30, 40, 50, 60, 70}
+	cout << "Level (R):     "; tree.RLevelDisplay();       // {10, 20, 30, 40, 50, 60, 70} <-- ADDED HERE
 	cout << "Pre (R):       "; tree.RPreDisplay();         // {10, 20, 40, 50, 30, 60, 70}
 	cout << "Pre (I):       "; tree.IPreDisplay();         // {10, 20, 40, 50, 30, 60, 70}
 	cout << "In (R):        "; tree.RInDisplay();          // {40, 20, 50, 10, 60, 30, 70}
