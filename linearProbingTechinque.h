@@ -1,16 +1,19 @@
 #pragma once
-#include "Node.h"
 #include<iostream>
-class ChaningTechnique // open-hashing-(extra space)
+#include<limits>
+#include<stack>
+class linearProbingTechinque // close-hashing-(no extra space)
 {
-	int size;
+	int capacity;
 	int length;
-	Node** hashTable;
+	int* hashTable;
 	int GetHashIndex(int key);
+	void DoubleCapacity();
+	void ReInsert();
 public:
 
-	ChaningTechnique();
-	~ChaningTechnique();
+	linearProbingTechinque();
+	~linearProbingTechinque();
 	void Clear();
 
 	int GetLength();
@@ -21,4 +24,3 @@ public:
 
 	static void TestBehavior();
 };
-

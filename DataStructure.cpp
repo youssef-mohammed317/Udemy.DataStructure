@@ -3,10 +3,12 @@
 
 #include <iostream>
 #include "ChaningTechnique.h"
+#include "linearProbingTechinque.h"
 int main()
 {
 	std::cout << "Hello World!\n";
-	ChaningTechnique::TestBehavior();
+	//ChaningTechnique::TestBehavior();
+	linearProbingTechinque::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
