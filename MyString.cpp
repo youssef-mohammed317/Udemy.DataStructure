@@ -201,6 +201,78 @@ bool MyString::IsAnagram(const char* string1, const char* string2)
 	}
 	return false;
 }
+
+void MyString::Permutations(char* str, char* res, int* flags, int k, int l)
+{
+	if (str == nullptr || flags == nullptr || k < 0 || k > l)return;
+
+	if (str[k] == '\0')
+	{
+		res[k] = '\0';
+		cout << res << " ";
+	}
+	else {
+
+		for (int i = 0; str[i] != '\0'; i++)
+		{
+			if (flags[i] == 0)
+			{
+				res[k] = str[i];
+				flags[i] = 1;
+				Permutations(str, res, flags, k + 1, l);
+				flags[i] = 0;
+			}
+		}
+	}
+
+}
+
+void MyString::PrintPermutationsTreeMethod(char* str)
+{
+
+	int l = GetLength(str) + 1;
+
+	int* flags = new int[l] {0};
+	char* res = new char[l];
+
+	Permutations(str, res, flags, 0, l);
+
+	delete[]flags;
+	delete[]res;
+}
+
+
+void MyString::Swap(char& x, char& y)
+{
+	char t = x;
+	x = y;
+	y = t;
+}
+
+void MyString::Perm(char* str, int l, int h)
+{
+	if (str == nullptr)return;
+	if (l == h)
+	{
+		cout << str << " ";
+	}
+	else {
+		for (int i = l; i <= h; i++)
+		{
+			Swap(str[i], str[l]);
+			Perm(str, l + 1, h);
+			Swap(str[i], str[l]);
+		}
+	}
+}
+void MyString::PrintPermutationsSwapMethod(char* str)
+{
+	if (str == nullptr)return;
+
+	int h = GetLength(str) - 1;
+	Perm(str, 0, h);
+}
+
 void MyString::TestBehavior()
 {
 	std::cout << "=========== TEST START ===========\n\n";
@@ -308,6 +380,20 @@ void MyString::TestBehavior()
 		<< IsAnagram(str13, str14) << "\n";
 	std::cout << "\"Hello\" and \"World\" -> "
 		<< IsAnagram("Hello", "World") << "\n\n";
+
+	// PrintPermutationsTreeMethod
+	std::cout << "PrintPermutationsTreeMethod\n";
+	char permStr1[] = "ABC";
+	std::cout << "\"" << permStr1 << "\" -> ";
+	PrintPermutationsTreeMethod(permStr1);
+	std::cout << "\n\n";
+
+	// PrintPermutationsSwapMethod
+	std::cout << "PrintPermutationsSwapMethod\n";
+	char permStr2[] = "ABC";
+	std::cout << "\"" << permStr2 << "\" -> ";
+	PrintPermutationsSwapMethod(permStr2);
+	std::cout << "\n\n";
 
 	std::cout << "=========== TEST END ===========\n";
 }
