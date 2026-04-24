@@ -2,10 +2,11 @@
 //
 
 #include <iostream>
-
+#include "BinarySearchTree.h"
 int main()
 {
-    std::cout << "Hello World!\n";
+	std::cout << "Hello World!\n";
+	BinarySearchTree::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

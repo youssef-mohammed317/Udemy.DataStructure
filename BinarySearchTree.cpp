@@ -307,9 +307,104 @@ void BinarySearchTree::RInsert(int val) {
 
 void BinarySearchTree::IDelete(int val) {
 
+	if (root == nullptr)
+		return;
+
+	Node* curr = root;
+	Node* parent = nullptr;
+
+	while (curr != nullptr && curr->GetData() != val)
+	{
+		parent = curr;
+		if (val > curr->GetData())
+		{
+			curr = curr->GetRight();
+		}
+		else {
+			curr = curr->GetLeft();
+		}
+	}
+
+	if (curr == nullptr)
+		return;// not found
+
+	// here curr point to target
+	if (curr->GetLeft() == nullptr || curr->GetRight() == nullptr)
+	{
+		// leaf or degree 1
+
+		Node* child = (curr->GetLeft() != nullptr) ? curr->GetLeft() : curr->GetRight();
+
+		if (parent == nullptr)
+		{
+			root = child;
+		}
+		else if (parent->GetLeft() == curr)
+		{
+			parent->SetLeft(child);
+		}
+		else
+			parent->SetRight(child);
+		delete curr;
+		return;
+	}
+
+	// here two childs 
+	parent = curr;
+	Node* successor = curr->GetRight();
+
+	while (successor->GetLeft() != nullptr)
+	{
+		parent = successor;
+		successor = successor->GetLeft();
+	}
+
+	curr->SetData(successor->GetData());
+
+	if (parent->GetRight() == successor)
+	{
+		parent->SetRight(successor->GetRight());
+	}
+	else
+	{
+		parent->SetLeft(successor->GetRight());
+	}
+
+	delete successor;
+}
+Node* BinarySearchTree::RDelete(Node* ptr, int val)
+{
+	if (ptr == nullptr)return nullptr;
+
+	if (val > ptr->GetData())
+	{
+		ptr->SetRight(RDelete(ptr->GetRight(), val));
+	}
+	else if (val < ptr->GetData())
+	{
+		ptr->SetLeft(RDelete(ptr->GetLeft(), val));
+	}
+	else
+	{
+		if (ptr->GetLeft() == nullptr || ptr->GetRight() == nullptr)
+		{
+			Node* child = (ptr->GetLeft() != nullptr) ? ptr->GetLeft() : ptr->GetRight();
+			delete ptr;
+			return child;
+		}
+		Node* successor = ptr->GetRight();
+		while (successor->GetLeft() != nullptr) {
+			successor = successor->GetLeft();
+		}
+		ptr->SetData(successor->GetData());
+
+		ptr->SetRight(RDelete(ptr->GetRight(), successor->GetData()));
+	}
+	return ptr;
+
 }
 void BinarySearchTree::RDelete(int val) {
-
+	root = RDelete(root, val);
 }
 
 Node* BinarySearchTree::ISearch(int val) {
@@ -352,7 +447,75 @@ Node* BinarySearchTree::RSearch(int val)
 
 int BinarySearchTree::IGetHeight()
 {
+	if (root == nullptr)return 0;
+	stack<Node*>s, n;
+	s.push(root);
+	Node* temp;
+	while (!s.empty())
+	{
+		temp = s.top(); s.pop();
+		n.push(temp);
 
+		if (temp->GetLeft() != nullptr)s.push(temp->GetLeft());
+		if (temp->GetRight() != nullptr)s.push(temp->GetRight());
+	}
+	// s is empty and n contains all addresses of all nodes
+	int size = n.size();
+	Node** arr = new Node * [size];
+	for (int i = 0; i < size; i++)
+	{
+		arr[i] = n.top(); n.pop();
+	}
+	// now array contains all addresses
+	int maxCounter = 0;
+	int counter = 0;
+	Node* lastParent = nullptr;
+
+	for (int i = 0; i < size; i++)
+	{
+		lastParent = arr[i];
+		counter = 1;
+		for (int j = 0; j < size; j++)
+		{
+			if (arr[j]->GetLeft() == lastParent || arr[j]->GetRight() == lastParent)
+			{
+				lastParent = arr[j];
+				counter++;
+			}
+		}
+
+		if (counter > maxCounter)
+		{
+			maxCounter = counter;
+		}
+	}
+	delete[] arr;
+	return maxCounter;
+
+
+}
+
+int BinarySearchTree::IGetHeightQueueMethod()
+{
+	if (root == nullptr) return 0;
+	queue<Node*> q;
+	q.push(root);
+	Node* temp;
+	int height = 0;
+	while (!q.empty())
+	{
+		int levelSize = q.size();
+		height++;
+
+		for (int i = 0; i < levelSize; i++)
+		{
+			temp = q.front(); q.pop();
+			if (temp->GetLeft() != nullptr)q.push(temp->GetLeft());
+			if (temp->GetRight() != nullptr)q.push(temp->GetRight());
+		}
+
+	}
+	return height;
 }
 
 int BinarySearchTree::RGetHeight(Node* ptr) {
@@ -502,7 +665,71 @@ void BinarySearchTree::RInDisplay(Node* ptr) {
 void BinarySearchTree::RInDisplay() {
 	RInDisplay(root);
 }
-
 void BinarySearchTree::TestBehavior() {
+	cout << "==========================================\n";
+	cout << "       Binary Search Tree Test Suite      \n";
+	cout << "==========================================\n\n";
 
+	// إنشاء كائن من الشجرة بما أن الدالة static
+	BinarySearchTree tree;
+
+	// 1. Testing Insertion (Mixed Iterative & Recursive)
+	cout << "[1] Testing Insertion...\n";
+	int values[] = { 50, 30, 70, 20, 40, 60, 80, 10, 25, 45, 65, 85, 42 };
+	for (int i = 0; i < 13; i++) {
+		if (i % 2 == 0) tree.IInsert(values[i]);
+		else tree.RInsert(values[i]);
+	}
+	cout << "Tree built with 13 nodes.\n";
+
+	// 2. Testing Traversals
+	cout << "\n[2] Testing Display (In-Order)...\n";
+	cout << "Iterative In-Order : "; tree.IInDisplay(); cout << "\n";
+	cout << "Recursive In-Order : "; tree.RInDisplay(); cout << "\n";
+	// Output should be sorted: 10 20 25 30 40 42 45 50 60 65 70 80 85
+
+	// 3. Testing Height
+	cout << "\n[3] Testing Height...\n";
+	cout << "Iterative Height (Stack) : " << tree.IGetHeight() << "\n";
+	cout << "Iterative Height (Queue) : " << tree.IGetHeightQueueMethod() << "\n";
+	cout << "Recursive Height         : " << tree.RGetHeight() << "\n";
+	// All should output the same number (4 in this case)
+
+	// 4. Testing Node Counting
+	cout << "\n[4] Testing Node Counting...\n";
+	cout << "Leaves (Degree 0) -> ICount: " << tree.ICountNodes(0) << " | RCount: " << tree.RCountNodes(0) << "\n";
+	cout << "Degree 1 Nodes    -> ICount: " << tree.ICountNodes(1) << " | RCount: " << tree.RCountNodes(1) << "\n";
+	cout << "Degree 2 Nodes    -> ICount: " << tree.ICountNodes(2) << " | RCount: " << tree.RCountNodes(2) << "\n";
+
+	// 5. Testing Search
+	cout << "\n[5] Testing Search...\n";
+	Node* s1 = tree.ISearch(42);
+	Node* s2 = tree.RSearch(100);
+	cout << "Search 42 (Iterative)  : " << (s1 ? "Found" : "Not Found") << "\n";
+	cout << "Search 100 (Recursive) : " << (s2 ? "Found" : "Not Found") << "\n";
+
+	// 6. Testing Deletion (All Cases)
+	cout << "\n[6] Testing Deletion...\n";
+	cout << "-> Deleting Leaf Node (42) using RDelete...\n";
+	tree.RDelete(42);
+	cout << "Tree: "; tree.RInDisplay(); cout << "\n\n";
+
+	cout << "-> Deleting Degree 1 Node (40) using IDelete... (45 should take its place)\n";
+	tree.IDelete(40);
+	cout << "Tree: "; tree.RInDisplay(); cout << "\n\n";
+
+	cout << "-> Deleting Degree 2 Node (50 - Root) using RDelete...\n";
+	tree.RDelete(50);
+	cout << "Tree: "; tree.RInDisplay(); cout << "\n\n";
+
+	// 7. Testing Clear Functions
+	cout << "[7] Testing Clear Tree...\n";
+	tree.ILevelClear();
+	cout << "Tree cleared using ILevelClear().\n";
+	cout << "Height after clear: " << tree.RGetHeight() << " (Should be 0)\n";
+	cout << "Tree elements: "; tree.RInDisplay(); cout << "(Should be empty)\n";
+
+	cout << "\n==========================================\n";
+	cout << "              Tests Completed             \n";
+	cout << "==========================================\n";
 }

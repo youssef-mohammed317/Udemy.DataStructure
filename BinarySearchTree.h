@@ -18,6 +18,8 @@ class BinarySearchTree
 	void RInsert(Node* ptr, int val);
 	Node* RSearch(Node* ptr, int val);
 
+	Node* RDelete(Node* ptr, int val);
+
 public:
 	BinarySearchTree();
 	~BinarySearchTree();
@@ -41,6 +43,8 @@ public:
 
 	int RGetHeight();
 	int IGetHeight();
+	int IGetHeightQueueMethod();
+
 	int RCountNodes(int degree);
 	int ICountNodes(int degree);
 
