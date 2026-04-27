@@ -2,10 +2,11 @@
 //
 
 #include <iostream>
-
+#include "DACExamples.h"
 int main()
 {
 	std::cout << "Hello World!\n";
+	DACExamples::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

@@ -1,20 +1,29 @@
 #pragma once
+#include <iostream>
+
 class DACExamples
 {
-	static void RBinarySearch(int* arr, int low, int high);
+	static int RBinarySearch(int* arr, int low, int high, int key);
 
-	static void Merge(int* arr, int low, int mid, int high);
-	static void RMergeSort(int* arr, int low, int high);
+	static void Merge(int* auxilliary, int* arr, int low, int mid, int high);
+	static void RMergeSort(int* auxilliary, int* arr, int low, int high);
 
 	static int** MatrixAddition(int** A, int** B, int n);
+	static void RSquareMatrixMultiplication(int** A, int** B, int** C,
+		int Arow, int Acol,
+		int Brow, int Bcol,
+		int Crow, int Ccol,
+		int n);
 public:
-	static void IBinarySearch(int* arr, int size);
-	static void RBinarySearch(int* arr, int size);
+	static int IBinarySearch(int* arr, int size, int key);
+	static int RBinarySearch(int* arr, int size, int key);
 
 	static void IMergeSort(int* arr, int size);
 	static void RMergeSort(int* arr, int size);
 
-	static int** IMatrixMultiplication(int** A, int** B, int n);
-	static int** RMatrixMultiplication(int** A, int** B, int n);
+	static int** ISquareMatrixMultiplication(int** A, int** B, int n);
+	static int** RSquareMatrixMultiplication(int** A, int** B, int n);
+
+	static void TestBehavior();
 };
 
