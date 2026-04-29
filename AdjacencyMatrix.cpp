@@ -3,12 +3,12 @@
 void AdjacencyMatrix::ValidateEdge(int u, int v)
 {
 	if (u > verticesNumber || u < 1 || v > verticesNumber || v < 1)
-		throw new exception("invalid vertex inputs");
+		throw out_of_range("invalid vertex inputs");
 }
 void AdjacencyMatrix::ValidateVertex(int vertex)
 {
 	if (vertex > verticesNumber || vertex < 1)
-		throw new exception("invalid vertex inputs");
+		throw out_of_range("invalid vertex inputs");
 }
 
 AdjacencyMatrix::AdjacencyMatrix(int verticesNumber, bool isDirected)
