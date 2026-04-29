@@ -1,0 +1,32 @@
+#pragma once
+class AdjacencyMatrix
+{
+	int** cost;
+	int verticesNumber;
+	bool isDirected;
+public:
+	AdjacencyMatrix(int verticesNumber, bool isDirected = false);
+	~AdjacencyMatrix();
+	void Clear();
+
+	void AddEdge(int u, int v, int weight = 1);
+	void RemoveEdge(int u, int v);
+	bool HasEdge(int u, int v);
+
+	int GountVertices();
+	int CountEdges();
+	int CountConnectedComponents();
+	bool IsCycle();
+	bool IsConnected();
+	bool IsCycleUsingDSU();
+
+	void BreadthFirstSearch(int startVertex);
+	void DepthFirstSearch(int startVertex);
+
+	AdjacencyMatrix Union(const AdjacencyMatrix& other);
+
+	void PrintMatrix();
+
+	static void TestBehavior();
+};
+
