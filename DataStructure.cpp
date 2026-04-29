@@ -6,8 +6,15 @@
 
 int main()
 {
-    std::cout << "Hello World!\n";
-    AdjacencyMatrix::TestBehavior();
+	std::cout << "Hello World!\n";
+	try
+	{
+		AdjacencyMatrix::TestBehavior();
+	}
+	catch (const exception& e)
+	{
+		cout << "Error occurred: " << e.what() << "\n";
+	}
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

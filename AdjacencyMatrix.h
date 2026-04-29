@@ -12,6 +12,8 @@ class AdjacencyMatrix
 	bool isDirected;
 	void ValidateEdge(int u, int v);
 	void ValidateVertex(int vertex);
+	void ParentHelper(int* parent, int& u, int& v, int& uRoot, int& vRoot);
+
 public:
 	AdjacencyMatrix(int verticesNumber, bool isDirected = false);
 	~AdjacencyMatrix();
@@ -20,7 +22,9 @@ public:
 	void AddEdge(int u, int v, int weight = 1);
 	void RemoveEdge(int u, int v);
 	bool HasEdge(int u, int v);
+	int GetWeight(int u, int v);
 
+	int Find(int vertex);
 	int CountVertices();
 	int CountEdges();
 	int CountWeights();
@@ -28,12 +32,11 @@ public:
 	bool IsDirected();
 	bool IsCycle();
 	bool IsConnected();
-	bool IsCycleUsingDSU();
 
 	void BreadthFirstSearch(int startVertex);
 	void DepthFirstSearch(int startVertex);
 
-	AdjacencyMatrix Union(const AdjacencyMatrix& other);
+	AdjacencyMatrix Union(AdjacencyMatrix& other);
 
 	void PrintMatrix();
 
