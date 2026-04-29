@@ -41,7 +41,7 @@ void AdjacencyMatrix::Clear()
 }
 void AdjacencyMatrix::AddEdge(int u, int v, int weight)
 {
-	ValidateIndex(u, v);
+	ValidateEdge(u, v);
 	if (isDirected)
 	{
 		cost[u][v] = weight;
@@ -53,7 +53,7 @@ void AdjacencyMatrix::AddEdge(int u, int v, int weight)
 
 void AdjacencyMatrix::RemoveEdge(int u, int v)
 {
-	ValidateIndex(u, v);
+	ValidateEdge(u, v);
 	if (isDirected)
 	{
 		cost[u][v] = INT_MAX;
@@ -64,7 +64,7 @@ void AdjacencyMatrix::RemoveEdge(int u, int v)
 }
 bool AdjacencyMatrix::HasEdge(int u, int v)
 {
-	ValidateIndex(u, v);
+	ValidateEdge(u, v);
 	return 	cost[u][v] != INT_MAX;
 }
 
