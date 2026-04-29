@@ -1,9 +1,17 @@
 #pragma once
+#include<climits>
+#include<stdexcept>
+#include<queue>
+#include<stack>
+#include<iostream>
+using namespace std;
 class AdjacencyMatrix
 {
 	int** cost;
 	int verticesNumber;
 	bool isDirected;
+	void ValidateEdge(int u, int v);
+	void ValidateVertex(int vertex);
 public:
 	AdjacencyMatrix(int verticesNumber, bool isDirected = false);
 	~AdjacencyMatrix();
@@ -13,9 +21,11 @@ public:
 	void RemoveEdge(int u, int v);
 	bool HasEdge(int u, int v);
 
-	int GountVertices();
+	int CountVertices();
 	int CountEdges();
+	int CountWeights();
 	int CountConnectedComponents();
+	bool IsDirected();
 	bool IsCycle();
 	bool IsConnected();
 	bool IsCycleUsingDSU();
