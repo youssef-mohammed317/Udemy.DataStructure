@@ -24,8 +24,16 @@ void AdjacencyMatrix::ParentHelper(int* parent, int& u, int& v, int& uRoot, int&
 
 		if (uRoot != vRoot)
 		{
-			parent[vRoot] = uRoot;
-			parent[uRoot]--;
+			if (parent[uRoot] <= parent[vRoot])
+			{
+				parent[uRoot] += parent[vRoot];
+				parent[vRoot] = uRoot;
+			}
+			else
+			{
+				parent[vRoot] += parent[uRoot];
+				parent[uRoot] = vRoot;
+			}
 		}
 	}
 }
