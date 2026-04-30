@@ -3,13 +3,15 @@
 
 #include <iostream>
 #include "AdjacencyMatrix.h"
+#include "AdjacencyList.h"
 
 int main()
 {
 	std::cout << "Hello World!\n";
 	try
 	{
-		AdjacencyMatrix::TestBehavior();
+		//AdjacencyMatrix::TestBehavior();
+		AdjacencyList::TestBehavior();
 	}
 	catch (const exception& e)
 	{
