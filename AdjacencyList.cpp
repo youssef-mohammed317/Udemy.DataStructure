@@ -11,6 +11,34 @@ void AdjacencyList::ValidateEdge(int u, int v)
 	ValidateVertex(v);
 }
 
+void AdjacencyList::ParentHelper(int* parent, int& u, int& v, int& uRoot, int& vRoot)
+{
+	uRoot = u;
+	while (parent[uRoot] > 0)
+	{
+		uRoot = parent[uRoot];
+	}
+
+	vRoot = v;
+	while (parent[vRoot] > 0) {
+		vRoot = parent[vRoot];
+	}
+
+	if (vRoot != uRoot)
+	{
+		if (parent[uRoot] < parent[vRoot])
+		{
+			parent[uRoot] += parent[vRoot];
+			parent[vRoot] = uRoot;
+		}
+		else {
+			parent[vRoot] += parent[uRoot];
+			parent[uRoot] = vRoot;
+		}
+	}
+
+}
+
 AdjacencyList::AdjacencyList(int verticesNumber, bool isDirected)
 {
 	this->verticesNumber = verticesNumber;
@@ -83,4 +111,134 @@ int AdjacencyList::GetWeight(int u, int v)
 	}
 
 	return INT_MAX;
+}
+
+int AdjacencyList::Find(int vertex)
+{
+	ValidateVertex(vertex);
+
+	int* parent = new int[verticesNumber + 1] {0};
+	for (int i = 1; i <= verticesNumber; i++)
+		parent[i] = -1;
+
+	int u, v, uRoot, vRoot;
+
+	for (u = 1; u <= verticesNumber; u++)
+	{
+		for (const Node& n : cost[u])
+		{
+			v = n.vertex;
+			ParentHelper(parent, u, v, uRoot, vRoot);
+		}
+	}
+
+	int vertexRoot = vertex;
+	while (parent[vertexRoot] > 0)
+		vertexRoot = parent[vertexRoot];
+
+	delete[]parent;
+	return vertexRoot;
+}
+
+int AdjacencyList::CountConnectedComponents()
+{
+	int* parent = new int[verticesNumber + 1] {0};
+	for (int i = 1; i <= verticesNumber; i++)
+		parent[i] = -1;
+
+	int u, v, uRoot, vRoot;
+
+	for (u = 1; u <= verticesNumber; u++)
+	{
+		for (const Node& n : cost[u])
+		{
+			v = n.vertex;
+			ParentHelper(parent, u, v, uRoot, vRoot);
+		}
+	}
+
+	int counter = 0;
+	for (int i = 1; i <= verticesNumber; i++)
+	{
+		if (parent[i] < 0)
+			counter++;
+	}
+	delete[]parent;
+	return counter;
+}
+
+
+int AdjacencyList::CountVertices()
+{
+	return verticesNumber;
+}
+
+int AdjacencyList::CountWeights()
+{
+	int weights = 0;
+
+
+	for (int u = 1; u <= verticesNumber; u++)
+	{
+		for (const Node& n : cost[u])
+		{
+			weights += n.weight;
+		}
+	}
+
+	return isDirected ? weights : weights / 2;
+
+}
+
+int AdjacencyList::CountEdges()
+{
+	int edges = 0;
+
+
+	for (int u = 1; u <= verticesNumber; u++)
+	{
+		edges += cost[u].size();
+	}
+
+	return isDirected ? edges : edges / 2;
+}
+
+bool AdjacencyList::IsDirected()
+{
+	return isDirected;
+}
+bool AdjacencyList::IsConnected()
+{
+	return CountConnectedComponents() == 1;
+}
+bool AdjacencyList::IsCycle() {
+	int* parent = new int[verticesNumber + 1] {0};
+	for (int i = 1; i <= verticesNumber; i++)
+		parent[i] = -1;
+
+	int u, v, uRoot, vRoot;
+	if (!isDirected)
+	{
+		for (u = 1; u <= verticesNumber; u++)
+		{
+			for (const Node& n : cost[u])
+			{
+				v = n.vertex;
+				if (u <= v)
+				{
+					ParentHelper(parent, u, v, uRoot, vRoot);
+					if (uRoot == vRoot)
+					{
+						delete[]parent;
+						return true;
+					}
+				}
+
+
+			}
+		}
+	}
+
+	delete[]parent;
+	return false;
 }

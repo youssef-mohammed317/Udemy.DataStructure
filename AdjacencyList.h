@@ -26,7 +26,7 @@ class AdjacencyList
 	bool isDirected;
 	void ValidateVertex(int vertex);
 	void ValidateEdge(int u, int v);
-	//void ParentHelper(int* parent, int& u, int& v, int& uRoot, int& vRoot);
+	void ParentHelper(int* parent, int& u, int& v, int& uRoot, int& vRoot);
 
 public:
 	AdjacencyList(int verticesNumber, bool isDirected = false);

@@ -131,9 +131,11 @@ int AdjacencyMatrix::Find(int vertex)
 				ParentHelper(parent, u, v, uRoot, vRoot);
 	}
 
-	int boss = parent[vertex] < 0 ? vertex : parent[vertex];
+	int vertexRoot = vertex;
+	while (parent[vertexRoot] > 0)
+		vertexRoot = parent[vertexRoot];
 	delete[] parent;
-	return boss;
+	return vertexRoot;
 }
 int AdjacencyMatrix::CountVertices()
 {
@@ -239,20 +241,12 @@ bool AdjacencyMatrix::IsCycle()
 		parent[i] = -1;
 
 	int u, v, uRoot, vRoot;
-	if (isDirected)
+	if (!isDirected)
+	{
+
 		for (u = 1; u <= verticesNumber; u++)
-			for (v = 1; v <= verticesNumber; v++)
-			{
-				ParentHelper(parent, u, v, uRoot, vRoot);
-				if (cost[u][v] != INT_MAX && uRoot == vRoot)
-				{
-					delete[]parent;
-					return true;
-				}
-			}
-	else
-		for (u = 1; u <= verticesNumber; u++)
-			for (v = u + 1; v <= verticesNumber; v++)
+		{
+			for (v = u; v <= verticesNumber; v++)
 			{
 				ParentHelper(parent, u, v, uRoot, vRoot);
 
@@ -261,6 +255,8 @@ bool AdjacencyMatrix::IsCycle()
 					return true;
 				}
 			}
+		}
+	}
 
 	delete[]parent;
 
