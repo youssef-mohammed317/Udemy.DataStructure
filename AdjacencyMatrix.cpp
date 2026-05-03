@@ -12,30 +12,29 @@ void AdjacencyMatrix::ValidateVertex(int vertex)
 }
 void AdjacencyMatrix::ParentHelper(int* parent, int& u, int& v, int& uRoot, int& vRoot)
 {
-	if (cost[u][v] != INT_MAX)
+
+	uRoot = u;
+	while (parent[uRoot] > 0)
+		uRoot = parent[uRoot];
+
+	vRoot = v;
+	while (parent[vRoot] > 0)
+		vRoot = parent[vRoot];
+
+	if (uRoot != vRoot)
 	{
-		uRoot = u;
-		while (parent[uRoot] > 0)
-			uRoot = parent[uRoot];
-
-		vRoot = v;
-		while (parent[vRoot] > 0)
-			vRoot = parent[vRoot];
-
-		if (uRoot != vRoot)
+		if (parent[uRoot] <= parent[vRoot])
 		{
-			if (parent[uRoot] <= parent[vRoot])
-			{
-				parent[uRoot] += parent[vRoot];
-				parent[vRoot] = uRoot;
-			}
-			else
-			{
-				parent[vRoot] += parent[uRoot];
-				parent[uRoot] = vRoot;
-			}
+			parent[uRoot] += parent[vRoot];
+			parent[vRoot] = uRoot;
+		}
+		else
+		{
+			parent[vRoot] += parent[uRoot];
+			parent[uRoot] = vRoot;
 		}
 	}
+
 }
 
 
@@ -82,8 +81,14 @@ void AdjacencyMatrix::AddEdge(int u, int v, int weight)
 			cost[u][v] = cost[v][u] = weight;
 		else
 		{
-			cost[u][v] += weight;
-			cost[v][u] += weight;
+			if (u != v)
+			{
+				cost[u][v] += weight;
+				cost[v][u] += weight;
+			}
+			else {
+				cost[v][u] += weight;
+			}
 		}
 
 	}
@@ -123,12 +128,15 @@ int AdjacencyMatrix::Find(int vertex)
 	{
 		for (u = 1; u <= verticesNumber; u++)
 			for (v = 1; v <= verticesNumber; v++)
-				ParentHelper(parent, u, v, uRoot, vRoot);
+				if (cost[u][v] != INT_MAX)
+					ParentHelper(parent, u, v, uRoot, vRoot);
 	}
 	else {
 		for (u = 1; u <= verticesNumber; u++)
 			for (v = u + 1; v <= verticesNumber; v++)
-				ParentHelper(parent, u, v, uRoot, vRoot);
+				if (cost[u][v] != INT_MAX)
+
+					ParentHelper(parent, u, v, uRoot, vRoot);
 	}
 
 	int vertexRoot = vertex;
@@ -196,25 +204,24 @@ int AdjacencyMatrix::CountConnectedComponents()
 		parent[i] = -1;
 
 	int u, v, uRoot, vRoot;
-	if (isDirected)
+	if (!isDirected)
 	{
-		for (u = 1; u <= verticesNumber; u++)
-		{
-			for (v = 1; v <= verticesNumber; v++)
-			{
-				ParentHelper(parent, u, v, uRoot, vRoot);
-			}
-		}
-
-	}
-	else {
 		for (u = 1; u <= verticesNumber; u++)
 		{
 			for (v = u + 1; v <= verticesNumber; v++)
 			{
-				ParentHelper(parent, u, v, uRoot, vRoot);
+				if (cost[u][v] != INT_MAX)
+
+					ParentHelper(parent, u, v, uRoot, vRoot);
 			}
 		}
+
+	}
+	if (isDirected)
+	{
+		// later	
+		delete[]parent;
+		throw logic_error("not implemented yet");
 	}
 	int counter = 0;
 	for (int i = 1; i <= verticesNumber; i++)
@@ -223,6 +230,7 @@ int AdjacencyMatrix::CountConnectedComponents()
 
 	delete[]parent;
 	return counter;
+
 }
 
 bool AdjacencyMatrix::IsDirected()
@@ -243,24 +251,34 @@ bool AdjacencyMatrix::IsCycle()
 	int u, v, uRoot, vRoot;
 	if (!isDirected)
 	{
-
 		for (u = 1; u <= verticesNumber; u++)
 		{
 			for (v = u; v <= verticesNumber; v++)
 			{
-				ParentHelper(parent, u, v, uRoot, vRoot);
+				if (cost[u][v] != INT_MAX)
+				{
+					ParentHelper(parent, u, v, uRoot, vRoot);
 
-				if (cost[u][v] != INT_MAX && uRoot == vRoot) {
-					delete[]parent;
-					return true;
+					if (uRoot == vRoot) {
+						delete[]parent;
+						return true;
+					}
 				}
 			}
 		}
-	}
 
+	}
+	if (isDirected)
+	{
+		// later
+		delete[]parent;
+
+		throw logic_error("not implemented yet");
+	}
 	delete[]parent;
 
 	return false;
+
 }
 
 void AdjacencyMatrix::BreadthFirstSearch(int startVertex)
@@ -293,55 +311,54 @@ void AdjacencyMatrix::BreadthFirstSearch(int startVertex)
 void AdjacencyMatrix::DepthFirstSearch(int startVertex)
 {
 	ValidateVertex(startVertex);
+	bool* visited = new bool[verticesNumber + 1] {0};
+	stack<int> s;
 
-	bool* printed = new bool[verticesNumber + 1] {0};
-	stack<int>s;
 	s.push(startVertex);
-	printed[startVertex] = true;
+	cout << "{ ";
 	int u;
-	cout << "{";
 	while (!s.empty())
 	{
 		u = s.top(); s.pop();
-		cout << u << " ";
-		for (int v = verticesNumber; v >= 1; v--)
+
+		if (!visited[u])
 		{
-			if (!printed[v] && cost[u][v] != INT_MAX)
+			visited[u] = true;
+			cout << u << " ";
+
+			for (int v = verticesNumber; v >= 1; v--)
 			{
-				s.push(v);
-				printed[v] = true;
+				if (!visited[v] && cost[u][v] != INT_MAX)
+				{
+					s.push(v);
+				}
 			}
 		}
 	}
 	cout << "}\n";
-	delete[]printed;
+	delete[] visited;
 }
-
-AdjacencyMatrix AdjacencyMatrix::Union(AdjacencyMatrix& other)
+AdjacencyMatrix* AdjacencyMatrix::Union(AdjacencyMatrix& other)
 {
 	if (isDirected != other.isDirected)
-	{
 		throw invalid_argument("both graphs must be directed or not");
-	}
+
 	int vertexNumber = verticesNumber > other.verticesNumber ? verticesNumber : other.verticesNumber;
-	AdjacencyMatrix result = AdjacencyMatrix(vertexNumber, isDirected);
+	AdjacencyMatrix* result = new AdjacencyMatrix(vertexNumber, isDirected);
+
 	int u, v;
 	for (u = 1; u <= verticesNumber; u++)
-		for (v = isDirected ? 1 : u + 1; v <= verticesNumber; v++)
-		{
+		for (v = isDirected ? 1 : u; v <= verticesNumber; v++)
 			if (cost[u][v] != INT_MAX)
-				result.AddEdge(u, v, cost[u][v]);
-		}
+				result->AddEdge(u, v, cost[u][v]);
 
 	for (u = 1; u <= other.verticesNumber; u++)
-		for (v = isDirected ? 1 : u + 1; v <= other.verticesNumber; v++)
-		{
+		for (v = isDirected ? 1 : u; v <= other.verticesNumber; v++)
 			if (other.cost[u][v] != INT_MAX)
-				result.AddEdge(u, v, other.cost[u][v]);
-		}
+				result->AddEdge(u, v, other.cost[u][v]);
+
 	return result;
 }
-
 
 void AdjacencyMatrix::PrintMatrix()
 {
@@ -366,62 +383,66 @@ void AdjacencyMatrix::PrintMatrix()
 }
 void AdjacencyMatrix::TestBehavior()
 {
-	cout << "==========================================\n";
-	cout << "    [1] Testing Undirected Graph (DSU, Cycles) \n";
-	cout << "==========================================\n";
-	AdjacencyMatrix unGraph(5, false); // 5 Vertices, Undirected
+	try {
+		cout << "==========================================\n";
+		cout << "    [1] Testing Undirected Matrix (DSU, Cycles) \n";
+		cout << "==========================================\n";
+		AdjacencyMatrix unGraph(5, false);
 
-	unGraph.AddEdge(1, 2, 10);
-	unGraph.AddEdge(2, 3, 20);
-	unGraph.AddEdge(1, 4, 30);
+		unGraph.AddEdge(1, 2, 10);
+		unGraph.AddEdge(2, 3, 20);
+		unGraph.AddEdge(1, 4, 30);
 
-	cout << "Graph Edges Count (Expected 3): " << unGraph.CountEdges() << "\n";
-	cout << "Graph Total Weight (Expected 60): " << unGraph.CountWeights() << "\n";
-	cout << "Is Connected? (Expected 0/False): " << unGraph.IsConnected() << "\n"; // Node 5 is isolated
-	cout << "Connected Components (Expected 2): " << unGraph.CountConnectedComponents() << "\n";
-	cout << "Is Cycle? (Expected 0/False): " << unGraph.IsCycle() << "\n";
-	cout << "Find boss of 3 (Expected 1 or 2 depending on tree): " << unGraph.Find(3) << "\n";
+		cout << "Graph Edges Count (Expected 3): " << unGraph.CountEdges() << "\n";
+		cout << "Graph Total Weight (Expected 60): " << unGraph.CountWeights() << "\n";
+		cout << "Is Connected? (Expected 0/False): " << unGraph.IsConnected() << "\n";
+		cout << "Connected Components (Expected 2): " << unGraph.CountConnectedComponents() << "\n";
+		cout << "Is Cycle? (Expected 0/False): " << unGraph.IsCycle() << "\n";
 
-	cout << "\n-> Adding edge (3, 4) to create a cycle...\n";
-	unGraph.AddEdge(3, 4, 5);
-	cout << "Is Cycle now? (Expected 1/True): " << unGraph.IsCycle() << "\n";
+		cout << "\n-> Adding edge (3, 4) to create a cycle...\n";
+		unGraph.AddEdge(3, 4, 5);
+		cout << "Is Cycle now? (Expected 1/True): " << unGraph.IsCycle() << "\n";
 
-	cout << "\n==========================================\n";
-	cout << "    [2] Testing Directed Graph (Traversals) \n";
-	cout << "==========================================\n";
-	AdjacencyMatrix dirGraph(6, true); // 6 Vertices, Directed
+		cout << "\n==========================================\n";
+		cout << "    [2] Testing Directed Matrix (Traversals) \n";
+		cout << "==========================================\n";
+		AdjacencyMatrix dirGraph(6, true);
 
-	dirGraph.AddEdge(1, 2);
-	dirGraph.AddEdge(1, 3);
-	dirGraph.AddEdge(2, 4);
-	dirGraph.AddEdge(2, 5);
-	dirGraph.AddEdge(3, 6);
+		dirGraph.AddEdge(1, 2);
+		dirGraph.AddEdge(1, 3);
+		dirGraph.AddEdge(2, 4);
+		dirGraph.AddEdge(2, 5);
+		dirGraph.AddEdge(3, 6);
 
-	cout << "BFS starting from 1 (Expected {1 2 3 4 5 6 }): \n";
-	dirGraph.BreadthFirstSearch(1);
+		cout << "BFS starting from 1 (Expected {1 2 3 4 5 6 }): \n";
+		dirGraph.BreadthFirstSearch(1);
 
-	cout << "DFS starting from 1 (Expected {1 2 4 5 3 6 }): \n";
-	dirGraph.DepthFirstSearch(1);
+		cout << "DFS starting from 1 (Expected {1 2 4 5 3 6 }): \n";
+		dirGraph.DepthFirstSearch(1);
 
+		cout << "\n==========================================\n";
+		cout << "    [3] Testing Matrix Union \n";
+		cout << "==========================================\n";
+		AdjacencyMatrix g1(3, false);
+		g1.AddEdge(1, 2, 5);
 
-	cout << "\n==========================================\n";
-	cout << "    [3] Testing Graph Union \n";
-	cout << "==========================================\n";
-	AdjacencyMatrix g1(3, false);
-	g1.AddEdge(1, 2, 5);
+		AdjacencyMatrix g2(4, false);
+		g2.AddEdge(2, 3, 10);
+		g2.AddEdge(3, 4, 15);
+		g2.AddEdge(1, 2, 5); // Overlapping edge
 
-	AdjacencyMatrix g2(4, false);
-	g2.AddEdge(2, 3, 10);
-	g2.AddEdge(3, 4, 15);
-	g2.AddEdge(1, 2, 5); // Overlapping edge
+		AdjacencyMatrix* g3 = g1.Union(g2); // Using Pointer
+		cout << "Union Graph Vertices (Expected 4): " << g3->CountVertices() << "\n";
+		cout << "Union Graph Edges (Expected 3): " << g3->CountEdges() << "\n";
+		cout << "Weight of overlapping edge (1, 2) (Expected 10): " << g3->GetWeight(1, 2) << "\n";
 
-	AdjacencyMatrix g3 = g1.Union(g2);
-	cout << "Union Graph Vertices (Expected 4): " << g3.CountVertices() << "\n";
-	cout << "Union Graph Edges (Expected 3): " << g3.CountEdges() << "\n";
-	cout << "Weight of overlapping edge (1, 2) (Expected 10): " << g3.GetWeight(1, 2) << "\n";
+		cout << "\nMatrix Representation of Union Graph:\n";
+		g3->PrintMatrix();
 
-	cout << "\nMatrix Representation of Union Graph:\n";
-	g3.PrintMatrix();
-
-	cout << "\nAll tests completed successfully!\n";
+		delete g3; // Memory cleanup!
+		cout << "\nAll Matrix Tests Completed Successfully!\n";
+	}
+	catch (const exception& e) {
+		cout << "\n[ERROR] Exception Caught in Matrix: " << e.what() << "\n";
+	}
 }

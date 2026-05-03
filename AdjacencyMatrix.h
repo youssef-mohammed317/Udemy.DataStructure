@@ -36,7 +36,7 @@ public:
 	void BreadthFirstSearch(int startVertex);
 	void DepthFirstSearch(int startVertex);
 
-	AdjacencyMatrix Union(AdjacencyMatrix& other);
+	AdjacencyMatrix* Union(AdjacencyMatrix& other);
 
 	void PrintMatrix();
 

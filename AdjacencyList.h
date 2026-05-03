@@ -13,7 +13,7 @@ struct Node {
 	int weight;
 	Node(int vertex, int weight = 1)
 	{
-		this->weight = vertex;
+		this->vertex = vertex;
 		this->weight = weight;
 	}
 };
@@ -50,9 +50,7 @@ public:
 	void BreadthFirstSearch(int startVertex);
 	void DepthFirstSearch(int startVertex);
 
-	AdjacencyList Union(AdjacencyList& other);
-
-	void PrintMatrix();
+	AdjacencyList* Union(AdjacencyList& other);
 
 	static void TestBehavior();
 };
