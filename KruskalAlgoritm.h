@@ -1,0 +1,14 @@
+#pragma once
+#include<list>
+#include "Graph.h"
+class KruskalAlgoritm
+{
+	// always select min weight use sorted list or array with selected array init with false and mark what is selected
+	// kruskal use disjoint sets
+
+	static int Find(int* parent, int vertex);
+	static void Union(int* parent, int src, int dest);
+public:
+	static std::list<Edge> Execute(Graph& graph);
+};
+
