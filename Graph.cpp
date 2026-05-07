@@ -44,9 +44,7 @@ void Graph::RemoveEdge(Edge edge)
 bool Graph::HasEdge(Edge edge)
 {
 	ValidateEdge(edge);
-	auto it = std::find_if(edges.begin(), edges.end(), [edge](const Edge& e) {
-		return e == edge;
-		});
+	auto it = std::find(edges.begin(), edges.end(), edge);
 	return it != edges.end();
 }
 bool Graph::IsDirected()
@@ -60,4 +58,31 @@ int Graph::GetVertices()
 std::list<Edge> Graph::GetEdges()
 {
 	return edges;
+}
+int Graph::GetWeight(int src, int dest)
+{
+	return GetWeight(Edge(src, dest, 1));
+}
+int Graph::GetWeight(Edge edge)
+{
+	ValidateEdge(edge);
+	auto it = std::find(edges.begin(), edges.end(), edge);
+	if (it != edges.end())
+	{
+		return it->weight;
+	}
+	return INT_MAX;
+}
+Edge Graph::GetMinWeight()
+{
+	if (edges.empty()) throw std::logic_error("the graph is empty");
+	Edge selected = edges.front();
+	for (Edge& e : edges)
+	{
+		if (e.weight < selected.weight)
+		{
+			selected = e;
+		}
+	}
+	return selected;
 }

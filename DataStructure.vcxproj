@@ -131,11 +131,13 @@
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="KnapsackAlgorithm.cpp" />
     <ClCompile Include="KruskalAlgoritm.cpp" />
+    <ClCompile Include="PrimsAlgorithm.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Graph.h" />
     <ClInclude Include="KnapsackAlgorithm.h" />
     <ClInclude Include="KruskalAlgoritm.h" />
+    <ClInclude Include="PrimsAlgorithm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -34,5 +34,8 @@ public:
 	std::list<Edge> GetEdges();
 	bool IsDirected();
 	int GetVertices();
+	int GetWeight(Edge edge);
+	int GetWeight(int src, int dest);
+	Edge GetMinWeight();
 };
 
