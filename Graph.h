@@ -22,6 +22,7 @@ public:
 	void RemoveEdge(int src, int dest);
 	bool HasEdge(int src, int dest) const;
 	void PrintGraph() const;
+	void Clear();
 
 	// Traversal Algorithms
 	// Uses a queue (FIFO) to explore level by level.

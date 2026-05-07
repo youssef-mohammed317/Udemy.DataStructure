@@ -96,3 +96,10 @@ void Graph::PrintGraph() const
 		adjLists[i].Print();
 	}
 }
+void Graph::Clear()
+{
+	for (int i = 1; i <= numVertices; i++)
+	{
+		adjLists[i].Clear();
+	}
+}

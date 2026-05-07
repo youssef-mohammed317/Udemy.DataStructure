@@ -138,6 +138,10 @@ int main()
 		}
 		catch (const out_of_range& e) { cout << "  [Caught] " << e.what() << "\n"; }
 
+		cout << "\n[-] Clearing the graph...\n";
+		myGraph.Clear();
+		myGraph.PrintGraph();
+
 	}
 	catch (const exception& e)
 	{
