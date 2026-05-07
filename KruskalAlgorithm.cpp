@@ -1,5 +1,5 @@
-#include "KruskalAlgoritm.h"
-int KruskalAlgoritm::Find(int* parent, int vertex)
+#include "KruskalAlgorithm.h"
+int KruskalAlgorithm::Find(int* parent, int vertex)
 {
 	while (parent[vertex] > 0)
 	{
@@ -8,7 +8,7 @@ int KruskalAlgoritm::Find(int* parent, int vertex)
 	return vertex;
 }
 
-void KruskalAlgoritm::Union(int* parent, int srcRoot, int destRoot)
+void KruskalAlgorithm::Union(int* parent, int srcRoot, int destRoot)
 {
 	if (parent[srcRoot] < parent[destRoot])
 	{
@@ -21,11 +21,11 @@ void KruskalAlgoritm::Union(int* parent, int srcRoot, int destRoot)
 	}
 }
 
-std::list<Edge> KruskalAlgoritm::Execute(Graph& graph)
+std::list<Edge> KruskalAlgorithm::Execute(Graph& graph)
 {
 	std::list<Edge> edges = graph.GetEdges();
 	edges.sort([](Edge& a, Edge& b) {
-		a.weight < b.weight;
+		return  a.weight < b.weight;
 		});
 
 	int* parent = new int[graph.GetVertices() + 1] {0};

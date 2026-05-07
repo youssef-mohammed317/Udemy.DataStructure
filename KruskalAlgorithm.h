@@ -2,7 +2,7 @@
 #include<list>
 #include<climits>
 #include "Graph.h"
-class KruskalAlgoritm
+class KruskalAlgorithm
 {
 	// always select min weight use sorted list or array with selected array init with false and mark what is selected
 	// kruskal use disjoint sets
