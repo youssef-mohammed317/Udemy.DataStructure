@@ -1,5 +1,6 @@
 #pragma once
 #include<list>
+#include<climits>
 #include "Graph.h"
 class KruskalAlgoritm
 {

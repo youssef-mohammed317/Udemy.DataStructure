@@ -2,6 +2,7 @@
 #include<list>
 #include<algorithm>
 #include<stdexcept>
+#include<climits>
 class Edge {
 public:
 	int src, dest, weight;

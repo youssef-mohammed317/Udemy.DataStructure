@@ -128,12 +128,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DataStructure.cpp" />
+    <ClCompile Include="DijkstraAlgorithm.cpp" />
     <ClCompile Include="Graph.cpp" />
     <ClCompile Include="KnapsackAlgorithm.cpp" />
     <ClCompile Include="KruskalAlgoritm.cpp" />
     <ClCompile Include="PrimsAlgorithm.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DijkstraAlgorithm.h" />
     <ClInclude Include="Graph.h" />
     <ClInclude Include="KnapsackAlgorithm.h" />
     <ClInclude Include="KruskalAlgoritm.h" />
