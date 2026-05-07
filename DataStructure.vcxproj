@@ -130,6 +130,8 @@
     <ClCompile Include="AdjList.cpp" />
     <ClCompile Include="AdjNode.cpp" />
     <ClCompile Include="DataStructure.cpp" />
+    <ClCompile Include="DisjointSet.cpp" />
+    <ClCompile Include="Graph.cpp" />
     <ClCompile Include="VertexNode.cpp" />
     <ClCompile Include="VertexQueue.cpp" />
     <ClCompile Include="VertexStack.cpp" />
@@ -137,6 +139,8 @@
   <ItemGroup>
     <ClInclude Include="AdjList.h" />
     <ClInclude Include="AdjNode.h" />
+    <ClInclude Include="DisjointSet.h" />
+    <ClInclude Include="Graph.h" />
     <ClInclude Include="VertexNode.h" />
     <ClInclude Include="VertexQueue.h" />
     <ClInclude Include="VertexStack.h" />
