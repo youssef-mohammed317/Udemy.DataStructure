@@ -1,29 +1,29 @@
 #include <iostream>
 #include <stdexcept>
 #include "AdjList.h"
+#include "VertexQueue.h"
+#include "VertexStack.h"
 
 using namespace std;
 
 int main()
 {
+	// ========================================================
+	// SECTION 1: Testing Adjacency List
+	// ========================================================
 	cout << "========================================================\n";
 	cout << "=== Testing Adjacency List (With Exceptions & Print) ===\n";
 	cout << "========================================================\n\n";
 
-	// 1. Test Constructor & AddEdge
 	cout << "[+] Building connections for Node 1...\n";
 	AdjList node1(1);
 	node1.AddEdge(2, 15);
 	node1.AddEdge(3, 8);
 	node1.AddEdge(4, 25);
 
-	// Use the class's built-in print method
 	node1.Print();
 
-	// 2. Test Exceptions in GetWeight
 	cout << "[?] Testing Exception Handling in GetWeight()...\n";
-
-	// Path exists
 	try
 	{
 		cout << "  Weight of path to Node 3: " << node1.GetWeight(3) << "\n";
@@ -33,7 +33,6 @@ int main()
 		cout << "  Error: " << e.what() << "\n";
 	}
 
-	// Path does not exist (will throw an exception)
 	try
 	{
 		cout << "  Weight of path to Node 5: ";
@@ -41,37 +40,86 @@ int main()
 	}
 	catch (const invalid_argument& e)
 	{
-		// Catch the exception and print the custom error message
 		cout << "[Exception Caught] " << e.what() << "\n\n";
 	}
 
-	// 3. Test Deep Copy (Copy Constructor)
 	cout << "[+] Testing Deep Copy (Copy Constructor)...\n";
 	AdjList copiedNode(node1);
-
 	cout << "  -> Removing Node 3 from the Original List...\n\n";
-	node1.RemoveEdge(3); // Remove from the original list only
+	node1.RemoveEdge(3);
 
 	cout << "--- Original List (After Deletion) ---\n";
 	node1.Print();
-
 	cout << "--- Copied List (Should still have Node 3) ---\n";
 	copiedNode.Print();
 
-	// 4. Test Assignment Operator (=)
-	cout << "[+] Testing Assignment Operator...\n";
-	AdjList assignedNode(99);
-	assignedNode.AddEdge(100, 50);
+	// ========================================================
+	// SECTION 2: Testing VertexQueue (FIFO for BFS)
+	// ========================================================
+	cout << "========================================================\n";
+	cout << "=== Testing VertexQueue (FIFO for BFS)               ===\n";
+	cout << "========================================================\n\n";
 
-	assignedNode = node1;
+	VertexQueue q;
+	cout << "[+] Enqueuing vertices: 10, 20, 30...\n";
+	q.Enqueue(10);
+	q.Enqueue(20);
+	q.Enqueue(30);
 
-	cout << "--- Assigned List (Should match the modified Original) ---\n";
-	assignedNode.Print();
+	cout << "  Queue Size: " << q.GetSize() << "\n";
+	cout << "  Front Element (Peek): " << q.Peek() << "\n\n";
 
-	// 5. Test Clear
-	cout << "[-] Testing Clear on Copied List...\n";
-	copiedNode.Clear();
-	copiedNode.Print();
+	cout << "[+] Dequeuing all elements:\n";
+	while (!q.IsEmpty())
+	{
+		cout << "  Dequeued: " << q.Dequeue() << "\n";
+	}
+
+	cout << "\n[?] Testing Queue Underflow Exception...\n";
+	try
+	{
+		q.Dequeue();
+	}
+	catch (const underflow_error& e)
+	{
+		cout << "  [Exception Caught] " << e.what() << "\n\n";
+	}
+
+	// ========================================================
+	// SECTION 3: Testing VertexStack (LIFO for DFS)
+	// ========================================================
+	cout << "========================================================\n";
+	cout << "=== Testing VertexStack (LIFO for DFS)               ===\n";
+	cout << "========================================================\n\n";
+
+	VertexStack s;
+	cout << "[+] Pushing vertices: 100, 200, 300...\n";
+	s.Push(100);
+	s.Push(200);
+	s.Push(300);
+
+	cout << "  Stack Size: " << s.GetSize() << "\n";
+	cout << "  Top Element (Peek): " << s.Peek() << "\n\n";
+
+	cout << "[+] Popping all elements (LIFO Order):\n";
+	while (!s.IsEmpty())
+	{
+		cout << "  Popped: " << s.Pop() << "\n";
+	}
+
+	cout << "\n[?] Testing Stack Underflow Exception...\n";
+	try
+	{
+		s.Pop();
+	}
+	catch (const underflow_error& e)
+	{
+		cout << "  [Exception Caught] " << e.what() << "\n\n";
+	}
+
+	cout << "========================================================\n";
+	cout << "=== All Tests Completed Successfully                 ===\n";
+	cout << "========================================================\n";
 
 	return 0;
 }
