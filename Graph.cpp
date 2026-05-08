@@ -103,3 +103,78 @@ void Graph::Clear()
 		adjLists[i].Clear();
 	}
 }
+
+void Graph::BFS(int startVertex)
+{
+	if (startVertex < 1 || startVertex > numVertices)
+		throw std::out_of_range("Vertex index out of bounds (1-based).");
+
+	bool* visited = new bool[numVertices + 1] {false};
+
+	VertexQueue q;
+	q.Enqueue(startVertex);
+	visited[startVertex] = true;
+	int src, dest;
+	AdjNode* curr;
+	bool isFirst = true;
+	std::cout << "{";
+	while (!q.IsEmpty())
+	{
+		src = q.Dequeue();
+		if (!isFirst) std::cout << ", ";
+		std::cout << src;
+		isFirst = false;
+		curr = adjLists[src].GetHead();
+		while (curr != nullptr)
+		{
+			dest = curr->GetDest();
+			if (!visited[dest])
+			{
+				q.Enqueue(dest);
+				visited[dest] = true;
+			}
+			curr = curr->GetNext();
+		}
+	}
+	std::cout << "}\n";
+	delete[] visited;
+}
+
+void Graph::DFS(int startVertex)
+{
+	if (startVertex < 1 || startVertex > numVertices)
+		throw std::out_of_range("Vertex index out of bounds (1-based).");
+
+	bool* visited = new bool[numVertices + 1] {false};
+	VertexStack s;
+	s.Push(startVertex);
+	int src, dest;
+	AdjNode* curr;
+	std::cout << "{";
+	bool isFirst = true;
+	while (!s.IsEmpty())
+	{
+		src = s.Pop();
+		if (!visited[src])
+		{
+			if (!isFirst) std::cout << ", ";
+			std::cout << src;
+			visited[src] = true;
+			isFirst = false;
+			curr = adjLists[src].GetHead();
+			while (curr != nullptr)
+			{
+				dest = curr->GetDest();
+				if (!visited[dest])
+				{
+					s.Push(dest);
+
+				}
+				curr = curr->GetNext();
+			}
+
+		}
+	}
+	std::cout << "}\n";
+	delete[] visited;
+}
