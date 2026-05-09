@@ -240,31 +240,31 @@ Graph Graph::DijkstraSPT(int startVertex) {
 	if (startVertex < 1 || startVertex > numVertices)
 		throw std::out_of_range("Vertex index out of bounds.");
 
-	int* dist = new int[numVertices + 1];
+	int* distances = new int[numVertices + 1];
 	int* parent = new int[numVertices + 1];
 	bool* selected = new bool[numVertices + 1];
 
 	for (int i = 1; i <= numVertices; i++)
 	{
-		dist[i] = INT_MAX;
+		distances[i] = INT_MAX;
 		parent[i] = -1;
 		selected[i] = false;
 	}
 
-	dist[startVertex] = 0;
+	distances[startVertex] = 0;
 	int src, minDistance, dest, weight;
 
-	for (int count = 0; count < numVertices - 1; count++)
+	for (int k = 1; k <= numVertices; k++)
 	{
 		src = -1;
 		minDistance = INT_MAX;
 
-		for (dest = 1; dest <= numVertices; dest++)
+		for (int i = 1; i <= numVertices; i++)
 		{
-			if (!selected[dest] && dist[dest] < minDistance)
+			if (!selected[i] && distances[i] < minDistance)
 			{
-				minDistance = dist[dest];
-				src = dest;
+				minDistance = distances[i];
+				src = i;
 			}
 		}
 
@@ -278,9 +278,9 @@ Graph Graph::DijkstraSPT(int startVertex) {
 			dest = curr->GetDest();
 			weight = curr->GetWeight();
 
-			if (!selected[dest] && dist[src] != INT_MAX && dist[src] + weight < dist[dest])
+			if (!selected[dest] && distances[src] != INT_MAX && distances[src] + weight < distances[dest])
 			{
-				dist[dest] = dist[src] + weight;
+				distances[dest] = distances[src] + weight;
 				parent[dest] = src;
 			}
 			curr = curr->GetNext();
@@ -289,16 +289,17 @@ Graph Graph::DijkstraSPT(int startVertex) {
 
 	Graph result = Graph(numVertices, isDirected);
 
-	for (int i = 1; i <= numVertices; i++)
+	for (dest = 1; dest <= numVertices; dest++)
 	{
-		if (parent[i] != -1)
+		src = parent[dest];
+		if (src != -1)
 		{
-			int w = GetWeight(parent[i], i);
-			result.AddEdge(parent[i], i, w);
+			weight = GetWeight(src, dest);
+			result.AddEdge(src, dest, weight);
 		}
 	}
 
-	delete[] dist;
+	delete[] distances;
 	delete[] parent;
 	delete[] selected;
 
