@@ -234,3 +234,73 @@ Graph Graph::KruskalMST()
 
 	return result;
 }
+
+Graph Graph::DijkstraSPT(int startVertex) {
+
+	if (startVertex < 1 || startVertex > numVertices)
+		throw std::out_of_range("Vertex index out of bounds.");
+
+	int* dist = new int[numVertices + 1];
+	int* parent = new int[numVertices + 1];
+	bool* selected = new bool[numVertices + 1];
+
+	for (int i = 1; i <= numVertices; i++)
+	{
+		dist[i] = INT_MAX;
+		parent[i] = -1;
+		selected[i] = false;
+	}
+
+	dist[startVertex] = 0;
+	int src, minDistance, dest;
+
+	for (int count = 0; count < numVertices - 1; count++)
+	{
+		src = -1;
+		minDistance = INT_MAX;
+
+		for (dest = 1; dest <= numVertices; dest++)
+		{
+			if (!selected[dest] && dist[dest] < minDistance)
+			{
+				minDistance = dist[dest];
+				src = dest;
+			}
+		}
+
+		if (src == -1) break;
+
+		selected[src] = true;
+
+		AdjNode* curr = adjLists[src].GetHead();
+		while (curr != nullptr)
+		{
+			int v = curr->GetDest();
+			int weight = curr->GetWeight();
+
+			if (!selected[dest] && dist[src] != INT_MAX && dist[src] + weight < dist[dest])
+			{
+				dist[dest] = dist[src] + weight;
+				parent[dest] = src;
+			}
+			curr = curr->GetNext();
+		}
+	}
+
+	Graph result = Graph(numVertices, isDirected);
+
+	for (int i = 1; i <= numVertices; i++)
+	{
+		if (parent[i] != -1)
+		{
+			int w = GetWeight(parent[i], i);
+			result.AddEdge(parent[i], i, w);
+		}
+	}
+
+	delete[] dist;
+	delete[] parent;
+	delete[] selected;
+
+	return result;
+}
