@@ -3,6 +3,7 @@
 #include "VertexQueue.h"
 #include "VertexStack.h"
 #include "DisjointSet.h"
+#include "SortedEdgeList.h"
 class Graph
 {
 private:

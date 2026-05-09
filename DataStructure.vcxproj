@@ -131,7 +131,10 @@
     <ClCompile Include="AdjNode.cpp" />
     <ClCompile Include="DataStructure.cpp" />
     <ClCompile Include="DisjointSet.cpp" />
+    <ClCompile Include="Edge.cpp" />
+    <ClCompile Include="EdgeNode.cpp" />
     <ClCompile Include="Graph.cpp" />
+    <ClCompile Include="SortedEdgeList.cpp" />
     <ClCompile Include="VertexNode.cpp" />
     <ClCompile Include="VertexQueue.cpp" />
     <ClCompile Include="VertexStack.cpp" />
@@ -140,7 +143,11 @@
     <ClInclude Include="AdjList.h" />
     <ClInclude Include="AdjNode.h" />
     <ClInclude Include="DisjointSet.h" />
+    <ClInclude Include="Edge.h" />
+    <ClInclude Include="EdgeNode.h" />
     <ClInclude Include="Graph.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SortedEdgeList.h" />
     <ClInclude Include="VertexNode.h" />
     <ClInclude Include="VertexQueue.h" />
     <ClInclude Include="VertexStack.h" />

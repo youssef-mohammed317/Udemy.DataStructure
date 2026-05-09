@@ -178,3 +178,59 @@ void Graph::DFS(int startVertex)
 	std::cout << "}\n";
 	delete[] visited;
 }
+
+Graph Graph::KruskalMST()
+{
+	if (isDirected)
+		throw std::logic_error("This algorithm only for undirected graphs");
+
+	// create edge array
+	SortedEdgeList list;
+	int src, dest;
+	AdjNode* curr;
+	for (src = 1; src <= numVertices; src++)
+	{
+		curr = adjLists[src].GetHead();
+		while (curr != nullptr)
+		{
+			dest = curr->GetDest();
+
+			if (dest >= src)
+			{
+				list.Insert(Edge(src, dest, curr->GetWeight()));
+			}
+
+			curr = curr->GetNext();
+		}
+	}
+	Graph result = Graph(numVertices);
+	Edge edge;
+	int srcRoot, destRoot;
+	int edgesAdded = 0;
+	DisjointSet ds = DisjointSet(numVertices);
+	while (!list.IsEmpty())
+	{
+		edge = list.ExtractFirst();
+
+		src = edge.GetSrc();
+		dest = edge.GetDest();
+
+		srcRoot = ds.Find(src);
+		destRoot = ds.Find(dest);
+
+		if (srcRoot != destRoot)
+		{
+			ds.UnionSets(srcRoot, destRoot);
+			result.AddEdge(src, dest, edge.GetWeight());
+			edgesAdded++;
+		}
+		else
+		{
+			// here can detect cycle
+		}
+	}
+
+	// count negatives in parent array in disjoint can get the number of components
+
+	return result;
+}
