@@ -103,7 +103,20 @@ void Graph::Clear()
 		adjLists[i].Clear();
 	}
 }
+int Graph::GetWeight(int src, int dest) const
+{
+	if (src < 1 || src > numVertices || dest < 1 || dest > numVertices)
+		throw std::out_of_range("Vertex index out of bounds (1-based).");
 
+	AdjNode* curr = adjLists[src].GetHead();
+	while (curr != nullptr)
+	{
+		if (curr->GetDest() == dest)
+			return curr->GetWeight();
+		curr = curr->GetNext();
+	}
+	return INT_MAX;
+}
 void Graph::BFS(int startVertex)
 {
 	if (startVertex < 1 || startVertex > numVertices)

@@ -34,12 +34,6 @@ public:
 	// Uses a stack (LIFO) or recursion to explore as deep as possible.
 	void DFS(int startVertex);
 
-	// Minimum Spanning Tree (MST)
-	// always select the min weight edge connected to the already selected vertices to grow a single tree
-	// prims use "near" array to track the closest nodes and "selected" array init with false to mark what is visited
-	// Note: this algorithm works ONLY for undirected graphs
-	Graph PrimMST();
-
 	// always select min weight use sorted list or array with selected array init with false and mark what is selected
 	// kruskal use disjoint sets
 	// Note: this algorithm works ONLY for undirected graphs

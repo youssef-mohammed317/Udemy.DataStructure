@@ -74,9 +74,6 @@
     <ClInclude Include="Edge.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="SortedEdgeList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
