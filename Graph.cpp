@@ -252,7 +252,7 @@ Graph Graph::DijkstraSPT(int startVertex) {
 	}
 
 	dist[startVertex] = 0;
-	int src, minDistance, dest;
+	int src, minDistance, dest, weight;
 
 	for (int count = 0; count < numVertices - 1; count++)
 	{
@@ -275,8 +275,8 @@ Graph Graph::DijkstraSPT(int startVertex) {
 		AdjNode* curr = adjLists[src].GetHead();
 		while (curr != nullptr)
 		{
-			int v = curr->GetDest();
-			int weight = curr->GetWeight();
+			dest = curr->GetDest();
+			weight = curr->GetWeight();
 
 			if (!selected[dest] && dist[src] != INT_MAX && dist[src] + weight < dist[dest])
 			{
