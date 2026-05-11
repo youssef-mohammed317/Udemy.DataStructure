@@ -1,156 +1,134 @@
 #include <iostream>
-#include <stdexcept>
-#include "AdjList.h"
-#include "VertexQueue.h"
-#include "VertexStack.h"
-#include "Graph.h"
-#include "DisjointSet.h"
+#include <string>
+#include <limits>
+#include "Graph.h" 
 
 using namespace std;
 
-int main()
-{
-	try
-	{
-		// ========================================================
-		// SECTION 1: Testing Adjacency List
-		// ========================================================
-		cout << "========================================================\n";
-		cout << "=== Testing Adjacency List (With Exceptions & Print) ===\n";
-		cout << "========================================================\n\n";
+// Array to map integer IDs (1-6) to actual city names.
+// Index 0 is left blank to match the 1-based indexing of your graph.
+const string cityNames[7] = {
+	"",              // 0 (Unused)
+	"Seattle",       // 1
+	"San Francisco", // 2
+	"Los Angeles",   // 3
+	"Denver",        // 4
+	"Chicago",       // 5
+	"New York"       // 6
+};
 
-		cout << "[+] Building connections for Node 1...\n";
-		AdjList node1(1);
-		node1.AddEdge(2, 15);
-		node1.AddEdge(3, 8);
-		node1.AddEdge(4, 25);
-
-		node1.Print();
-
-		cout << "[?] Testing Exception Handling in GetWeight()...\n";
-		try
-		{
-			cout << "  Weight of path to Node 3: " << node1.GetWeight(3) << "\n";
-		}
-		catch (const invalid_argument& e) { cout << "  Error: " << e.what() << "\n"; }
-
-		try
-		{
-			cout << "  Weight of path to Node 5: ";
-			cout << node1.GetWeight(5) << "\n";
-		}
-		catch (const invalid_argument& e) { cout << "[Exception Caught] " << e.what() << "\n\n"; }
-
-
-		// ========================================================
-		// SECTION 2: Testing VertexQueue (FIFO for BFS)
-		// ========================================================
-		cout << "========================================================\n";
-		cout << "=== Testing VertexQueue (FIFO for BFS)               ===\n";
-		cout << "========================================================\n\n";
-
-		VertexQueue q;
-		q.Enqueue(10);
-		q.Enqueue(20);
-		q.Enqueue(30);
-
-		cout << "[+] Dequeuing all elements (FIFO):\n";
-		while (!q.IsEmpty()) { cout << "  Dequeued: " << q.Dequeue() << "\n"; }
-
-
-		// ========================================================
-		// SECTION 3: Testing VertexStack (LIFO for DFS)
-		// ========================================================
-		cout << "\n========================================================\n";
-		cout << "=== Testing VertexStack (LIFO for DFS)               ===\n";
-		cout << "========================================================\n\n";
-
-		VertexStack s;
-		s.Push(100);
-		s.Push(200);
-		s.Push(300);
-
-		cout << "[+] Popping all elements (LIFO):\n";
-		while (!s.IsEmpty()) { cout << "  Popped: " << s.Pop() << "\n"; }
-
-
-		// ========================================================
-		// SECTION 4: Testing Graph (1-Based Indexing)
-		// ========================================================
-		cout << "\n========================================================\n";
-		cout << "=== Testing Graph Class (1-Based & Exceptions)      ===\n";
-		cout << "========================================================\n\n";
-
-		Graph myGraph(5, false); // Undirected graph with 5 vertices
-
-		cout << "[+] Adding edges (1-based)...\n";
-		myGraph.AddEdge(1, 2, 10);
-		myGraph.AddEdge(1, 5, 20);
-		myGraph.AddEdge(2, 3, 5);
-		myGraph.AddEdge(4, 5, 30);
-
-		myGraph.PrintGraph();
-
-		cout << "\n[?] Checking HasEdge:\n";
-		cout << "  Has edge (1, 5)? " << (myGraph.HasEdge(1, 5) ? "Yes" : "No") << "\n";
-		cout << "  Has edge (5, 1)? " << (myGraph.HasEdge(5, 1) ? "Yes" : "No") << " (Should be Yes - Undirected)\n";
-
-		cout << "\n[!] Testing Graph Boundary Exceptions:\n";
-		try {
-			cout << "  Attempting AddEdge(0, 1): ";
-			myGraph.AddEdge(0, 1, 10);
-		}
-		catch (const out_of_range& e) { cout << "[Caught] " << e.what() << "\n"; }
-
-		try {
-			cout << "  Attempting AddEdge(1, 6): ";
-			myGraph.AddEdge(1, 6, 10);
-		}
-		catch (const out_of_range& e) { cout << "[Caught] " << e.what() << "\n"; }
-
-
-		// ========================================================
-		// SECTION 5: Testing DisjointSet (1-Based & Weighted Union)
-		// ========================================================
-		cout << "\n========================================================\n";
-		cout << "=== Testing DisjointSet (1-Based & Union by Size)    ===\n";
-		cout << "========================================================\n\n";
-
-		DisjointSet ds(5);
-		cout << "[+] Performing Unions: (1,2), (3,4), (2,4)...\n";
-
-		ds.UnionSets(ds.Find(1), ds.Find(2));
-		ds.UnionSets(ds.Find(3), ds.Find(4));
-		ds.UnionSets(ds.Find(2), ds.Find(4)); // Now 1, 2, 3, 4 are connected
-
-		cout << "\n[?] Checking Connectivity:\n";
-		cout << "  Root of 1: " << ds.Find(1) << "\n";
-		cout << "  Root of 4: " << ds.Find(4) << "\n";
-
-		if (ds.Find(1) == ds.Find(4))
-			cout << "  Result: 1 and 4 are in the same set! ✅\n";
-
-		cout << "  Root of 5: " << ds.Find(5) << " (Should be its own root: 5)\n";
-
-		cout << "\n[!] Testing DisjointSet Exceptions:\n";
-		try {
-			ds.Find(6);
-		}
-		catch (const out_of_range& e) { cout << "  [Caught] " << e.what() << "\n"; }
-
-		cout << "\n[-] Clearing the graph...\n";
-		myGraph.Clear();
-		myGraph.PrintGraph();
-
+// Helper function to display the list of cities
+void DisplayCityOptions() {
+	cout << "\n--- Available Cities ---\n";
+	for (int i = 1; i <= 6; i++) {
+		cout << "[" << i << "] " << cityNames[i] << "\n";
 	}
-	catch (const exception& e)
-	{
-		cout << "\nCRITICAL ERROR: " << e.what() << endl;
-	}
+	cout << "------------------------\n";
+}
 
-	cout << "\n========================================================\n";
-	cout << "=== All Unit Tests Completed Successfully!           ===\n";
-	cout << "========================================================\n";
+int main() {
+	try {
+		// 1. Initialize the Graph (6 cities, undirected roads)
+		int numberOfCities = 6;
+		Graph cityMap(numberOfCities, false);
+
+		// 2. Add roads between cities (City A ID, City B ID, Distance in hours)
+		// Shifted from 0-based to 1-based indexing
+		cityMap.AddEdge(1, 2, 4);  // Seattle (1) to San Francisco (2)
+		cityMap.AddEdge(1, 3, 4);  // Seattle (1) to Los Angeles (3)
+		cityMap.AddEdge(2, 3, 2);  // San Francisco (2) to Los Angeles (3)
+		cityMap.AddEdge(2, 4, 5);  // San Francisco (2) to Denver (4)
+		cityMap.AddEdge(3, 4, 8);  // Los Angeles (3) to Denver (4)
+		cityMap.AddEdge(3, 5, 2);  // Los Angeles (3) to Chicago (5)
+		cityMap.AddEdge(4, 5, 3);  // Denver (4) to Chicago (5)
+		cityMap.AddEdge(4, 6, 6);  // Denver (4) to New York (6)
+		cityMap.AddEdge(5, 6, 5);  // Chicago (5) to New York (6)
+
+		int choice = 0;
+		int startCity = 0;
+
+		cout << "Welcome to the Interactive City Routing System!\n";
+
+		// 3. Main Application Loop
+		while (choice != 5) {
+			cout << "\n=============================================\n";
+			cout << "                 MAIN MENU                   \n";
+			cout << "=============================================\n";
+			cout << "1. View all current routes (Full Map)\n";
+			cout << "2. Find shortest paths from a specific city (GPS/Dijkstra)\n";
+			cout << "3. Calculate cheapest network to connect all cities (Kruskal)\n";
+			cout << "4. Explore neighboring cities step-by-step (BFS)\n";
+			cout << "5. Exit System\n";
+			cout << "=============================================\n";
+			cout << "Enter your choice (1-5): ";
+
+			cin >> choice;
+
+			// Handle invalid input (e.g., typing letters instead of numbers)
+			if (cin.fail()) {
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+				cout << "Invalid input. Please enter a number.\n";
+				continue;
+			}
+
+			switch (choice) {
+			case 1:
+				cout << "\n[Displaying All Available Routes]\n";
+				cityMap.PrintGraph();
+				break;
+
+			case 2:
+				DisplayCityOptions();
+				cout << "Enter the ID of your starting city (1-6): ";
+				cin >> startCity;
+				if (startCity >= 1 && startCity <= 6) {
+					cout << "\n[Calculating Shortest Paths from " << cityNames[startCity] << "]\n";
+					Graph shortestPaths = cityMap.DijkstraSPT(startCity);
+					shortestPaths.PrintGraph();
+				}
+				else {
+					cout << "Invalid city ID! Must be between 1 and 6.\n";
+				}
+				break;
+
+			case 3:
+				cout << "\n[Calculating Minimum Cost to Connect All Cities]\n";
+				cout << "Building Fiber Optic Network...\n";
+				{
+					Graph networkCables = cityMap.KruskalMST();
+					networkCables.PrintGraph();
+				}
+				break;
+
+			case 4:
+				DisplayCityOptions();
+				cout << "Enter the ID of your starting city (1-6): ";
+				cin >> startCity;
+				if (startCity >= 1 && startCity <= 6) {
+					cout << "\n[Exploring outward from " << cityNames[startCity] << "]\n";
+					cout << "City IDs visited in order: ";
+					cityMap.BFS(startCity);
+				}
+				else {
+					cout << "Invalid city ID! Must be between 1 and 6.\n";
+				}
+				break;
+
+			case 5:
+				cout << "Exiting system. Have a safe trip!\n";
+				break;
+
+			default:
+				cout << "Invalid choice! Please select a number between 1 and 5.\n";
+				break;
+			}
+		}
+	}
+	// Catch the exceptions thrown by your Graph implementation!
+	catch (const std::exception& e) {
+		cerr << "\n[ERROR] " << e.what() << "\n";
+	}
 
 	return 0;
 }
