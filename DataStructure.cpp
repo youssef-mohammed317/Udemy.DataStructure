@@ -5,12 +5,14 @@
 #include "NQueensProblem.h"
 #include "PermutationProblem.h"
 #include "RatInMazeProblem.h"
+#include "SudokuProblem.h"
 int main()
 {
 	//NQueensProblem::Execute(6);
 	//PermutationProblem::Execute((char*)"ABC");
 
-	RatInMazeProblem::TestBehavior();
+	//RatInMazeProblem::TestBehavior();
+	SudokuProblem::TestBehavior();
 
 }
 

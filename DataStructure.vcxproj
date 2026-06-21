@@ -131,11 +131,13 @@
     <ClCompile Include="NQueensProblem.cpp" />
     <ClCompile Include="PermutationProblem.cpp" />
     <ClCompile Include="RatInMazeProblem.cpp" />
+    <ClCompile Include="SudokuProblem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NQueensProblem.h" />
     <ClInclude Include="PermutationProblem.h" />
     <ClInclude Include="RatInMazeProblem.h" />
+    <ClInclude Include="SudokuProblem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
