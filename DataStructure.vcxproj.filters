@@ -21,9 +21,15 @@
     <ClCompile Include="NQueensProblem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="PermutationProblem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NQueensProblem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PermutationProblem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

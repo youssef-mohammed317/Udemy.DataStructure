@@ -3,9 +3,11 @@
 
 #include <iostream>
 #include "NQueensProblem.h"
+#include "PermutationProblem.h"
 int main()
 {
-	NQueensProblem::Execute(6);
+	//NQueensProblem::Execute(6);
+	PermutationProblem::Execute((char*)"ABC");
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
