@@ -4,10 +4,14 @@
 #include <iostream>
 #include "NQueensProblem.h"
 #include "PermutationProblem.h"
+#include "RatInMazeProblem.h"
 int main()
 {
 	//NQueensProblem::Execute(6);
-	PermutationProblem::Execute((char*)"ABC");
+	//PermutationProblem::Execute((char*)"ABC");
+
+	RatInMazeProblem::TestBehavior();
+
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

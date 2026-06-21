@@ -130,10 +130,12 @@
     <ClCompile Include="DataStructure.cpp" />
     <ClCompile Include="NQueensProblem.cpp" />
     <ClCompile Include="PermutationProblem.cpp" />
+    <ClCompile Include="RatInMazeProblem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="NQueensProblem.h" />
     <ClInclude Include="PermutationProblem.h" />
+    <ClInclude Include="RatInMazeProblem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
