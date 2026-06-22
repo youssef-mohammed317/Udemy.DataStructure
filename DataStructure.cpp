@@ -2,10 +2,12 @@
 //
 
 #include <iostream>
-
+#include "LongestCommonSubsequence.h"
 int main()
 {
-    std::cout << "Hello World!\n";
+	//std::cout << LongestCommonSubsequence::ExecuteRecursion((char*)"ace", (char*)"abcde");
+	//LongestCommonSubsequence::ExecuteMemoization((char*)"ace", (char*)"abcde");
+	LongestCommonSubsequence::ExecuteTabulation((char*)"abc", (char*)"acb");
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
