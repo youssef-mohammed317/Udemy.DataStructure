@@ -129,9 +129,11 @@
   <ItemGroup>
     <ClCompile Include="DataStructure.cpp" />
     <ClCompile Include="LongestCommonSubsequence.cpp" />
+    <ClCompile Include="MaximumSubArraySum.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LongestCommonSubsequence.h" />
+    <ClInclude Include="MaximumSubArraySum.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

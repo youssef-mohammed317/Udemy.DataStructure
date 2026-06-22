@@ -3,11 +3,14 @@
 
 #include <iostream>
 #include "LongestCommonSubsequence.h"
+#include "MaximumSubArraySum.h"
 int main()
 {
 	//std::cout << LongestCommonSubsequence::ExecuteRecursion((char*)"ace", (char*)"abcde");
 	//LongestCommonSubsequence::ExecuteMemoization((char*)"ace", (char*)"abcde");
-	LongestCommonSubsequence::ExecuteTabulation((char*)"abc", (char*)"acb");
+	//LongestCommonSubsequence::ExecuteTabulation((char*)"abc", (char*)"acb");
+
+	MaximumSubArraySum::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
