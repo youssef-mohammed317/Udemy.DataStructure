@@ -4,13 +4,17 @@
 #include <iostream>
 #include "LongestCommonSubsequence.h"
 #include "MaximumSubArraySum.h"
+#include "MatrixChainMultiplication.h"
 int main()
 {
 	//std::cout << LongestCommonSubsequence::ExecuteRecursion((char*)"ace", (char*)"abcde");
 	//LongestCommonSubsequence::ExecuteMemoization((char*)"ace", (char*)"abcde");
 	//LongestCommonSubsequence::ExecuteTabulation((char*)"abc", (char*)"acb");
 
-	MaximumSubArraySum::TestBehavior();
+	//MaximumSubArraySum::TestBehavior();
+
+	int arr[] = { 3,2,4,2,5 };
+	MatrixChainMultiplication::ExecuteTabulation(arr, 4);
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

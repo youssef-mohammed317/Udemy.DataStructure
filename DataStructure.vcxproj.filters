@@ -24,12 +24,18 @@
     <ClCompile Include="MaximumSubArraySum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MatrixChainMultiplication.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LongestCommonSubsequence.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="MaximumSubArraySum.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MatrixChainMultiplication.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
