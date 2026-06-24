@@ -128,11 +128,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DataStructure.cpp" />
+    <ClCompile Include="Knapsack01.cpp" />
     <ClCompile Include="LongestCommonSubsequence.cpp" />
     <ClCompile Include="MatrixChainMultiplication.cpp" />
     <ClCompile Include="MaximumSubArraySum.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Knapsack01.h" />
     <ClInclude Include="LongestCommonSubsequence.h" />
     <ClInclude Include="MatrixChainMultiplication.h" />
     <ClInclude Include="MaximumSubArraySum.h" />

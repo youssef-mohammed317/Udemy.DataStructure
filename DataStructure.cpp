@@ -5,6 +5,7 @@
 #include "LongestCommonSubsequence.h"
 #include "MaximumSubArraySum.h"
 #include "MatrixChainMultiplication.h"
+#include "Knapsack01.h"
 int main()
 {
 	//std::cout << LongestCommonSubsequence::ExecuteRecursion((char*)"ace", (char*)"abcde");
@@ -13,8 +14,10 @@ int main()
 
 	//MaximumSubArraySum::TestBehavior();
 
-	int arr[] = { 3,2,4,2,5 };
-	MatrixChainMultiplication::ExecuteTabulation(arr, 4);
+	//int arr[] = { 3,2,4,2,5 };
+	//MatrixChainMultiplication::ExecuteTabulation(arr, 4);
+
+	Knapsack01::TestBehavior();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
